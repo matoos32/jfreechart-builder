@@ -1,0 +1,207 @@
+/*
+ * jfreechart-builder: a builder pattern module for working with the jfreechart library
+ * 
+ * (C) Copyright 2020, by Matt E.
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+package com.jfcbuilder.builders;
+
+import java.util.List;
+
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.ValueMarker;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
+
+import com.jfcbuilder.builders.types.BuilderConstants;
+import com.jfcbuilder.builders.types.Orientation;
+import com.jfcbuilder.builders.types.ZeroBasedIndexRange;
+
+/**
+ * Builder for producing general XYPlot plots using configured builder properties, series, and
+ * datasets.
+ */
+public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
+
+  private XYTimeSeriesPlotBuilderElements elements;
+
+  /**
+   * Hidden constructor.
+   */
+  private XYPlotBuilder() {
+    elements = new XYTimeSeriesPlotBuilderElements();
+  }
+
+  /**
+   * Factory method for obtaining new instances of this class.
+   * 
+   * @return New instance of this class
+   */
+  public static XYPlotBuilder instance() {
+    return new XYPlotBuilder();
+  }
+
+  @Override
+  public XYPlotBuilder indexRange(ZeroBasedIndexRange indexRange) {
+    elements.indexRange(indexRange);
+    return this;
+  }
+
+  @Override
+  public XYPlotBuilder xAxis(ValueAxis xAxis) {
+    elements.xAxis(xAxis);
+    return this;
+  }
+
+  @Override
+  public XYPlotBuilder timeData(long[] timeData) {
+    elements.timeData(timeData);
+    return this;
+  }
+
+  @Override
+  public XYPlotBuilder series(IXYTimeSeriesBuilder<?> series) {
+    elements.series(series);
+    return this;
+  }
+
+  @Override
+  public XYPlotBuilder series(IXYDatasetBuilder<?> dataset) {
+    elements.dataset(dataset);
+    return this;
+  }
+
+  @Override
+  public XYPlotBuilder line(LineBuilder line) {
+    elements.line(line);
+    return this;
+  }
+
+  @Override
+  public XYPlotBuilder plotWeight(int weight) {
+    elements.plotWeight(weight);
+    return this;
+  }
+
+  @Override
+  public int plotWeight() {
+    return elements.plotWeight();
+  }
+
+  @Override
+  public XYPlotBuilder yAxisName(String name) {
+    elements.yAxisName(name);
+    return this;
+  }
+
+  @Override
+  public XYPlotBuilder yAxisRange(double lower, double upper) throws IllegalArgumentException {
+    elements.yAxisRange(lower, upper);
+    return this;
+  }
+
+  @Override
+  public XYPlotBuilder yAxisTickSize(double size) {
+    elements.yAxisTickSize(size);
+    return this;
+  }
+
+  @Override
+  public XYPlot build() throws IllegalStateException {
+
+    elements.checkBuildPreconditions();
+
+    final List<IXYTimeSeriesBuilder<?>> seriesBuilders = elements.unmodifiableSeries();
+    final List<LineBuilder> lineBuilders = elements.unmodifiableLines();
+    final ValueAxis xAxis = elements.xAxis();
+    final long[] timeData = elements.timeData();
+
+    StringBuilder axisSubName = new StringBuilder();
+
+    TimeSeriesCollection collection = new TimeSeriesCollection();
+    StandardXYItemRenderer renderer = new StandardXYItemRenderer();
+
+    double yMax = Double.MIN_VALUE;
+    double yMin = Double.MAX_VALUE;
+
+    final ZeroBasedIndexRange indexRange = elements.indexRange();
+
+    for (IXYTimeSeriesBuilder<?> builder : seriesBuilders) {
+
+      builder.indexRange(indexRange);
+      builder.timeData(timeData);
+
+      TimeSeries series = builder.build();
+
+      if (!series.isEmpty()) {
+
+        yMax = Math.max(yMax, series.getMaxY());
+        yMin = Math.min(yMin, series.getMinY());
+
+        renderer.setSeriesPaint(collection.getSeriesCount(), builder.color());
+        renderer.setSeriesStroke(collection.getSeriesCount(), builder.style());
+        collection.addSeries(series);
+        // JFreeChart series key is the name given to the series.
+        if (series.getKey() != null && !series.getKey().toString().isEmpty()) {
+          axisSubName.append(' ').append(series.getKey().toString());
+        }
+      }
+    }
+
+    final NumberAxis yAxis = new NumberAxis(
+        elements.yAxisName() + System.lineSeparator() + axisSubName.toString());
+    yAxis.setMinorTickMarksVisible(true);
+    yAxis.setMinorTickCount(2);
+    yAxis.setMinorTickMarkOutsideLength(2);
+    yAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
+    yAxis.setAutoRangeIncludesZero(false);
+    yAxis.setAutoRangeStickyZero(false);
+
+    final XYPlot plot = new XYPlot(collection, xAxis, yAxis, renderer);
+
+    for (LineBuilder builder : lineBuilders) {
+      ValueMarker line = builder.build();
+
+      yMax = Math.max(yMax, line.getValue());
+      yMin = Math.min(yMin, line.getValue());
+
+      if (builder.orientation() == Orientation.HORIZONTAL) {
+        plot.addRangeMarker(line);
+      } else {
+        plot.addDomainMarker(line);
+      }
+    }
+
+    if (elements.yAxisRange() != null) {
+      yAxis.setRange(elements.yAxisRange());
+    } else {
+      // Pad the y-axis so the min and max don't go right against the limit. Setting lower/upper
+      // margin doesn't do it.
+      yAxis.setRange(yMin * ((yMin > 0.0) ? 0.95 : 1.05), yMax * ((yMax < 0.0) ? 0.99 : 1.01));
+    }
+
+    if (!elements.usingDefaultYAxisTickSize()) {
+      yAxis.setTickUnit(new NumberTickUnit(elements.yAxisTickSize()));
+    }
+
+    return plot;
+  }
+}
