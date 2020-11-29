@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2020, by Matt E.
+ * (C) Copyright 2020, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,8 +39,8 @@ public class ZeroBasedIndexRange {
   /**
    * Constructor that sets the zero-based indexes defining the range.
    * 
-   * @param startIndex Zero based index of the start of the range .
-   * @param endIndex Zero based index of the end of the range.
+   * @param startIndex Zero based index of the start of the range 
+   * @param endIndex Zero based index of the end of the range
    * @throws IllegalArgumentException If startIndex or endIndex are negative, or if startIndex is
    *         greater than endIndex.
    */
@@ -51,8 +51,8 @@ public class ZeroBasedIndexRange {
   /**
    * Sets the zero-based indexes defining the range.
    * 
-   * @param startIndex Zero based index of the start of the range .
-   * @param endIndex Zero based index of the end of the range.
+   * @param startIndex Zero based index of the start of the range
+   * @param endIndex Zero based index of the end of the range
    * @throws IllegalArgumentException If startIndex or endIndex are negative, or if startIndex is
    *         greater than endIndex.
    */

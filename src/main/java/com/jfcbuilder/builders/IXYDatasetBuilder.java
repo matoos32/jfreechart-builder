@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2020, by Matt E.
+ * (C) Copyright 2020, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -41,16 +41,16 @@ public interface IXYDatasetBuilder<T extends IXYDatasetBuilder<T>> {
    * This is an optimization to allow clients to supply existing data without having to copy and/or
    * crop it to match the desired size in chart.
    * 
-   * @param indexRange The index range to be set.
-   * @return Reference to this builder instance for method chaining.
+   * @param indexRange The index range to be set
+   * @return Reference to this builder instance for method chaining
    */
   T indexRange(ZeroBasedIndexRange indexRange);
 
   /**
    * Sets the time data to be used for generating the XYDataset.
    * 
-   * @param timeData Ascending date-time values represented as milliseconds since the epoch start.
-   * @return Reference to this builder instance for method chaining.
+   * @param timeData Ascending date-time values represented as milliseconds since the epoch start
+   * @return Reference to this builder instance for method chaining
    */
   T timeData(long[] timeData);
 

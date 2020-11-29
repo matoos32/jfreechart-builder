@@ -24,14 +24,14 @@ In the future, more parameterization may be added like specifying background and
 Code like this:
 
 ```
-ChartBuilder.instance()
+ChartBuilder.get()
   .title("Simple Time Series With Annotations")
   .timeData(timeArray)
-  .xyPlot(XYPlotBuilder.instance()
-    .series(XYTimeSeriesBuilder.instance().name("Amplitude").data(array1).color(Color.BLUE).style(SOLID_LINE))
-    .annotation(XYArrowBuilder.instance().x(arrowX).y(arrowY).angle(180.0).color(Color.RED).text(arrowTxt))
-    .annotation(XYArrowBuilder.instance().x(arrowX).y(arrowY).angle(0.0).color(Color.RED))
-    .annotation(XYTextBuilder.instance().x(arrowX).y(arrowY).color(DARK_GREEN)
+  .xyPlot(XYPlotBuilder.get()
+    .series(XYTimeSeriesBuilder.get().name("Amplitude").data(array1).color(Color.BLUE).style(SOLID_LINE))
+    .annotation(XYArrowBuilder.get().x(arrowX).y(arrowY).angle(180.0).color(Color.RED).text(arrowTxt))
+    .annotation(XYArrowBuilder.get().x(arrowX).y(arrowY).angle(0.0).color(Color.RED))
+    .annotation(XYTextBuilder.get().x(arrowX).y(arrowY).color(DARK_GREEN)
       .text("This value!").textPaddingLeft(5).textAlign(TextAnchor.BASELINE_LEFT).angle(90.0)))
   .build()
 ```
@@ -47,30 +47,30 @@ public static final Stroke SOLID = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, B
 
 private static final Color DARK_GREEN = new Color(0, 150, 0);
 
-ChartBuilder.instance()
+ChartBuilder.get()
 
   .title("Multi Plot Minute Time Series")
 
   .timeData(timeArray)
 
-  .xyPlot(XYPlotBuilder.instance().yAxisName("Values")
-    .series(XYTimeSeriesBuilder.instance().data(array1).color(Color.BLUE).style(SOLID))
-    .series(XYTimeSeriesBuilder.instance().data(array2).color(Color.RED).style(SOLID))
-    .series(XYTimeSeriesBuilder.instance().data(array3).color(DARK_GREEN).style(SOLID))
-    .series(XYTimeSeriesBuilder.instance().data(array4).color(Color.MAGENTA).style(SOLID)))
+  .xyPlot(XYPlotBuilder.get().yAxisName("Values")
+    .series(XYTimeSeriesBuilder.get().data(array1).color(Color.BLUE).style(SOLID))
+    .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID))
+    .series(XYTimeSeriesBuilder.get().data(array3).color(DARK_GREEN).style(SOLID))
+    .series(XYTimeSeriesBuilder.get().data(array4).color(Color.MAGENTA).style(SOLID)))
 
-  .xyPlot(XYPlotBuilder.instance().yAxisName("Amplitudes")
-    .series(XYTimeSeriesBuilder.instance().data(array2).color(Color.GRAY).style(SOLID))
-    .series(XYTimeSeriesBuilder.instance().data(array3).color(Color.LIGHT_GRAY).style(SOLID)))
+  .xyPlot(XYPlotBuilder.get().yAxisName("Amplitudes")
+    .series(XYTimeSeriesBuilder.get().data(array2).color(Color.GRAY).style(SOLID))
+    .series(XYTimeSeriesBuilder.get().data(array3).color(Color.LIGHT_GRAY).style(SOLID)))
 
-  .xyPlot(XYPlotBuilder.instance().yAxisName("Series 1")
-    .series(XYTimeSeriesBuilder.instance().data(array1).color(Color.BLUE).style(SOLID)))
+  .xyPlot(XYPlotBuilder.get().yAxisName("Series 1")
+    .series(XYTimeSeriesBuilder.get().data(array1).color(Color.BLUE).style(SOLID)))
 
-  .xyPlot(XYPlotBuilder.instance().yAxisName("Series 2")
-    .series(XYTimeSeriesBuilder.instance().data(array2).color(Color.RED).style(SOLID)))
+  .xyPlot(XYPlotBuilder.get().yAxisName("Series 2")
+    .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID)))
 
-  .xyPlot(XYPlotBuilder.instance().yAxisName("Series 3")
-    .series(XYTimeSeriesBuilder.instance().data(array3).color(DARK_GREEN).style(SOLID)))
+  .xyPlot(XYPlotBuilder.get().yAxisName("Series 3")
+    .series(XYTimeSeriesBuilder.get().data(array3).color(DARK_GREEN).style(SOLID)))
 
 .build()
 ```
@@ -82,36 +82,36 @@ Produces a chart like this:
 Stock chart code and data like this:
 
 ```
-ChartBuilder.instance()
+ChartBuilder.get()
 
   .title("Stock Chart Time Series With Weekend Gaps, Lines, and Annotations")
   .timeData(timeArray)
 
-  .xyPlot(OhlcPlotBuilder.instance().yAxisName("Price").plotWeight(3)
-    .series(OhlcSeriesBuilder.instance().ohlcv(dohlcv).upColor(Color.WHITE).downColor(Color.RED))
-    .series(XYTimeSeriesBuilder.instance().name("MA(20)").data(sma20).color(Color.MAGENTA).style(SOLID_LINE))
-    .series(XYTimeSeriesBuilder.instance().name("MA(50)").data(sma50).color(Color.BLUE).style(SOLID_LINE))
-    .series(XYTimeSeriesBuilder.instance().name("MA(200)").data(sma200).color(Color.RED).style(SOLID_LINE))
-    .annotation(XYArrowBuilder.instance().x(stockEventDate).y(stockEventPrice).angle(270.0).color(DARK_GREEN)
+  .xyPlot(OhlcPlotBuilder.get().yAxisName("Price").plotWeight(3)
+    .series(OhlcSeriesBuilder.get().ohlcv(dohlcv).upColor(Color.WHITE).downColor(Color.RED))
+    .series(XYTimeSeriesBuilder.get().name("MA(20)").data(sma20).color(Color.MAGENTA).style(SOLID_LINE))
+    .series(XYTimeSeriesBuilder.get().name("MA(50)").data(sma50).color(Color.BLUE).style(SOLID_LINE))
+    .series(XYTimeSeriesBuilder.get().name("MA(200)").data(sma200).color(Color.RED).style(SOLID_LINE))
+    .annotation(XYArrowBuilder.get().x(stockEventDate).y(stockEventPrice).angle(270.0).color(DARK_GREEN)
       .textAlign(TextAnchor.BOTTOM_CENTER).text(String.format("%.2f", stockEventPrice)))
-    .line(LineBuilder.instance().orientation(Orientation.HORIZONTAL).atValue(resistanceLevel)
+    .line(LineBuilder.get().horizontal().at(resistanceLevel)
     .color(Color.LIGHT_GRAY).style(SOLID_LINE)))
 
-  .xyPlot(VolumeXYPlotBuilder.instance().yAxisName("Volume").plotWeight(1)
-    .series(VolumeXYTimeSeriesBuilder.instance().ohlcv(dohlcv).closeUpSeries().color(Color.WHITE))
-    .series(VolumeXYTimeSeriesBuilder.instance().ohlcv(dohlcv).closeDownSeries().color(Color.RED))
-    .series(XYTimeSeriesBuilder.instance().name("MA(90)").data(volSma90).color(Color.BLUE).style(SOLID_LINE))
-    .annotation(XYArrowBuilder.instance().x(stockEventDate).y(stockEventVolume).angle(270.0).color(DARK_GREEN)
+  .xyPlot(VolumeXYPlotBuilder.get().yAxisName("Volume").plotWeight(1)
+    .series(VolumeXYTimeSeriesBuilder.get().ohlcv(dohlcv).closeUpSeries().color(Color.WHITE))
+    .series(VolumeXYTimeSeriesBuilder.get().ohlcv(dohlcv).closeDownSeries().color(Color.RED))
+    .series(XYTimeSeriesBuilder.get().name("MA(90)").data(volSma90).color(Color.BLUE).style(SOLID_LINE))
+    .annotation(XYArrowBuilder.get().x(stockEventDate).y(stockEventVolume).angle(270.0).color(DARK_GREEN)
       .textAlign(TextAnchor.BOTTOM_CENTER).text(String.format("%.0f", stockEventVolume)))
-    .line(LineBuilder.instance().orientation(Orientation.HORIZONTAL).atValue(volumeLine)
+    .line(LineBuilder.get().horizontal().at(volumeLine)
     .color(DARK_GREEN).style(SOLID_LINE)))
 
-  .xyPlot(XYPlotBuilder.instance().yAxisName("Stoch").yAxisRange(0.0, 100.0).yAxisTickSize(50.0).plotWeight(1)
-    .series(XYTimeSeriesBuilder.instance().name("K(" + K + ")").data(stoch.getPctK()).color(Color.RED).style(SOLID_LINE))
-    .series(XYTimeSeriesBuilder.instance().name("D(" + D + ")").data(stoch.getPctD()).color(Color.BLUE).style(SOLID_LINE))
-    .line(LineBuilder.instance().orientation(Orientation.HORIZONTAL).atValue(80.0).color(Color.BLACK).style(SOLID_LINE))
-    .line(LineBuilder.instance().orientation(Orientation.HORIZONTAL).atValue(50.0).color(Color.BLUE).style(SOLID_LINE))
-    .line(LineBuilder.instance().orientation(Orientation.HORIZONTAL).atValue(20.0).color(Color.BLACK).style(SOLID_LINE)))
+  .xyPlot(XYPlotBuilder.get().yAxisName("Stoch").yAxisRange(0.0, 100.0).yAxisTickSize(50.0).plotWeight(1)
+    .series(XYTimeSeriesBuilder.get().name("K(" + K + ")").data(stoch.getPctK()).color(Color.RED).style(SOLID_LINE))
+    .series(XYTimeSeriesBuilder.get().name("D(" + D + ")").data(stoch.getPctD()).color(Color.BLUE).style(SOLID_LINE))
+    .line(LineBuilder.get().horizontal().at(80.0).color(Color.BLACK).style(SOLID_LINE))
+    .line(LineBuilder.get().horizontal().at(50.0).color(Color.BLUE).style(SOLID_LINE))
+    .line(LineBuilder.get().horizontal().at(20.0).color(Color.BLACK).style(SOLID_LINE)))
 
   .build()
 ```

@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2020, by Matt E.
+ * (C) Copyright 2020, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -144,7 +144,7 @@ public interface IXYPlotBuilder<T extends IXYPlotBuilder<T>> {
   /**
    * Builds the XYPlot from all configured data and properties.
    * 
-   * @return New instance of an XYPlot corresponding to all configured data and properties.
+   * @return New instance of an XYPlot corresponding to all configured data and properties
    * @throws IllegalStateException If a XYTimeSeriesBuilder or LineBuilder are not configured,
    *         possibly if at least one XYTimeSeriesBuilder or LineBuilder are not of a specifically
    *         needed sub-type based on the implementation, if a time axis was not set, or if time

@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2020, by Matt E.
+ * (C) Copyright 2020, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -53,7 +53,7 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
    * 
    * @return New instance of this class
    */
-  public static XYPlotBuilder instance() {
+  public static XYPlotBuilder get() {
     return new XYPlotBuilder();
   }
 

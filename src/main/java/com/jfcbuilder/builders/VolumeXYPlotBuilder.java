@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2020, by Matt E.
+ * (C) Copyright 2020, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -71,7 +71,7 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
    * 
    * @return New instance of this class
    */
-  public static VolumeXYPlotBuilder instance() {
+  public static VolumeXYPlotBuilder get() {
     return new VolumeXYPlotBuilder();
   }
 
@@ -363,7 +363,7 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
   }
 
   private XYBarRenderer createXYBarRenderer(Color fillColor, Color outlineColor) {
-    return XYBarRendererBuilder.instance().fillColor(fillColor).outlineColor(outlineColor).build();
+    return XYBarRendererBuilder.get().fillColor(fillColor).outlineColor(outlineColor).build();
   }
 
 }
