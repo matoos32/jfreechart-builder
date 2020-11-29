@@ -20,8 +20,6 @@
 
 package com.jfcbuilder.builders;
 
-import java.util.List;
-
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.axis.ValueAxis;
@@ -96,6 +94,12 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
   }
 
   @Override
+  public XYPlotBuilder annotation(IXYAnnotationBuilder<?> annotation) {
+    elements.annotation(annotation);
+    return this;
+  }
+
+  @Override
   public XYPlotBuilder plotWeight(int weight) {
     elements.plotWeight(weight);
     return this;
@@ -129,8 +133,6 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
 
     elements.checkBuildPreconditions();
 
-    final List<IXYTimeSeriesBuilder<?>> seriesBuilders = elements.unmodifiableSeries();
-    final List<LineBuilder> lineBuilders = elements.unmodifiableLines();
     final ValueAxis xAxis = elements.xAxis();
     final long[] timeData = elements.timeData();
 
@@ -144,7 +146,7 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
 
     final ZeroBasedIndexRange indexRange = elements.indexRange();
 
-    for (IXYTimeSeriesBuilder<?> builder : seriesBuilders) {
+    for (IXYTimeSeriesBuilder<?> builder : elements.unmodifiableSeries()) {
 
       builder.indexRange(indexRange);
       builder.timeData(timeData);
@@ -177,7 +179,7 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
 
     final XYPlot plot = new XYPlot(collection, xAxis, yAxis, renderer);
 
-    for (LineBuilder builder : lineBuilders) {
+    for (LineBuilder builder : elements.unmodifiableLines()) {
       ValueMarker line = builder.build();
 
       yMax = Math.max(yMax, line.getValue());
@@ -188,6 +190,11 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
       } else {
         plot.addDomainMarker(line);
       }
+    }
+
+    for (IXYAnnotationBuilder<?> builder : elements.unmodifiableAnnotations()) {
+      // Annotations don't have ability to get their max/min y-value to adjust y-axis range :(
+      plot.addAnnotation(builder.build());
     }
 
     if (elements.yAxisRange() != null) {
@@ -204,4 +211,5 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
 
     return plot;
   }
+
 }

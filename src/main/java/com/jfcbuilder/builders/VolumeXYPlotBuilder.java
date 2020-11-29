@@ -21,7 +21,6 @@
 package com.jfcbuilder.builders;
 
 import java.awt.Color;
-import java.util.List;
 
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
@@ -182,6 +181,12 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
   }
 
   @Override
+  public VolumeXYPlotBuilder annotation(IXYAnnotationBuilder<?> annotation) {
+    elements.annotation(annotation);
+    return this;
+  }
+
+  @Override
   public VolumeXYPlotBuilder plotWeight(int weight) {
     elements.plotWeight(weight);
     return this;
@@ -216,8 +221,6 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
 
     elements.checkBuildPreconditions();
 
-    final List<IXYTimeSeriesBuilder<?>> seriesBuilders = elements.unmodifiableSeries();
-    final List<LineBuilder> lineBuilders = elements.unmodifiableLines();
     final ValueAxis xAxis = elements.xAxis();
     final long[] timeData = elements.timeData();
 
@@ -231,7 +234,7 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
 
     final ZeroBasedIndexRange indexRange = elements.indexRange();
 
-    for (IXYTimeSeriesBuilder<?> builder : seriesBuilders) {
+    for (IXYTimeSeriesBuilder<?> builder : elements.unmodifiableSeries()) {
 
       builder.indexRange(indexRange);
       builder.timeData(timeData);
@@ -256,19 +259,6 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
     final NumberAxis yAxis = new NumberAxis(elements.yAxisName() + axisSubName.toString());
 
     final XYPlot plot = new XYPlot(xyCollection, xAxis, yAxis, stdXRenderer);
-
-    for (LineBuilder line : lineBuilders) {
-      ValueMarker marker = line.build();
-
-      if (line.orientation() == Orientation.HORIZONTAL) {
-        yMax = Math.max(yMax, marker.getValue());
-        yMin = Math.min(yMin, marker.getValue());
-        plot.addRangeMarker(marker);
-      } else {
-        // Vertical lines have infinite y-value so don't count them in y-min/max
-        plot.addDomainMarker(marker);
-      }
-    }
 
     if (uniformVolSeriesBuilder != null) {
 
@@ -330,6 +320,24 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
       plot.setDataset(datasetIndex, volDownCollection);
       plot.setRenderer(datasetIndex, volDownRenderer, false);
 
+    }
+
+    for (LineBuilder line : elements.unmodifiableLines()) {
+      ValueMarker marker = line.build();
+
+      if (line.orientation() == Orientation.HORIZONTAL) {
+        yMax = Math.max(yMax, marker.getValue());
+        yMin = Math.min(yMin, marker.getValue());
+        plot.addRangeMarker(marker);
+      } else {
+        // Vertical lines have infinite y-value so don't count them in y-min/max
+        plot.addDomainMarker(marker);
+      }
+    }
+
+    for (IXYAnnotationBuilder<?> builder : elements.unmodifiableAnnotations()) {
+      // Annotations don't have ability to get their max/min y-value to adjust y-axis range :(
+      plot.addAnnotation(builder.build());
     }
 
     yAxis.setMinorTickMarksVisible(true);

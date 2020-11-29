@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.CandlestickRenderer;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
@@ -34,6 +35,7 @@ import org.jfree.data.xy.XYDataset;
 
 import com.jfcbuilder.builders.renderers.CandlestickRendererBuilder;
 import com.jfcbuilder.builders.types.BuilderConstants;
+import com.jfcbuilder.builders.types.Orientation;
 import com.jfcbuilder.builders.types.ZeroBasedIndexRange;
 
 /**
@@ -120,6 +122,12 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
   @Override
   public OhlcPlotBuilder line(LineBuilder line) {
     elements.line(line);
+    return this;
+  }
+
+  @Override
+  public OhlcPlotBuilder annotation(IXYAnnotationBuilder<?> annotation) {
+    elements.annotation(annotation);
     return this;
   }
 
@@ -222,6 +230,21 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
             axisSubName.append(' ').append(series.getKey().toString());
           }
         }
+      }
+
+      for (LineBuilder builder : elements.unmodifiableLines()) {
+        ValueMarker line = builder.build();
+
+        if (builder.orientation() == Orientation.HORIZONTAL) {
+          plot.addRangeMarker(line);
+        } else {
+          plot.addDomainMarker(line);
+        }
+      }
+
+      for (IXYAnnotationBuilder<?> builder : elements.unmodifiableAnnotations()) {
+        // Annotations don't have ability to get their max/min y-value to adjust y-axis range :(
+        plot.addAnnotation(builder.build());
       }
 
       yAxis.setLabel(elements.yAxisName() + axisSubName.toString());

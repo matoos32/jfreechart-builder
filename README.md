@@ -4,38 +4,73 @@ A [builder pattern](https://en.wikipedia.org/wiki/Builder_pattern) module for wo
 
 Takes an opinionated approach to creating "good enough" charts while providing a more declarative way of parameterizing them.
 
+
+## Capabilities
+
+* XY time series plots using a [CombinedDomainXYPlot](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/plot/CombinedDomainXYPlot.java) in all cases. This produces left-to-right horizontal time axes and vertical value axes. The time axis is meant to be shared by all sub-plots. If you need different time axes then you'll need to `build()` multiple charts and lay those out as desired in your app.
+
+* Stock market OHLC candlestick charts
+
+* Stock market volume bar charts
+
+* Stright lines
+
+* Annotations (arrows and text)
+
+In the future, more parameterization may be added like specifying background and axis colors, or even the actual series renderer objects themselves to fully leverage what [jfreechart](https://github.com/jfree/jfreechart) provides.
+
+## Samples
+
 Code like this:
 
 ```
-public static final Stroke SOLID =
-    new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND);
+ChartBuilder.instance()
+  .title("Simple Time Series With Annotations")
+  .timeData(timeArray)
+  .xyPlot(XYPlotBuilder.instance()
+    .series(XYTimeSeriesBuilder.instance().name("Amplitude").data(array1).color(Color.BLUE).style(SOLID_LINE))
+    .annotation(XYArrowBuilder.instance().x(arrowX).y(arrowY).angle(180.0).color(Color.RED).text(arrowTxt))
+    .annotation(XYArrowBuilder.instance().x(arrowX).y(arrowY).angle(0.0).color(Color.RED))
+    .annotation(XYTextBuilder.instance().x(arrowX).y(arrowY).color(DARK_GREEN)
+      .text("This value!").textPaddingLeft(5).textAlign(TextAnchor.BASELINE_LEFT).angle(90.0)))
+  .build()
+```
+
+Produces a chart like this:
+
+![A multi-plot minute time series chart](./screenshots/simple-time-series-with-annotations.png "Screenshot")
+
+Multiple series can be multi-plotted like this:
+
+```
+public static final Stroke SOLID = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND);
 
 private static final Color DARK_GREEN = new Color(0, 150, 0);
 
 ChartBuilder.instance()
 
-    .title("Multi Plot Minute Time Series")
+  .title("Multi Plot Minute Time Series")
 
-    .timeData(timestampsArray)
+  .timeData(timeArray)
 
-    .xyPlot(XYPlotBuilder.instance().yAxisName("Values")
-        .series(XYTimeSeriesBuilder.instance().data(array1).color(Color.BLUE).style(SOLID))
-        .series(XYTimeSeriesBuilder.instance().data(array2).color(Color.RED).style(SOLID))
-        .series(XYTimeSeriesBuilder.instance().data(array3).color(DARK_GREEN).style(SOLID))
-        .series(XYTimeSeriesBuilder.instance().data(array4).color(Color.MAGENTA).style(SOLID)))
+  .xyPlot(XYPlotBuilder.instance().yAxisName("Values")
+    .series(XYTimeSeriesBuilder.instance().data(array1).color(Color.BLUE).style(SOLID))
+    .series(XYTimeSeriesBuilder.instance().data(array2).color(Color.RED).style(SOLID))
+    .series(XYTimeSeriesBuilder.instance().data(array3).color(DARK_GREEN).style(SOLID))
+    .series(XYTimeSeriesBuilder.instance().data(array4).color(Color.MAGENTA).style(SOLID)))
 
-    .xyPlot(XYPlotBuilder.instance().yAxisName("Amplitudes")
-        .series(XYTimeSeriesBuilder.instance().data(array2).color(Color.GRAY).style(SOLID))
-        .series(XYTimeSeriesBuilder.instance().data(array3).color(Color.LIGHT_GRAY).style(SOLID)))
+  .xyPlot(XYPlotBuilder.instance().yAxisName("Amplitudes")
+    .series(XYTimeSeriesBuilder.instance().data(array2).color(Color.GRAY).style(SOLID))
+    .series(XYTimeSeriesBuilder.instance().data(array3).color(Color.LIGHT_GRAY).style(SOLID)))
 
-    .xyPlot(XYPlotBuilder.instance().yAxisName("Series 1")
-        .series(XYTimeSeriesBuilder.instance().data(array1).color(Color.BLUE).style(SOLID)))
+  .xyPlot(XYPlotBuilder.instance().yAxisName("Series 1")
+    .series(XYTimeSeriesBuilder.instance().data(array1).color(Color.BLUE).style(SOLID)))
 
-    .xyPlot(XYPlotBuilder.instance().yAxisName("Series 2")
-        .series(XYTimeSeriesBuilder.instance().data(array2).color(Color.RED).style(SOLID)))
+  .xyPlot(XYPlotBuilder.instance().yAxisName("Series 2")
+    .series(XYTimeSeriesBuilder.instance().data(array2).color(Color.RED).style(SOLID)))
 
-    .xyPlot(XYPlotBuilder.instance().yAxisName("Series 3")
-        .series(XYTimeSeriesBuilder.instance().data(array3).color(DARK_GREEN).style(SOLID)))
+  .xyPlot(XYPlotBuilder.instance().yAxisName("Series 3")
+    .series(XYTimeSeriesBuilder.instance().data(array3).color(DARK_GREEN).style(SOLID)))
 
 .build()
 ```
@@ -44,34 +79,41 @@ Produces a chart like this:
 
 ![A multi-plot minute time series chart](./screenshots/multi-plot-minute-time-series.png "Screenshot")
 
-And code like this:
+Stock chart code and data like this:
 
 ```
 ChartBuilder.instance()
 
-    .title("Stock Chart Time Series With Weekend Gaps")
+  .title("Stock Chart Time Series With Weekend Gaps, Lines, and Annotations")
+  .timeData(timeArray)
 
-    .timeData(timestampsArray) // Has weekend date timestamps missing
+  .xyPlot(OhlcPlotBuilder.instance().yAxisName("Price").plotWeight(3)
+    .series(OhlcSeriesBuilder.instance().ohlcv(dohlcv).upColor(Color.WHITE).downColor(Color.RED))
+    .series(XYTimeSeriesBuilder.instance().name("MA(20)").data(sma20).color(Color.MAGENTA).style(SOLID_LINE))
+    .series(XYTimeSeriesBuilder.instance().name("MA(50)").data(sma50).color(Color.BLUE).style(SOLID_LINE))
+    .series(XYTimeSeriesBuilder.instance().name("MA(200)").data(sma200).color(Color.RED).style(SOLID_LINE))
+    .annotation(XYArrowBuilder.instance().x(stockEventDate).y(stockEventPrice).angle(270.0).color(DARK_GREEN)
+      .textAlign(TextAnchor.BOTTOM_CENTER).text(String.format("%.2f", stockEventPrice)))
+    .line(LineBuilder.instance().orientation(Orientation.HORIZONTAL).atValue(resistanceLevel)
+    .color(Color.LIGHT_GRAY).style(SOLID_LINE)))
 
-    .xyPlot(OhlcPlotBuilder.instance().yAxisName("Price").plotWeight(3)
-        .series(OhlcSeriesBuilder.instance().ohlcv(ohlcv).upColor(Color.WHITE).downColor(Color.RED))
-        .series(XYTimeSeriesBuilder.instance().name("MA(20)").data(sma20).color(Color.MAGENTA).style(SOLID))
-        .series(XYTimeSeriesBuilder.instance().name("MA(50)").data(sma50).color(Color.BLUE).style(SOLID))
-        .series(XYTimeSeriesBuilder.instance().name("MA(200)").data(sma200).color(Color.RED).style(SOLID)))
+  .xyPlot(VolumeXYPlotBuilder.instance().yAxisName("Volume").plotWeight(1)
+    .series(VolumeXYTimeSeriesBuilder.instance().ohlcv(dohlcv).closeUpSeries().color(Color.WHITE))
+    .series(VolumeXYTimeSeriesBuilder.instance().ohlcv(dohlcv).closeDownSeries().color(Color.RED))
+    .series(XYTimeSeriesBuilder.instance().name("MA(90)").data(volSma90).color(Color.BLUE).style(SOLID_LINE))
+    .annotation(XYArrowBuilder.instance().x(stockEventDate).y(stockEventVolume).angle(270.0).color(DARK_GREEN)
+      .textAlign(TextAnchor.BOTTOM_CENTER).text(String.format("%.0f", stockEventVolume)))
+    .line(LineBuilder.instance().orientation(Orientation.HORIZONTAL).atValue(volumeLine)
+    .color(DARK_GREEN).style(SOLID_LINE)))
 
-    .xyPlot(VolumeXYPlotBuilder.instance().yAxisName("Volume")
-        .series(VolumeXYTimeSeriesBuilder.instance().ohlcv(ohlcv).closeUpSeries().color(Color.WHITE))
-        .series(VolumeXYTimeSeriesBuilder.instance().ohlcv(ohlcv).closeDownSeries().color(Color.RED))
-        .series(XYTimeSeriesBuilder.instance().name("MA(90)").data(volSma90).color(Color.BLUE).style(SOLID)))
+  .xyPlot(XYPlotBuilder.instance().yAxisName("Stoch").yAxisRange(0.0, 100.0).yAxisTickSize(50.0).plotWeight(1)
+    .series(XYTimeSeriesBuilder.instance().name("K(" + K + ")").data(stoch.getPctK()).color(Color.RED).style(SOLID_LINE))
+    .series(XYTimeSeriesBuilder.instance().name("D(" + D + ")").data(stoch.getPctD()).color(Color.BLUE).style(SOLID_LINE))
+    .line(LineBuilder.instance().orientation(Orientation.HORIZONTAL).atValue(80.0).color(Color.BLACK).style(SOLID_LINE))
+    .line(LineBuilder.instance().orientation(Orientation.HORIZONTAL).atValue(50.0).color(Color.BLUE).style(SOLID_LINE))
+    .line(LineBuilder.instance().orientation(Orientation.HORIZONTAL).atValue(20.0).color(Color.BLACK).style(SOLID_LINE)))
 
-    .xyPlot(XYPlotBuilder.instance().yAxisName("Stoch").yAxisRange(0.0, 100.0).yAxisTickSize(50.0)
-        .series(XYTimeSeriesBuilder.instance().name("K(" + K + ")").data(stochK).color(Color.RED).style(SOLID))
-        .series(XYTimeSeriesBuilder.instance().name("D(" + D + ")").data(stochD).color(Color.BLUE).style(SOLID))
-        .line(LineBuilder.instance().orientation(Orientation.HORIZONTAL).atValue(80.0).color(Color.BLACK).style(SOLID))
-        .line(LineBuilder.instance().orientation(Orientation.HORIZONTAL).atValue(50.0).color(Color.BLUE).style(SOLID))
-        .line(LineBuilder.instance().orientation(Orientation.HORIZONTAL).atValue(20.0).color(Color.BLACK).style(SOLID)))
-
-    .build()
+  .build()
 ```
 
 Produces a chart like this:
@@ -83,18 +125,10 @@ Produces a chart like this:
 
 See the [jfreechart-builder-demo](https://github.com/matoos32/jfreechart-builder-demo) for an interactive demo used for development.
 
-## Scope
-
-Currently only supports XY time series plots and uses a [CombinedDomainXYPlot](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/plot/CombinedDomainXYPlot.java) in all cases. This produces left-to-right horizontal time axes and vertical value axes. The time axis is meant to be shared by all sub-plots. If you need different time axes then you'll need to `build()` multiple charts and lay those out as desired in your app.
-
-Currently also only supports lines, stock market OHLC candlestick charts, and stock market volume bar charts.
-
-In the future, more parameterization may be added like specifying background and axis colors, or even the actual series renderer objects themselves to fully leverage what [jfreechart](https://github.com/jfree/jfreechart) provides.
-
 
 ## Thread-safety and garbage collection
 
-No thread-safety measures are deliberately taken. If you require thread-safety then either provide deep copies of parameter objects or or synchronize access to builders and data vs. what your app is doing.
+No thread-safety measures are deliberately taken. If you require thread-safety then provide deep copies of objects, don't share builders, don't share charts, or add synchronization to your business logic.
 
 Generally, primitive data arrays are copied into **jfreechart** objects. **jfreechart-builder** will maintain references to other objects passed-in like strings, colors, and drawing strokes. When the builders and charts they produce go out of scope,
 the objects you provided (and other objects that may be referencing them) should be garbage collected as applicable.
@@ -102,16 +136,16 @@ the objects you provided (and other objects that may be referencing them) should
 
 ## Versioning
 
-The major and minor numbers are the same as the **jfreechart** major and minor used. This is to indicate general compatibility. The incremental ("patch") number is the version of this module.
+The major and minor numbers are the same as the **jfreechart** major and minor to denote what version is compatible. The incremental ("patch") number is the monolithic version number of **jfreechart-builder**.
 
 
 ## License
 
 **jfreechart-builder** is not affiliated with the **jfreechart** project but for compatibility is provided under the terms of the same [LGPL 2.1 license](./license-LGPL.txt).
 
-You should be aware of the contents of the **jfreechart-builder** JAR file built form this project.
+You should be aware of the contents of the **jfreechart-builder** JAR file built from this project.
 
-It's understood it will contain the compiled `.class` files of only **jfreechart-builder** and should not incorporate any from **jfreechart**, however you must verify its contents to know what your build tools are actually producing.
+It should contain the compiled `.class` files only of **jfreechart-builder** and should not incorporate any from **jfreechart**, however you must verify its contents to know what the build tools are actually producing.
 
 If you need clarification on the LGPL vs. Java, please see the [FSF's tech note about it](https://www.gnu.org/licenses/lgpl-java.html).
 
@@ -126,16 +160,18 @@ If you need clarification on the LGPL vs. Java, please see the [FSF's tech note 
 
 ### Installing source code
 
-`git clone` this repo locally.
+```
+git clone <repo URL>
+```
 
 
 ### Building and installing the JAR
 
 ```
 cd path/to/the/cloned/repo
-```
 
-Next, use `git` to checkout the desired branch or tag.
+git checkout <desired branch or tag>
+```
 
 If you want to simply build the jar and figure out what to do with it next ...
 
@@ -168,4 +204,4 @@ Add this dependency to your project's `.pom` file:
 
 ## Contributing
 
-Contributions are welcome. The project maintainers' time permitting, merge/pull requests will be reviewed. If accepted they will be merged. No guarantees are made that requests will be reviewed or merged.
+Contributions are welcome and will be accepted as the maintainers' time permits.
