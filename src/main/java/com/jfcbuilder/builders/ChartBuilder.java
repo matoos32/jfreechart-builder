@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2020, by Matt E.
+ * (C) Copyright 2020, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -70,7 +70,7 @@ public class ChartBuilder {
    * 
    * @return New instance of this class
    */
-  public static ChartBuilder instance() {
+  public static ChartBuilder get() {
     return new ChartBuilder();
   }
 
@@ -146,8 +146,8 @@ public class ChartBuilder {
   /**
    * Builds the JFreeChart using all configured settings.
    * 
-   * @return New instance of a JFreeChart corresponding to all configured data sets and settings.
-   * @throws IllegalStateException If time data to be shared by all plots was not set.
+   * @return New instance of a JFreeChart corresponding to all configured data sets and settings
+   * @throws IllegalStateException If time data to be shared by all plots was not set
    */
   public JFreeChart build() {
 

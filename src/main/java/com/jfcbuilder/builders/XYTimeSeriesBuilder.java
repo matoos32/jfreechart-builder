@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2020, by Matt E.
+ * (C) Copyright 2020, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,7 +49,7 @@ public class XYTimeSeriesBuilder implements IXYTimeSeriesBuilder<XYTimeSeriesBui
    * 
    * @return New instance of this class
    */
-  public static XYTimeSeriesBuilder instance() {
+  public static XYTimeSeriesBuilder get() {
     return new XYTimeSeriesBuilder();
   }
 

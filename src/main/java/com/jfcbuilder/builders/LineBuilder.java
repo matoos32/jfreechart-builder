@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2020, by Matt E.
+ * (C) Copyright 2020, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -55,7 +55,7 @@ public class LineBuilder {
    * 
    * @return New instance of this class
    */
-  public static LineBuilder instance() {
+  public static LineBuilder get() {
     return new LineBuilder();
   }
 
@@ -71,6 +71,26 @@ public class LineBuilder {
   }
 
   /**
+   * Sets the orientation of the line to horizontal.
+   * 
+   * @return Reference to this builder for chaining method calls
+   */
+  public LineBuilder horizontal() {
+    this.orientation = Orientation.HORIZONTAL;
+    return this;
+  }
+  
+  /**
+   * Sets the orientation of the line to vertical.
+   * 
+   * @return Reference to this builder for chaining method calls
+   */
+  public LineBuilder vertical() {
+    this.orientation = Orientation.VERTICAL;
+    return this;
+  }
+  
+  /**
    * Gets the currently configured line orientation
    * 
    * @return The configured orientation
@@ -85,7 +105,7 @@ public class LineBuilder {
    * @param value The desired line value
    * @return Reference to this builder for chaining method calls
    */
-  public LineBuilder atValue(double value) {
+  public LineBuilder at(double value) {
     this.value = value;
     return this;
   }

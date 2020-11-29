@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2020, by Matt E.
+ * (C) Copyright 2020, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -63,7 +63,7 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
    * 
    * @return New instance of this class
    */
-  public static OhlcPlotBuilder instance() {
+  public static OhlcPlotBuilder get() {
     return new OhlcPlotBuilder();
   }
 
@@ -175,7 +175,7 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
   /**
    * Builds the DOHLC plot. The DOHLC series is shown behind all other series that were added.
    * 
-   * @return New instance of an plot corresponding to all configured data sets and settings.
+   * @return New instance of an plot corresponding to all configured data sets and settings
    * @throws IllegalStateException If an OhlcSeriesBuilder, if time axis was not set, or if time
    *         data was not set.
    */
@@ -285,7 +285,7 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
     Color downColor = (ohlcSeriesBuilder != null) ? ohlcSeriesBuilder.downColor()
         : BuilderConstants.DEFAULT_DOWN_COLOR;
 
-    return CandlestickRendererBuilder.instance().upColor(upColor).downColor(downColor).build();
+    return CandlestickRendererBuilder.get().upColor(upColor).downColor(downColor).build();
   }
 
 }

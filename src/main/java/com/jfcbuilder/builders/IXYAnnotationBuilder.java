@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2020, by Matt E.
+ * (C) Copyright 2020, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -99,9 +99,9 @@ public interface IXYAnnotationBuilder<T extends IXYAnnotationBuilder<T>> {
   /**
    * Builds the XYAnnotation from all configured data and properties.
    * 
-   * @return New instance of an XYAnnotation corresponding to all configured data and properties.
+   * @return New instance of an XYAnnotation corresponding to all configured data and properties
    * @throws IllegalStateException If the builder is missing properties when {@code build()} is
-   *         called.
+   *         called
    */
   XYAnnotation build() throws IllegalStateException;
 }
