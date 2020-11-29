@@ -227,10 +227,9 @@ public class XYAnnotationElements {
    */
   public String paddedText() {
 
-    // TODO: Can this be made more efficient? Strings.repeat() below may use a new StringBuilder
-    // each call. Strings are also accumulated with += .. would StringBuilder be better for such
-    // a low number of +=? How does this fare for huge numbers of annotations and/or charts
-    // being generated in bulk?
+    // TODO: Can and should this be made more efficient? Strings are accumulated with +=
+    // would StringBuilder be better for such a low number of +=? How does this
+    // fare for huge numbers of annotations and/or charts being generated in bulk?
 
     String label = "";
 
