@@ -126,6 +126,59 @@ Produces a chart like this:
 See the [jfreechart-builder-demo](https://github.com/matoos32/jfreechart-builder-demo) for an interactive demo used for development.
 
 
+## Incorporating into your project
+
+
+### Building Prerequisites
+
+* JDK 8 or greater [[1](https://openjdk.java.net/)] [[2](https://www.oracle.com/java/)] installed.
+* [Apache Maven](https://maven.apache.org/) installed.
+* Internet connection so Maven can download artifacts or you provide and install those into your local Maven repo by alternative means.
+
+
+### Installing source code
+
+```
+git clone <repo URL>
+```
+
+
+### Building and installing the JAR
+
+```
+cd path/to/the/cloned/repo
+
+git checkout <desired branch or tag>
+```
+
+To simply build the jar and figure out what to do with it next:
+
+```
+mvn package
+```
+
+The jar will be in the `target/` folder.
+
+
+To build and install the jar into your Maven repo:
+
+```
+mvn install
+```
+
+
+### Including the dependency in a client project
+
+Add this dependency to your project's `.pom` file:
+
+```
+<dependency>
+  <groupId>com.jfcbuilder</groupId>
+  <artifactId>jfreechart-builder</artifactId>
+  <version>1.5.0</version>
+<dependency>
+```
+
 ## Thread-safety and garbage collection
 
 No thread-safety measures are deliberately taken. If you require thread-safety then provide deep copies of objects, don't share builders, don't share charts, or add synchronization to your business logic.
@@ -148,58 +201,6 @@ You should be aware of the contents of the **jfreechart-builder** JAR file built
 It should contain the compiled `.class` files only of **jfreechart-builder** and should not incorporate any from **jfreechart**, however you must verify its contents to know what the build tools are actually producing.
 
 If you need clarification on the LGPL vs. Java, please see the [FSF's tech note about it](https://www.gnu.org/licenses/lgpl-java.html).
-
-
-## Incorporating into your project
-
-### Building Prerequisites
-
-* JDK 8 or greater [[1](https://openjdk.java.net/)] [[2](https://www.oracle.com/java/)] installed.
-* [Apache Maven](https://maven.apache.org/) installed.
-* Internet connection so Maven can download artifacts or you provide and install those into your local Maven repo by alternative means.
-
-### Installing source code
-
-```
-git clone <repo URL>
-```
-
-
-### Building and installing the JAR
-
-```
-cd path/to/the/cloned/repo
-
-git checkout <desired branch or tag>
-```
-
-If you want to simply build the jar and figure out what to do with it next ...
-
-```
-mvn package
-```
-
-The jar will be in the `target/` folder.
-
-
-If you want to build and install the jar into your Maven repo:
-
-```
-mvn install
-```
-
-
-### Including the dependency in a client project
-
-Add this dependency to your project's `.pom` file:
-
-```
-<dependency>
-  <groupId>com.jfcbuilder</groupId>
-  <artifactId>jfreechart-builder</artifactId>
-  <version>1.5.0</version>
-<dependency>
-```
 
 
 ## Contributing
