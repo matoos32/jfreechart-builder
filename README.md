@@ -126,10 +126,22 @@ Produces a chart like this:
 See the [jfreechart-builder-demo](https://github.com/matoos32/jfreechart-builder-demo) for an interactive demo used for development.
 
 
+## Versioning
+
+The major and minor numbers are the same as the **jfreechart** major and minor to denote what version is compatible. The incremental ("patch") number is the monolithic version number of **jfreechart-builder**.
+
+
+## Branching model
+
+If you want the latest and greatest contributions use the `develop` branch. These commits have not yet been merged into `main` nor received a version tag, but give you a preview of what's to come.
+
+Each time `develop` is merged into `main`, a version tag is added onto that merge commit so that each commit to `main` represents the next version.
+
+
 ## Incorporating into your project
 
 
-### Building Prerequisites
+### Prerequisites
 
 * JDK 8 or greater [[1](https://openjdk.java.net/)] [[2](https://www.oracle.com/java/)] installed.
 * [Apache Maven](https://maven.apache.org/) installed.
@@ -175,7 +187,7 @@ Add this dependency to your project's `.pom` file:
 <dependency>
   <groupId>com.jfcbuilder</groupId>
   <artifactId>jfreechart-builder</artifactId>
-  <version>1.5.0</version>
+  <version>1.5.1</version>
 <dependency>
 ```
 
@@ -185,11 +197,6 @@ No thread-safety measures are deliberately taken. If you require thread-safety t
 
 Generally, primitive data arrays are copied into **jfreechart** objects. **jfreechart-builder** will maintain references to other objects passed-in like strings, colors, and drawing strokes. When the builders and charts they produce go out of scope,
 the objects you provided (and other objects that may be referencing them) should be garbage collected as applicable.
-
-
-## Versioning
-
-The major and minor numbers are the same as the **jfreechart** major and minor to denote what version is compatible. The incremental ("patch") number is the monolithic version number of **jfreechart-builder**.
 
 
 ## License
@@ -206,3 +213,5 @@ If you need clarification on the LGPL vs. Java, please see the [FSF's tech note 
 ## Contributing
 
 Contributions are welcome and will be accepted as the maintainers' time permits.
+
+Please use indentations of two spaces (no tabs) and wrap lines at a max width of 100 characters.
