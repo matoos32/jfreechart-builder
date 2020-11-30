@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2020, by Matt E.
+ * (C) Copyright 2020, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -48,6 +48,7 @@ public class XYTimeSeriesPlotBuilderElements {
   private List<IXYTimeSeriesBuilder<?>> seriesBuilders;
   private List<IXYDatasetBuilder<?>> datasetBuilders;
   private List<LineBuilder> lineBuilders;
+  private List<IXYAnnotationBuilder<?>> annotationBuilders;
   private ValueAxis xAxis;
   private long[] timeData;
   private ZeroBasedIndexRange indexRange;
@@ -63,6 +64,7 @@ public class XYTimeSeriesPlotBuilderElements {
     seriesBuilders = new ArrayList<>();
     datasetBuilders = new ArrayList<>();
     lineBuilders = new ArrayList<>();
+    annotationBuilders = new ArrayList<>();
     xAxis = null;
     timeData = null;
     indexRange = null;
@@ -108,7 +110,7 @@ public class XYTimeSeriesPlotBuilderElements {
   public ValueAxis xAxis() {
     return xAxis;
   }
-  
+
   /**
    * Sets the time data to be used with all data series. Values should be in ascending order and
    * representing milliseconds since the epoch start.
@@ -187,6 +189,26 @@ public class XYTimeSeriesPlotBuilderElements {
    */
   public List<LineBuilder> unmodifiableLines() {
     return Collections.unmodifiableList(lineBuilders);
+  }
+
+  /**
+   * Registers an IXYAnnotationBuilder to be used for building the plot.
+   * 
+   * @param annotation The builder to be registered
+   */
+  public void annotation(IXYAnnotationBuilder<?> annotation) {
+    if (annotation != null) {
+      annotationBuilders.add(annotation);
+    }
+  }
+
+  /**
+   * Gets an unmodifiable list of the annotation builders to be used for building the plot.
+   * 
+   * @return The unmodifiable list of annotation builders
+   */
+  public List<IXYAnnotationBuilder<?>> unmodifiableAnnotations() {
+    return Collections.unmodifiableList(annotationBuilders);
   }
 
   /**

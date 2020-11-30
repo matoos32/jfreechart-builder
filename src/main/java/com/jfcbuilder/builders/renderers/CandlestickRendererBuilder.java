@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2020, by Matt E.
+ * (C) Copyright 2020, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -40,7 +40,7 @@ public class CandlestickRendererBuilder {
     downColor = BuilderConstants.DEFAULT_DOWN_COLOR;
   }
 
-  public static CandlestickRendererBuilder instance() {
+  public static CandlestickRendererBuilder get() {
     return new CandlestickRendererBuilder();
   }
 

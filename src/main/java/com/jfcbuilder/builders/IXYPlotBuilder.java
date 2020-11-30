@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2020, by Matt E.
+ * (C) Copyright 2020, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -91,6 +91,15 @@ public interface IXYPlotBuilder<T extends IXYPlotBuilder<T>> {
   T line(LineBuilder line);
 
   /**
+   * Registers an IXYAnnotationBuilder whose {@code build()} method will be called to generate its
+   * XYAnnotation when this plot builder's {@code build()} method is called.
+   * 
+   * @param annotation The annotation builder representing the annotation that it will build
+   * @return Reference to this builder instance for method chaining
+   */
+  T annotation(IXYAnnotationBuilder<?> annotation);
+  
+  /**
    * Sets the plot weight to be attributed to the plot. A default of 1 will be used if this is not
    * set.
    * 
@@ -135,11 +144,12 @@ public interface IXYPlotBuilder<T extends IXYPlotBuilder<T>> {
   /**
    * Builds the XYPlot from all configured data and properties.
    * 
-   * @return New instance of an XYPlot corresponding to all configured data and properties.
+   * @return New instance of an XYPlot corresponding to all configured data and properties
    * @throws IllegalStateException If a XYTimeSeriesBuilder or LineBuilder are not configured,
    *         possibly if at least one XYTimeSeriesBuilder or LineBuilder are not of a specifically
    *         needed sub-type based on the implementation, if a time axis was not set, or if time
    *         data was not set.
    */
   XYPlot build() throws IllegalStateException;
+
 }

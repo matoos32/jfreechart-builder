@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2020, by Matt E.
+ * (C) Copyright 2020, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.CandlestickRenderer;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
@@ -34,6 +35,7 @@ import org.jfree.data.xy.XYDataset;
 
 import com.jfcbuilder.builders.renderers.CandlestickRendererBuilder;
 import com.jfcbuilder.builders.types.BuilderConstants;
+import com.jfcbuilder.builders.types.Orientation;
 import com.jfcbuilder.builders.types.ZeroBasedIndexRange;
 
 /**
@@ -61,7 +63,7 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
    * 
    * @return New instance of this class
    */
-  public static OhlcPlotBuilder instance() {
+  public static OhlcPlotBuilder get() {
     return new OhlcPlotBuilder();
   }
 
@@ -124,6 +126,12 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
   }
 
   @Override
+  public OhlcPlotBuilder annotation(IXYAnnotationBuilder<?> annotation) {
+    elements.annotation(annotation);
+    return this;
+  }
+
+  @Override
   public OhlcPlotBuilder plotWeight(int weight) {
     elements.plotWeight(weight);
     return this;
@@ -167,7 +175,7 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
   /**
    * Builds the DOHLC plot. The DOHLC series is shown behind all other series that were added.
    * 
-   * @return New instance of an plot corresponding to all configured data sets and settings.
+   * @return New instance of an plot corresponding to all configured data sets and settings
    * @throws IllegalStateException If an OhlcSeriesBuilder, if time axis was not set, or if time
    *         data was not set.
    */
@@ -224,6 +232,21 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
         }
       }
 
+      for (LineBuilder builder : elements.unmodifiableLines()) {
+        ValueMarker line = builder.build();
+
+        if (builder.orientation() == Orientation.HORIZONTAL) {
+          plot.addRangeMarker(line);
+        } else {
+          plot.addDomainMarker(line);
+        }
+      }
+
+      for (IXYAnnotationBuilder<?> builder : elements.unmodifiableAnnotations()) {
+        // Annotations don't have ability to get their max/min y-value to adjust y-axis range :(
+        plot.addAnnotation(builder.build());
+      }
+
       yAxis.setLabel(elements.yAxisName() + axisSubName.toString());
 
       final int seriesIndex = plot.getSeriesCount();
@@ -262,7 +285,7 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
     Color downColor = (ohlcSeriesBuilder != null) ? ohlcSeriesBuilder.downColor()
         : BuilderConstants.DEFAULT_DOWN_COLOR;
 
-    return CandlestickRendererBuilder.instance().upColor(upColor).downColor(downColor).build();
+    return CandlestickRendererBuilder.get().upColor(upColor).downColor(downColor).build();
   }
 
 }

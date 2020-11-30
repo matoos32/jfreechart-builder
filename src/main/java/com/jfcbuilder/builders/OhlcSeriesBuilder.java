@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2020, by Matt E.
+ * (C) Copyright 2020, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -62,7 +62,7 @@ public class OhlcSeriesBuilder implements IXYDatasetBuilder<OhlcSeriesBuilder> {
    * 
    * @return New instance of this class
    */
-  public static OhlcSeriesBuilder instance() {
+  public static OhlcSeriesBuilder get() {
     return new OhlcSeriesBuilder();
   }
 
