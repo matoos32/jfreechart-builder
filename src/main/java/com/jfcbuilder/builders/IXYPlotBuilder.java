@@ -20,6 +20,8 @@
 
 package com.jfcbuilder.builders;
 
+import java.awt.Paint;
+
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 
@@ -98,7 +100,7 @@ public interface IXYPlotBuilder<T extends IXYPlotBuilder<T>> {
    * @return Reference to this builder instance for method chaining
    */
   T annotation(IXYAnnotationBuilder<?> annotation);
-  
+
   /**
    * Sets the plot weight to be attributed to the plot. A default of 1 will be used if this is not
    * set.
@@ -141,6 +143,44 @@ public interface IXYPlotBuilder<T extends IXYPlotBuilder<T>> {
    */
   T yAxisTickSize(double size);
 
+  /**
+   * Sets the plot background color to use when building the plot.
+   * 
+   * @param color The color to set
+   * @return Reference to this builder instance for method chaining
+   */
+  T backgroundColor(Paint color);
+
+  /**
+   * Sets the axis font color to use when building the plot.
+   * 
+   * @param color The color to set
+   * @return Reference to this builder instance for method chaining
+   */
+  T axisFontColor(Paint color);
+
+  /**
+   * Sets the axis color to use when building the plot.
+   * 
+   * @param color The color to set
+   * @return Reference to this builder instance for method chaining
+   */
+  T axisColor(Paint color);
+
+  /**
+   * Sets displaying grid lines ON.
+   * 
+   * @return Reference to this builder instance for method chaining
+   */
+  T gridLines();
+
+  /**
+   * Sets displaying grid lines OFF.
+   * 
+   * @return Reference to this builder instance for method chaining
+   */
+  T noGridLines();
+  
   /**
    * Builds the XYPlot from all configured data and properties.
    * 

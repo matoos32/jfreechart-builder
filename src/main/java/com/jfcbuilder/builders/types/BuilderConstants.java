@@ -37,6 +37,8 @@ public abstract class BuilderConstants {
 
   public static final int DEFAULT_PLOT_WEIGHT = 1;
 
+  public static final Color DEFAULT_GRIDLINE_PAINT = Color.LIGHT_GRAY;
+  
   public static final Color DEFAULT_UP_COLOR = Color.WHITE;
   public static final Color DEFAULT_DOWN_COLOR = Color.RED;
 

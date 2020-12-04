@@ -50,36 +50,37 @@ private static final Color DARK_GREEN = new Color(0, 150, 0);
 ChartBuilder.get()
 
   .title("Multi Plot Minute Time Series")
-
   .timeData(timeArray)
 
   .xyPlot(XYPlotBuilder.get().yAxisName("Values")
-    .series(XYTimeSeriesBuilder.get().data(array1).color(Color.BLUE).style(SOLID))
-    .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID))
-    .series(XYTimeSeriesBuilder.get().data(array3).color(DARK_GREEN).style(SOLID))
-    .series(XYTimeSeriesBuilder.get().data(array4).color(Color.MAGENTA).style(SOLID)))
+    .backgroundColor(Color.DARK_GRAY).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
+    .series(XYTimeSeriesBuilder.get().data(array1).color(Color.YELLOW).style(SOLID_LINE))
+    .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID_LINE))
+    .series(XYTimeSeriesBuilder.get().data(array3).color(Color.GREEN).style(SOLID_LINE))
+    .series(XYTimeSeriesBuilder.get().data(array4).color(Color.MAGENTA).style(SOLID_LINE)))
 
   .xyPlot(XYPlotBuilder.get().yAxisName("Amplitudes")
-    .series(XYTimeSeriesBuilder.get().data(array2).color(Color.GRAY).style(SOLID))
-    .series(XYTimeSeriesBuilder.get().data(array3).color(Color.LIGHT_GRAY).style(SOLID)))
+    .series(XYTimeSeriesBuilder.get().data(array2).color(Color.BLACK).style(SOLID_LINE))
+    .series(XYTimeSeriesBuilder.get().data(array3).color(Color.LIGHT_GRAY).style(SOLID_LINE)))
 
   .xyPlot(XYPlotBuilder.get().yAxisName("Series 1")
-    .series(XYTimeSeriesBuilder.get().data(array1).color(Color.BLUE).style(SOLID)))
+    .backgroundColor(DARK_GREEN).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
+    .series(XYTimeSeriesBuilder.get().data(array1).color(Color.GREEN).style(SOLID_LINE)))
 
   .xyPlot(XYPlotBuilder.get().yAxisName("Series 2")
-    .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID)))
+    .backgroundColor(DARK_RED).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
+    .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID_LINE)))
 
   .xyPlot(XYPlotBuilder.get().yAxisName("Series 3")
-    .series(XYTimeSeriesBuilder.get().data(array3).color(DARK_GREEN).style(SOLID)))
+    .backgroundColor(DARK_BLUE).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
+    .series(XYTimeSeriesBuilder.get().data(array3).color(Color.CYAN).style(SOLID_LINE)))
 
-.build()
+  .build()
 ```
-
-Produces a chart like this:
 
 ![A multi-plot minute time series chart](./screenshots/multi-plot-minute-time-series.png "Screenshot")
 
-Stock chart code and data like this:
+Stock market data can be plotted like this:
 
 ```
 ChartBuilder.get()
@@ -116,8 +117,6 @@ ChartBuilder.get()
   .build()
 ```
 
-Produces a chart like this:
-
 ![A stock chart time series chart with weekend gaps](./screenshots/stock-chart-time-series-weekend-gaps.png "Screenshot")
 
 
@@ -145,7 +144,7 @@ Each time `develop` is merged into `main`, a version tag is added onto that merg
 
 * JDK 8 or greater [[1](https://openjdk.java.net/)] [[2](https://www.oracle.com/java/)] installed.
 * [Apache Maven](https://maven.apache.org/) installed.
-* Internet connection so Maven can download artifacts or you provide and install those into your local Maven repo by alternative means.
+* Internet connection for Maven downloads or you add them to your local Maven repo by other means.
 
 
 ### Installing source code

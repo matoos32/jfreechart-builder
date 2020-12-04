@@ -21,6 +21,7 @@
 package com.jfcbuilder.builders;
 
 import java.awt.Color;
+import java.awt.Paint;
 import java.util.List;
 
 import org.jfree.chart.axis.NumberAxis;
@@ -160,6 +161,36 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
     return this;
   }
 
+  @Override
+  public OhlcPlotBuilder backgroundColor(Paint color) {
+    elements.backgroundColor(color);
+    return this;
+  }
+
+  @Override
+  public OhlcPlotBuilder axisFontColor(Paint color) {
+    elements.axisFontColor(color);
+    return this;
+  }
+
+  @Override
+  public OhlcPlotBuilder axisColor(Paint color) {
+    elements.axisColor(color);
+    return this;
+  }
+
+  @Override
+  public OhlcPlotBuilder gridLines() {
+    elements.gridLines();
+    return this;
+  }
+
+  @Override
+  public OhlcPlotBuilder noGridLines() {
+    elements.noGridLines();
+    return this;
+  }
+
   private void checkBuildPreconditions() throws IllegalStateException {
 
     elements.checkBuildPreconditions();
@@ -185,8 +216,16 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
     checkBuildPreconditions();
 
     final ValueAxis xAxis = elements.xAxis();
+    xAxis.setAxisLinePaint(elements.axisColor());
+    xAxis.setTickLabelPaint(elements.axisFontColor());
+
     final long[] timeData = elements.timeData();
 
+    ohlcSeriesBuilder.indexRange(elements.indexRange());
+    ohlcSeriesBuilder.timeData(elements.timeData());
+    XYDataset ohlc = ohlcSeriesBuilder.build();
+
+    // TODO: Extract this code common with other classes to a factory method
     NumberAxis yAxis = new NumberAxis();
     yAxis.setMinorTickMarksVisible(true);
     yAxis.setMinorTickCount(2);
@@ -194,16 +233,16 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
     yAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
     yAxis.setAutoRangeIncludesZero(false);
     yAxis.setAutoRangeStickyZero(false);
-
-    ohlcSeriesBuilder.indexRange(elements.indexRange());
-    ohlcSeriesBuilder.timeData(elements.timeData());
-    XYDataset ohlc = ohlcSeriesBuilder.build();
+    yAxis.setAxisLinePaint(elements.axisColor());
+    yAxis.setTickLabelPaint(elements.axisFontColor());
 
     XYPlot plot = new XYPlot(ohlc, xAxis, yAxis, getCandleRenderer());
-    plot.setBackgroundPaint(Color.WHITE);
-    plot.setForegroundAlpha(0.65f);
-    plot.setDomainGridlinePaint(Color.LIGHT_GRAY);
-    plot.setRangeGridlinePaint(Color.LIGHT_GRAY);
+    plot.setBackgroundPaint(elements.backgroundColor());
+    plot.setForegroundAlpha(0.65f); // TODO: is this alpha needed?
+    plot.setDomainGridlinesVisible(elements.showGridLines());
+    plot.setRangeGridlinesVisible(elements.showGridLines());
+    plot.setDomainGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
+    plot.setRangeGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
 
     StringBuilder axisSubName = new StringBuilder();
 
