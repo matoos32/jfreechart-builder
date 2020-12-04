@@ -29,10 +29,6 @@ ChartBuilder.get()
 ### Multiple series can be multi-plotted like this ...
 
 ```
-public static final Stroke SOLID = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND);
-
-private static final Color DARK_GREEN = new Color(0, 150, 0);
-
 ChartBuilder.get()
 
   .title("Multi Plot Minute Time Series")
