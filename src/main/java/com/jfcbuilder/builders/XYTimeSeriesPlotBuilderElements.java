@@ -20,12 +20,15 @@
 
 package com.jfcbuilder.builders;
 
+import java.awt.Paint;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import org.jfree.chart.axis.Axis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.Range;
 
 import com.jfcbuilder.builders.types.ZeroBasedIndexRange;
@@ -45,6 +48,10 @@ public class XYTimeSeriesPlotBuilderElements {
 
   private static final int DEFAULT_PLOT_WEIGHT = 1;
 
+  private static final Paint DEFAULT_BACKGROUND_COLOR = XYPlot.DEFAULT_BACKGROUND_PAINT;
+  private static final Paint DEFAULT_AXIS_FONT_COLOR = Axis.DEFAULT_TICK_LABEL_PAINT;
+  private static final Paint DEFAULT_AXIS_COLOR = Axis.DEFAULT_AXIS_LINE_PAINT;
+
   private List<IXYTimeSeriesBuilder<?>> seriesBuilders;
   private List<IXYDatasetBuilder<?>> datasetBuilders;
   private List<LineBuilder> lineBuilders;
@@ -56,6 +63,10 @@ public class XYTimeSeriesPlotBuilderElements {
   private String yAxisName;
   private Range yAxisRange;
   private double yAxisTickSize;
+  private Paint backgroundColor;
+  private Paint axisFontColor;
+  private Paint axisColor;
+  private boolean showGridLines;
 
   /**
    * Constructor.
@@ -72,6 +83,10 @@ public class XYTimeSeriesPlotBuilderElements {
     yAxisName = "";
     yAxisRange = null;
     yAxisTickSize = USE_DEFAULT_Y_AXIS_TICK_SIZE;
+    backgroundColor = DEFAULT_BACKGROUND_COLOR;
+    axisFontColor = DEFAULT_AXIS_FONT_COLOR;
+    axisColor = DEFAULT_AXIS_COLOR;
+    showGridLines = false;
   }
 
   /**
@@ -301,6 +316,83 @@ public class XYTimeSeriesPlotBuilderElements {
    */
   public boolean usingDefaultYAxisTickSize() {
     return Double.isNaN(yAxisTickSize); // USE_DEFAULT_Y_AXIS_TICK_SIZE
+  }
+
+  /**
+   * Sets the plot background color to use when building the plot.
+   * 
+   * @param color The color to set
+   */
+  public void backgroundColor(Paint color) {
+    backgroundColor = color == null ? DEFAULT_BACKGROUND_COLOR : color;
+  }
+
+  /**
+   * Gets the plot background color to use when building the plot.
+   * 
+   * @return The color
+   */
+  public Paint backgroundColor() {
+    return backgroundColor;
+  }
+
+  /**
+   * Sets the axis font color to use when building the plot.
+   * 
+   * @param color The color to set
+   */
+  public void axisFontColor(Paint color) {
+    axisFontColor = color == null ? DEFAULT_AXIS_FONT_COLOR : color;
+  }
+
+  /**
+   * Gets the axis font color to use when building the plot.
+   * 
+   * @return The color
+   */
+  public Paint axisFontColor() {
+    return axisFontColor;
+  }
+
+  /**
+   * Sets the axis color to use when building the plot.
+   * 
+   * @param color The color to set
+   */
+  public void axisColor(Paint color) {
+    axisColor = color == null ? DEFAULT_AXIS_COLOR : color;
+  }
+
+  /**
+   * Gets the axis color to use when building the plot.
+   * 
+   * @return The color
+   */
+  public Paint axisColor() {
+    return axisColor;
+  }
+
+  /**
+   * Sets displaying grid lines ON.
+   */
+  public void gridLines() {
+    showGridLines = true;
+  }
+
+  /**
+   * Sets displaying grid lines OFF.
+   */
+  public void noGridLines() {
+    showGridLines = false;
+  }
+
+  /**
+   * Returns whether or not to show grid lines.
+   * 
+   * @return True to show grid lines, false otherwise.
+   */
+  public boolean showGridLines() {
+    return showGridLines;
   }
 
   /**

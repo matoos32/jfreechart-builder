@@ -21,6 +21,7 @@
 package com.jfcbuilder.builders;
 
 import java.awt.Color;
+import java.awt.Paint;
 
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
@@ -217,11 +218,44 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
   }
 
   @Override
+  public VolumeXYPlotBuilder backgroundColor(Paint color) {
+    elements.backgroundColor(color);
+    return this;
+  }
+
+  @Override
+  public VolumeXYPlotBuilder axisFontColor(Paint color) {
+    elements.axisFontColor(color);
+    return this;
+  }
+
+  @Override
+  public VolumeXYPlotBuilder axisColor(Paint color) {
+    elements.axisColor(color);
+    return this;
+  }
+
+  @Override
+  public VolumeXYPlotBuilder gridLines() {
+    elements.gridLines();
+    return this;
+  }
+
+  @Override
+  public VolumeXYPlotBuilder noGridLines() {
+    elements.noGridLines();
+    return this;
+  }
+
+  @Override
   public XYPlot build() throws IllegalStateException {
 
     elements.checkBuildPreconditions();
 
     final ValueAxis xAxis = elements.xAxis();
+    xAxis.setAxisLinePaint(elements.axisColor());
+    xAxis.setTickLabelPaint(elements.axisFontColor());
+
     final long[] timeData = elements.timeData();
 
     StringBuilder axisSubName = new StringBuilder();
@@ -256,9 +290,23 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
       }
     }
 
+    // TODO: Extract this code common with other classes to a factory method
     final NumberAxis yAxis = new NumberAxis(elements.yAxisName() + axisSubName.toString());
+    yAxis.setMinorTickMarksVisible(true);
+    yAxis.setMinorTickCount(2);
+    yAxis.setMinorTickMarkOutsideLength(2);
+    yAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
+    yAxis.setAutoRangeIncludesZero(false);
+    yAxis.setAutoRangeStickyZero(false);
+    yAxis.setAxisLinePaint(elements.axisColor());
+    yAxis.setTickLabelPaint(elements.axisFontColor());
 
     final XYPlot plot = new XYPlot(xyCollection, xAxis, yAxis, stdXRenderer);
+    plot.setBackgroundPaint(elements.backgroundColor());
+    plot.setDomainGridlinesVisible(elements.showGridLines());
+    plot.setRangeGridlinesVisible(elements.showGridLines());
+    plot.setDomainGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
+    plot.setRangeGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
 
     if (uniformVolSeriesBuilder != null) {
 
@@ -339,13 +387,6 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
       // Annotations don't have ability to get their max/min y-value to adjust y-axis range :(
       plot.addAnnotation(builder.build());
     }
-
-    yAxis.setMinorTickMarksVisible(true);
-    yAxis.setMinorTickCount(2);
-    yAxis.setMinorTickMarkOutsideLength(2);
-    yAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
-    yAxis.setAutoRangeIncludesZero(false);
-    yAxis.setAutoRangeStickyZero(false);
 
     if (elements.yAxisRange() != null) {
       yAxis.setRange(elements.yAxisRange());
