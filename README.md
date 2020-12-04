@@ -5,23 +5,10 @@ A [builder pattern](https://en.wikipedia.org/wiki/Builder_pattern) module for wo
 Takes an opinionated approach to creating "good enough" charts while providing a more declarative way of parameterizing them.
 
 
-## Capabilities
-
-* XY time series plots using a [CombinedDomainXYPlot](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/plot/CombinedDomainXYPlot.java) in all cases. This produces left-to-right horizontal time axes and vertical value axes. The time axis is meant to be shared by all sub-plots. If you need different time axes then you'll need to `build()` multiple charts and lay those out as desired in your app.
-
-* Stock market OHLC candlestick charts
-
-* Stock market volume bar charts
-
-* Stright lines
-
-* Annotations (arrows and text)
-
-In the future, more parameterization may be added like specifying background and axis colors, or even the actual series renderer objects themselves to fully leverage what [jfreechart](https://github.com/jfree/jfreechart) provides.
-
 ## Samples
 
-Code like this:
+
+### A simple annotated plot
 
 ```
 ChartBuilder.get()
@@ -36,11 +23,10 @@ ChartBuilder.get()
   .build()
 ```
 
-Produces a chart like this:
-
 ![A multi-plot minute time series chart](./screenshots/simple-time-series-with-annotations.png "Screenshot")
 
-Multiple series can be multi-plotted like this:
+
+### Multiple series can be multi-plotted like this ...
 
 ```
 public static final Stroke SOLID = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND);
@@ -80,7 +66,8 @@ ChartBuilder.get()
 
 ![A multi-plot minute time series chart](./screenshots/multi-plot-minute-time-series.png "Screenshot")
 
-Stock market data can be plotted like this:
+
+### Stock market data can be plotted like this ...
 
 ```
 ChartBuilder.get()
@@ -119,6 +106,28 @@ ChartBuilder.get()
 
 ![A stock chart time series chart with weekend gaps](./screenshots/stock-chart-time-series-weekend-gaps.png "Screenshot")
 
+
+## Capabilities
+
+* XY time series plots using a [CombinedDomainXYPlot](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/plot/CombinedDomainXYPlot.java) in all cases.
+
+  * This produces left-to-right horizontal time axes and vertical value axes.
+  * The time axis is meant to be shared by all sub-plots.
+  * If you need different time axes then you'll need to `build()` multiple charts and lay those out as desired in your app.
+
+* Stock market OHLC candlestick charts
+
+* Stock market volume bar charts
+
+* Stright lines
+
+* Annotations (arrows and text)
+
+* Set various colors
+
+* Toggle grid lines
+
+In the future, more parameterization may be added to leverage more of what [jfreechart](https://github.com/jfree/jfreechart) provides.
 
 ## Demo App
 
