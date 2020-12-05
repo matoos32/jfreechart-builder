@@ -21,9 +21,12 @@
 package com.jfcbuilder.builders;
 
 import java.awt.Color;
+import java.awt.Paint;
+import java.text.NumberFormat;
 import java.util.List;
 
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
@@ -33,10 +36,8 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 
-import com.jfcbuilder.builders.renderers.CandlestickRendererBuilder;
-import com.jfcbuilder.builders.types.BuilderConstants;
-import com.jfcbuilder.builders.types.Orientation;
-import com.jfcbuilder.builders.types.ZeroBasedIndexRange;
+import com.jfcbuilder.types.Orientation;
+import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
  * Builder for producing stock market Open High Low Close (OHLC) plots using configured builder
@@ -54,6 +55,7 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
    */
   private OhlcPlotBuilder() {
     elements = new XYTimeSeriesPlotBuilderElements();
+    elements.yAxisTickFormat().setMinimumFractionDigits(2);
     ohlcSeriesBuilder = null;
     yAxisName(DEFAULT_Y_AXIS_NAME);
   }
@@ -160,6 +162,42 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
     return this;
   }
 
+  @Override
+  public OhlcPlotBuilder yTickFormat(NumberFormat format) {
+    elements.yTickFormat(format);
+    return this;
+  }
+
+  @Override
+  public OhlcPlotBuilder backgroundColor(Paint color) {
+    elements.backgroundColor(color);
+    return this;
+  }
+
+  @Override
+  public OhlcPlotBuilder axisFontColor(Paint color) {
+    elements.axisFontColor(color);
+    return this;
+  }
+
+  @Override
+  public OhlcPlotBuilder axisColor(Paint color) {
+    elements.axisColor(color);
+    return this;
+  }
+
+  @Override
+  public OhlcPlotBuilder gridLines() {
+    elements.gridLines();
+    return this;
+  }
+
+  @Override
+  public OhlcPlotBuilder noGridLines() {
+    elements.noGridLines();
+    return this;
+  }
+
   private void checkBuildPreconditions() throws IllegalStateException {
 
     elements.checkBuildPreconditions();
@@ -185,8 +223,16 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
     checkBuildPreconditions();
 
     final ValueAxis xAxis = elements.xAxis();
+    xAxis.setAxisLinePaint(elements.axisColor());
+    xAxis.setTickLabelPaint(elements.axisFontColor());
+
     final long[] timeData = elements.timeData();
 
+    ohlcSeriesBuilder.indexRange(elements.indexRange());
+    ohlcSeriesBuilder.timeData(elements.timeData());
+    XYDataset ohlc = ohlcSeriesBuilder.build();
+
+    // TODO: Extract this code common with other classes to a factory method
     NumberAxis yAxis = new NumberAxis();
     yAxis.setMinorTickMarksVisible(true);
     yAxis.setMinorTickCount(2);
@@ -194,16 +240,20 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
     yAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
     yAxis.setAutoRangeIncludesZero(false);
     yAxis.setAutoRangeStickyZero(false);
-
-    ohlcSeriesBuilder.indexRange(elements.indexRange());
-    ohlcSeriesBuilder.timeData(elements.timeData());
-    XYDataset ohlc = ohlcSeriesBuilder.build();
+    yAxis.setAxisLinePaint(elements.axisColor());
+    yAxis.setTickLabelPaint(elements.axisFontColor());
+    yAxis.setNumberFormatOverride(elements.yAxisTickFormat());
+    if (!elements.usingDefaultYAxisTickSize()) {
+      yAxis.setTickUnit(new NumberTickUnit(elements.yAxisTickSize()));
+    }
 
     XYPlot plot = new XYPlot(ohlc, xAxis, yAxis, getCandleRenderer());
-    plot.setBackgroundPaint(Color.WHITE);
-    plot.setForegroundAlpha(0.65f);
-    plot.setDomainGridlinePaint(Color.LIGHT_GRAY);
-    plot.setRangeGridlinePaint(Color.LIGHT_GRAY);
+    plot.setBackgroundPaint(elements.backgroundColor());
+    plot.setForegroundAlpha(0.65f); // TODO: is this alpha needed?
+    plot.setDomainGridlinesVisible(elements.showGridLines());
+    plot.setRangeGridlinesVisible(elements.showGridLines());
+    plot.setDomainGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
+    plot.setRangeGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
 
     StringBuilder axisSubName = new StringBuilder();
 

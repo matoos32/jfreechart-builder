@@ -5,29 +5,16 @@ A [builder pattern](https://en.wikipedia.org/wiki/Builder_pattern) module for wo
 Takes an opinionated approach to creating "good enough" charts while providing a more declarative way of parameterizing them.
 
 
-## Capabilities
-
-* XY time series plots using a [CombinedDomainXYPlot](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/plot/CombinedDomainXYPlot.java) in all cases. This produces left-to-right horizontal time axes and vertical value axes. The time axis is meant to be shared by all sub-plots. If you need different time axes then you'll need to `build()` multiple charts and lay those out as desired in your app.
-
-* Stock market OHLC candlestick charts
-
-* Stock market volume bar charts
-
-* Stright lines
-
-* Annotations (arrows and text)
-
-In the future, more parameterization may be added like specifying background and axis colors, or even the actual series renderer objects themselves to fully leverage what [jfreechart](https://github.com/jfree/jfreechart) provides.
-
 ## Samples
 
-Code like this:
+
+### A simple annotated plot
 
 ```
 ChartBuilder.get()
   .title("Simple Time Series With Annotations")
   .timeData(timeArray)
-  .xyPlot(XYPlotBuilder.get()
+  .xyPlot(XYPlotBuilder.get().gridLines()
     .series(XYTimeSeriesBuilder.get().name("Amplitude").data(array1).color(Color.BLUE).style(SOLID_LINE))
     .annotation(XYArrowBuilder.get().x(arrowX).y(arrowY).angle(180.0).color(Color.RED).text(arrowTxt))
     .annotation(XYArrowBuilder.get().x(arrowX).y(arrowY).angle(0.0).color(Color.RED))
@@ -36,50 +23,47 @@ ChartBuilder.get()
   .build()
 ```
 
-Produces a chart like this:
-
 ![A multi-plot minute time series chart](./screenshots/simple-time-series-with-annotations.png "Screenshot")
 
-Multiple series can be multi-plotted like this:
+
+### Multiple series plots
 
 ```
-public static final Stroke SOLID = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND);
-
-private static final Color DARK_GREEN = new Color(0, 150, 0);
-
 ChartBuilder.get()
 
   .title("Multi Plot Minute Time Series")
-
   .timeData(timeArray)
 
   .xyPlot(XYPlotBuilder.get().yAxisName("Values")
-    .series(XYTimeSeriesBuilder.get().data(array1).color(Color.BLUE).style(SOLID))
-    .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID))
-    .series(XYTimeSeriesBuilder.get().data(array3).color(DARK_GREEN).style(SOLID))
-    .series(XYTimeSeriesBuilder.get().data(array4).color(Color.MAGENTA).style(SOLID)))
+    .backgroundColor(Color.DARK_GRAY).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
+    .series(XYTimeSeriesBuilder.get().data(array1).color(Color.YELLOW).style(SOLID_LINE))
+    .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID_LINE))
+    .series(XYTimeSeriesBuilder.get().data(array3).color(Color.GREEN).style(SOLID_LINE))
+    .series(XYTimeSeriesBuilder.get().data(array4).color(Color.MAGENTA).style(SOLID_LINE)))
 
-  .xyPlot(XYPlotBuilder.get().yAxisName("Amplitudes")
-    .series(XYTimeSeriesBuilder.get().data(array2).color(Color.GRAY).style(SOLID))
-    .series(XYTimeSeriesBuilder.get().data(array3).color(Color.LIGHT_GRAY).style(SOLID)))
+  .xyPlot(XYPlotBuilder.get().yAxisName("Amplitudes").noGridLines()
+    .series(XYTimeSeriesBuilder.get().data(array2).color(Color.BLACK).style(SOLID_LINE))
+    .series(XYTimeSeriesBuilder.get().data(array3).color(Color.LIGHT_GRAY).style(SOLID_LINE)))
 
   .xyPlot(XYPlotBuilder.get().yAxisName("Series 1")
-    .series(XYTimeSeriesBuilder.get().data(array1).color(Color.BLUE).style(SOLID)))
+    .backgroundColor(DARK_GREEN).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
+    .series(XYTimeSeriesBuilder.get().data(array1).color(Color.GREEN).style(SOLID_LINE)))
 
   .xyPlot(XYPlotBuilder.get().yAxisName("Series 2")
-    .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID)))
+    .backgroundColor(DARK_RED).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
+    .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID_LINE)))
 
   .xyPlot(XYPlotBuilder.get().yAxisName("Series 3")
-    .series(XYTimeSeriesBuilder.get().data(array3).color(DARK_GREEN).style(SOLID)))
+    .backgroundColor(DARK_BLUE).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
+    .series(XYTimeSeriesBuilder.get().data(array3).color(Color.CYAN).style(SOLID_LINE)))
 
-.build()
+  .build()
 ```
-
-Produces a chart like this:
 
 ![A multi-plot minute time series chart](./screenshots/multi-plot-minute-time-series.png "Screenshot")
 
-Stock chart code and data like this:
+
+### Stock market plots
 
 ```
 ChartBuilder.get()
@@ -87,7 +71,7 @@ ChartBuilder.get()
   .title("Stock Chart Time Series With Weekend Gaps, Lines, and Annotations")
   .timeData(timeArray)
 
-  .xyPlot(OhlcPlotBuilder.get().yAxisName("Price").plotWeight(3)
+  .xyPlot(OhlcPlotBuilder.get().yAxisName("Price").plotWeight(3).gridLines()
     .series(OhlcSeriesBuilder.get().ohlcv(dohlcv).upColor(Color.WHITE).downColor(Color.RED))
     .series(XYTimeSeriesBuilder.get().name("MA(20)").data(sma20).color(Color.MAGENTA).style(SOLID_LINE))
     .series(XYTimeSeriesBuilder.get().name("MA(50)").data(sma50).color(Color.BLUE).style(SOLID_LINE))
@@ -97,7 +81,7 @@ ChartBuilder.get()
     .line(LineBuilder.get().horizontal().at(resistanceLevel)
     .color(Color.LIGHT_GRAY).style(SOLID_LINE)))
 
-  .xyPlot(VolumeXYPlotBuilder.get().yAxisName("Volume").plotWeight(1)
+  .xyPlot(VolumeXYPlotBuilder.get().yAxisName("Volume").yTickFormat(volNumFormat).plotWeight(1).gridLines()
     .series(VolumeXYTimeSeriesBuilder.get().ohlcv(dohlcv).closeUpSeries().color(Color.WHITE))
     .series(VolumeXYTimeSeriesBuilder.get().ohlcv(dohlcv).closeDownSeries().color(Color.RED))
     .series(XYTimeSeriesBuilder.get().name("MA(90)").data(volSma90).color(Color.BLUE).style(SOLID_LINE))
@@ -106,7 +90,7 @@ ChartBuilder.get()
     .line(LineBuilder.get().horizontal().at(volumeLine)
     .color(DARK_GREEN).style(SOLID_LINE)))
 
-  .xyPlot(XYPlotBuilder.get().yAxisName("Stoch").yAxisRange(0.0, 100.0).yAxisTickSize(50.0).plotWeight(1)
+  .xyPlot(XYPlotBuilder.get().yAxisName("Stoch").yAxisRange(0.0, 100.0).yAxisTickSize(50.0).plotWeight(1).gridLines()
     .series(XYTimeSeriesBuilder.get().name("K(" + K + ")").data(stoch.getPctK()).color(Color.RED).style(SOLID_LINE))
     .series(XYTimeSeriesBuilder.get().name("D(" + D + ")").data(stoch.getPctD()).color(Color.BLUE).style(SOLID_LINE))
     .line(LineBuilder.get().horizontal().at(80.0).color(Color.BLACK).style(SOLID_LINE))
@@ -116,26 +100,36 @@ ChartBuilder.get()
   .build()
 ```
 
-Produces a chart like this:
-
 ![A stock chart time series chart with weekend gaps](./screenshots/stock-chart-time-series-weekend-gaps.png "Screenshot")
 
 
+## Capabilities
+
+* XY time series plots using a [CombinedDomainXYPlot](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/plot/CombinedDomainXYPlot.java) in all cases.
+
+  * This produces left-to-right horizontal time axes and vertical value axes.
+  * The time axis is meant to be shared by all sub-plots.
+  * If you need different time axes then you'll need to `build()` multiple charts and lay those out as desired in your app.
+
+* Stock market OHLC candlestick charts
+
+* Stock market volume bar charts
+
+* Stright lines
+
+* Annotations (arrows and text)
+
+* Set various colors
+
+* Toggle grid lines
+
+In the future, more parameterization may be added to leverage more of what
+[jfreechart](https://github.com/jfree/jfreechart) provides.
+
 ## Demo App
 
-See the [jfreechart-builder-demo](https://github.com/matoos32/jfreechart-builder-demo) for an interactive demo used for development.
-
-
-## Versioning
-
-The major and minor numbers are the same as the **jfreechart** major and minor to denote what version is compatible. The incremental ("patch") number is the monolithic version number of **jfreechart-builder**.
-
-
-## Branching model
-
-If you want the latest and greatest contributions use the `develop` branch. These commits have not yet been merged into `main` nor received a version tag, but give you a preview of what's to come.
-
-Each time `develop` is merged into `main`, a version tag is added onto that merge commit so that each commit to `main` represents the next version.
+See the [jfreechart-builder-demo](https://github.com/matoos32/jfreechart-builder-demo) for an
+interactive demo used for development.
 
 
 ## Incorporating into your project
@@ -145,25 +139,41 @@ Each time `develop` is merged into `main`, a version tag is added onto that merg
 
 * JDK 8 or greater [[1](https://openjdk.java.net/)] [[2](https://www.oracle.com/java/)] installed.
 * [Apache Maven](https://maven.apache.org/) installed.
-* Internet connection so Maven can download artifacts or you provide and install those into your local Maven repo by alternative means.
+* Internet connection for Maven downloads or you add them to your local Maven repo yourself.
 
 
 ### Installing source code
 
 ```
-git clone <repo URL>
+git clone <this repo's URL>
 ```
 
 
-### Building and installing the JAR
+### Versioning
+
+The major and minor numbers are the same as the **jfreechart** major and minor to denote compatibility.
+The incremental ("patch") number is the monolithic version number of **jfreechart-builder**.
+
+
+### Branching model
+
+If you want the latest and greatest contributions use the `develop` branch. These commits give you a
+preview of what's to come.
+
+Each time `develop` is merged into `main`, a version tag is added onto that merge commit.
+Each commit to `main` represents the next released version.
+
+
+### Building
 
 ```
-cd path/to/the/cloned/repo
+cd path/to/cloned/repo
 
 git checkout <desired branch or tag>
 ```
 
-To simply build the jar and figure out what to do with it next:
+
+#### Simple build
 
 ```
 mvn package
@@ -172,14 +182,23 @@ mvn package
 The jar will be in the `target/` folder.
 
 
-To build and install the jar into your Maven repo:
+#### Build and install the jar in your Maven repo
 
 ```
 mvn install
 ```
 
 
-### Including the dependency in a client project
+### Generate and view Javadoc
+
+```
+mvn javadoc:javadoc
+```
+
+Use a browser to open `target/site/apidocs/index.html`
+
+
+### Add the JAR to a client project
 
 Add this dependency to your project's `.pom` file:
 
@@ -187,9 +206,10 @@ Add this dependency to your project's `.pom` file:
 <dependency>
   <groupId>com.jfcbuilder</groupId>
   <artifactId>jfreechart-builder</artifactId>
-  <version>1.5.1</version>
+  <version>1.5.2</version>
 <dependency>
 ```
+
 
 ## Thread-safety and garbage collection
 
@@ -214,4 +234,6 @@ If you need clarification on the LGPL vs. Java, please see the [FSF's tech note 
 
 Contributions are welcome and will be accepted as the maintainers' time permits.
 
-Please use indentations of two spaces (no tabs) and wrap lines at a max width of 100 characters.
+* Please use indentations of two spaces (no tabs)
+* Wrap lines at a width of 100 characters.
+* To help others, write good Javadoc at least for class descriptions and public methods.

@@ -18,7 +18,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.jfcbuilder.builders.types;
+package com.jfcbuilder.types;
+
+import com.jfcbuilder.builders.BuilderConstants;
 
 /**
  * Class for aggregating and representing a stock market Date Open High Low Close Volume (DOHLCV)
@@ -30,17 +32,36 @@ public class DohlcvSeries extends OhlcvSeries {
 
   private long[] dateArr;
 
+  /**
+   * Constructor. Initializes all value arrays to an empty one.
+   */
   public DohlcvSeries() {
     super();
     dateArr = BuilderConstants.EMPTY_TIME_DATA;
   }
 
+  /**
+   * Constructor for initializing with specific value arrays. All arrays should be of same length
+   * with date values corresponding to values in other arrays at the same element index.
+   * 
+   * @param dateArr Array of data values representing milliseconds since the epoch start
+   * @param openArr Array of price open values
+   * @param highArr Array of price high values
+   * @param lowArr Array of price low values
+   * @param closeArr Array of price close values
+   * @param volumeArr Array of volume values
+   */
   public DohlcvSeries(long[] dateArr, double[] openArr, double[] highArr, double[] lowArr,
       double[] closeArr, double[] volumeArr) {
     super(openArr, highArr, lowArr, closeArr, volumeArr);
     this.dateArr = dateArr;
   }
 
+  /**
+   * Gets the configured date values.
+   * 
+   * @return The array of date values.
+   */
   public long[] dates() {
     return dateArr;
   }

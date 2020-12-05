@@ -21,6 +21,8 @@
 package com.jfcbuilder.builders;
 
 import java.awt.Color;
+import java.awt.Paint;
+import java.text.NumberFormat;
 
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
@@ -32,10 +34,8 @@ import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
-import com.jfcbuilder.builders.renderers.XYBarRendererBuilder;
-import com.jfcbuilder.builders.types.BuilderConstants;
-import com.jfcbuilder.builders.types.Orientation;
-import com.jfcbuilder.builders.types.ZeroBasedIndexRange;
+import com.jfcbuilder.types.Orientation;
+import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
  * Builder for producing stock market volume plots using configured builder properties, series, and
@@ -217,11 +217,50 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
   }
 
   @Override
+  public VolumeXYPlotBuilder yTickFormat(NumberFormat format) {
+    elements.yTickFormat(format);
+    return this;
+  }
+
+  @Override
+  public VolumeXYPlotBuilder backgroundColor(Paint color) {
+    elements.backgroundColor(color);
+    return this;
+  }
+
+  @Override
+  public VolumeXYPlotBuilder axisFontColor(Paint color) {
+    elements.axisFontColor(color);
+    return this;
+  }
+
+  @Override
+  public VolumeXYPlotBuilder axisColor(Paint color) {
+    elements.axisColor(color);
+    return this;
+  }
+
+  @Override
+  public VolumeXYPlotBuilder gridLines() {
+    elements.gridLines();
+    return this;
+  }
+
+  @Override
+  public VolumeXYPlotBuilder noGridLines() {
+    elements.noGridLines();
+    return this;
+  }
+
+  @Override
   public XYPlot build() throws IllegalStateException {
 
     elements.checkBuildPreconditions();
 
     final ValueAxis xAxis = elements.xAxis();
+    xAxis.setAxisLinePaint(elements.axisColor());
+    xAxis.setTickLabelPaint(elements.axisFontColor());
+
     final long[] timeData = elements.timeData();
 
     StringBuilder axisSubName = new StringBuilder();
@@ -256,9 +295,27 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
       }
     }
 
+    // TODO: Extract this code common with other classes to a factory method
     final NumberAxis yAxis = new NumberAxis(elements.yAxisName() + axisSubName.toString());
-
+    yAxis.setMinorTickMarksVisible(true);
+    yAxis.setMinorTickCount(2);
+    yAxis.setMinorTickMarkOutsideLength(2);
+    yAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
+    yAxis.setAutoRangeIncludesZero(false);
+    yAxis.setAutoRangeStickyZero(false);
+    yAxis.setAxisLinePaint(elements.axisColor());
+    yAxis.setTickLabelPaint(elements.axisFontColor());
+    yAxis.setNumberFormatOverride(elements.yAxisTickFormat());
+    if (!elements.usingDefaultYAxisTickSize()) {
+      yAxis.setTickUnit(new NumberTickUnit(elements.yAxisTickSize()));
+    }
+    
     final XYPlot plot = new XYPlot(xyCollection, xAxis, yAxis, stdXRenderer);
+    plot.setBackgroundPaint(elements.backgroundColor());
+    plot.setDomainGridlinesVisible(elements.showGridLines());
+    plot.setRangeGridlinesVisible(elements.showGridLines());
+    plot.setDomainGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
+    plot.setRangeGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
 
     if (uniformVolSeriesBuilder != null) {
 
@@ -340,13 +397,6 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
       plot.addAnnotation(builder.build());
     }
 
-    yAxis.setMinorTickMarksVisible(true);
-    yAxis.setMinorTickCount(2);
-    yAxis.setMinorTickMarkOutsideLength(2);
-    yAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
-    yAxis.setAutoRangeIncludesZero(false);
-    yAxis.setAutoRangeStickyZero(false);
-
     if (elements.yAxisRange() != null) {
       yAxis.setRange(elements.yAxisRange());
     } else {
@@ -355,15 +405,10 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
       yAxis.setRange(yMin * ((yMin > 0.0) ? 0.95 : 1.05), yMax * ((yMax < 0.0) ? 0.99 : 1.05));
     }
 
-    if (!elements.usingDefaultYAxisTickSize()) {
-      yAxis.setTickUnit(new NumberTickUnit(elements.yAxisTickSize()));
-    }
-
     return plot;
   }
 
   private XYBarRenderer createXYBarRenderer(Color fillColor, Color outlineColor) {
     return XYBarRendererBuilder.get().fillColor(fillColor).outlineColor(outlineColor).build();
   }
-
 }

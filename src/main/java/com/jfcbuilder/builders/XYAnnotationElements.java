@@ -25,13 +25,11 @@ import java.util.Collections;
 
 import org.jfree.chart.ui.TextAnchor;
 
-import com.jfcbuilder.builders.types.BuilderConstants;
-
 /**
  * Helper class for storing and accessing properties common to different kinds of XYAnnotation
  * builders. Intended for use in composition-type implementations.
  */
-public class XYAnnotationElements {
+class XYAnnotationElements {
 
   private static final String DEFAULT_TEXT = "";
   private static final int DEFAULT_TEXT_PADDING = 0;
@@ -69,7 +67,7 @@ public class XYAnnotationElements {
   public void x(double x) {
     this.x = x;
   }
-  
+
   /**
    * Gets the x-coordinate of the annotation.
    * 
@@ -96,7 +94,7 @@ public class XYAnnotationElements {
   public double y() {
     return y;
   }
-  
+
   /**
    * Sets the angular orientation of the annotation in degrees.
    * 
@@ -114,7 +112,7 @@ public class XYAnnotationElements {
   public double angle() {
     return angle;
   }
-  
+
   /**
    * Sets the annotation text.
    * 
@@ -132,21 +130,21 @@ public class XYAnnotationElements {
   public String text() {
     return text;
   }
-  
-  /**
-   * Gets the number of padding spaces to left side of the text.
-   * 
-   * @return The number of left side padding spaces
-   */
-  public void textPaddingLeft(int n) {
-    textPaddingLeft = (n < 0) ? 0 : n;
-  }
-  
+
   /**
    * Sets the number of padding spaces to left side of the text. Use this to offset the text a
    * desired distance from the anchored XY coordinate.
    * 
    * @param n Number of space characters to insert at left of text
+   */
+  public void textPaddingLeft(int n) {
+    textPaddingLeft = (n < 0) ? 0 : n;
+  }
+
+  /**
+   * Gets the number of padding spaces to left side of the text.
+   * 
+   * @return The number of left side padding spaces
    */
   public int textPaddingLeft() {
     return textPaddingLeft;
@@ -161,7 +159,7 @@ public class XYAnnotationElements {
   public void textPaddingRight(int n) {
     textPaddingRight = (n < 0) ? 0 : n;
   }
-  
+
   /**
    * Gets the number of padding spaces to right side of the text.
    * 
@@ -170,7 +168,7 @@ public class XYAnnotationElements {
   public int textPaddingRight() {
     return textPaddingRight;
   }
-  
+
   /**
    * Sets the annotation's text alignment relative to the anchored XY coordinate.
    * 
@@ -179,7 +177,7 @@ public class XYAnnotationElements {
   public void textAlign(TextAnchor alignment) {
     this.textAlign = alignment == null ? DEFAULT_TEXT_ALIGNMENT : alignment;
   }
-  
+
   /**
    * Gets the annotation's text alignment relative to the anchored XY coordinate.
    * 
@@ -219,7 +217,7 @@ public class XYAnnotationElements {
       throw new IllegalStateException("X or Y value not set");
     }
   }
-  
+
   /**
    * Helper method to build the left/right padded text to be displayed.
    * 

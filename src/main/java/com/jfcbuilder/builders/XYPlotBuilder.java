@@ -20,6 +20,9 @@
 
 package com.jfcbuilder.builders;
 
+import java.awt.Paint;
+import java.text.NumberFormat;
+
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.axis.ValueAxis;
@@ -29,9 +32,8 @@ import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
-import com.jfcbuilder.builders.types.BuilderConstants;
-import com.jfcbuilder.builders.types.Orientation;
-import com.jfcbuilder.builders.types.ZeroBasedIndexRange;
+import com.jfcbuilder.types.Orientation;
+import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
  * Builder for producing general XYPlot plots using configured builder properties, series, and
@@ -129,11 +131,50 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
   }
 
   @Override
+  public XYPlotBuilder yTickFormat(NumberFormat format) {
+    elements.yTickFormat(format);
+    return this;
+  }
+
+  @Override
+  public XYPlotBuilder backgroundColor(Paint color) {
+    elements.backgroundColor(color);
+    return this;
+  }
+
+  @Override
+  public XYPlotBuilder axisFontColor(Paint color) {
+    elements.axisFontColor(color);
+    return this;
+  }
+
+  @Override
+  public XYPlotBuilder axisColor(Paint color) {
+    elements.axisColor(color);
+    return this;
+  }
+
+  @Override
+  public XYPlotBuilder gridLines() {
+    elements.gridLines();
+    return this;
+  }
+
+  @Override
+  public XYPlotBuilder noGridLines() {
+    elements.noGridLines();
+    return this;
+  }
+
+  @Override
   public XYPlot build() throws IllegalStateException {
 
     elements.checkBuildPreconditions();
 
     final ValueAxis xAxis = elements.xAxis();
+    xAxis.setAxisLinePaint(elements.axisColor());
+    xAxis.setTickLabelPaint(elements.axisFontColor());
+
     final long[] timeData = elements.timeData();
 
     StringBuilder axisSubName = new StringBuilder();
@@ -168,16 +209,27 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
       }
     }
 
-    final NumberAxis yAxis = new NumberAxis(
-        elements.yAxisName() + System.lineSeparator() + axisSubName.toString());
+    // TODO: Extract this code common with other classes to a factory method
+    final NumberAxis yAxis = new NumberAxis(elements.yAxisName() + axisSubName.toString());
     yAxis.setMinorTickMarksVisible(true);
     yAxis.setMinorTickCount(2);
     yAxis.setMinorTickMarkOutsideLength(2);
     yAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
     yAxis.setAutoRangeIncludesZero(false);
     yAxis.setAutoRangeStickyZero(false);
-
+    yAxis.setAxisLinePaint(elements.axisColor());
+    yAxis.setTickLabelPaint(elements.axisFontColor());
+    yAxis.setNumberFormatOverride(elements.yAxisTickFormat());
+    if (!elements.usingDefaultYAxisTickSize()) {
+      yAxis.setTickUnit(new NumberTickUnit(elements.yAxisTickSize()));
+    }
+    
     final XYPlot plot = new XYPlot(collection, xAxis, yAxis, renderer);
+    plot.setBackgroundPaint(elements.backgroundColor());
+    plot.setDomainGridlinesVisible(elements.showGridLines());
+    plot.setRangeGridlinesVisible(elements.showGridLines());
+    plot.setDomainGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
+    plot.setRangeGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
 
     for (LineBuilder builder : elements.unmodifiableLines()) {
       ValueMarker line = builder.build();
@@ -203,10 +255,6 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
       // Pad the y-axis so the min and max don't go right against the limit. Setting lower/upper
       // margin doesn't do it.
       yAxis.setRange(yMin * ((yMin > 0.0) ? 0.95 : 1.05), yMax * ((yMax < 0.0) ? 0.99 : 1.01));
-    }
-
-    if (!elements.usingDefaultYAxisTickSize()) {
-      yAxis.setTickUnit(new NumberTickUnit(elements.yAxisTickSize()));
     }
 
     return plot;
