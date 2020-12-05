@@ -25,7 +25,6 @@ import java.awt.Stroke;
 
 import org.jfree.chart.plot.ValueMarker;
 
-import com.jfcbuilder.types.BuilderConstants;
 import com.jfcbuilder.types.Orientation;
 
 /**

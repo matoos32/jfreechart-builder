@@ -24,7 +24,6 @@ import java.awt.Color;
 import java.awt.Stroke;
 import java.util.Objects;
 
-import com.jfcbuilder.types.BuilderConstants;
 import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**

@@ -21,6 +21,7 @@
 package com.jfcbuilder.builders;
 
 import java.awt.Paint;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,7 +52,7 @@ class XYTimeSeriesPlotBuilderElements {
   private static final Paint DEFAULT_BACKGROUND_COLOR = XYPlot.DEFAULT_BACKGROUND_PAINT;
   private static final Paint DEFAULT_AXIS_FONT_COLOR = Axis.DEFAULT_TICK_LABEL_PAINT;
   private static final Paint DEFAULT_AXIS_COLOR = Axis.DEFAULT_AXIS_LINE_PAINT;
-
+  
   private List<IXYTimeSeriesBuilder<?>> seriesBuilders;
   private List<IXYDatasetBuilder<?>> datasetBuilders;
   private List<LineBuilder> lineBuilders;
@@ -63,6 +64,7 @@ class XYTimeSeriesPlotBuilderElements {
   private String yAxisName;
   private Range yAxisRange;
   private double yAxisTickSize;
+  private NumberFormat yAxisTickFormat;
   private Paint backgroundColor;
   private Paint axisFontColor;
   private Paint axisColor;
@@ -83,12 +85,13 @@ class XYTimeSeriesPlotBuilderElements {
     yAxisName = "";
     yAxisRange = null;
     yAxisTickSize = USE_DEFAULT_Y_AXIS_TICK_SIZE;
+    yAxisTickFormat = BuilderConstants.getDefaultNumberFormat();
     backgroundColor = DEFAULT_BACKGROUND_COLOR;
     axisFontColor = DEFAULT_AXIS_FONT_COLOR;
     axisColor = DEFAULT_AXIS_COLOR;
     showGridLines = false;
   }
-
+  
   /**
    * Sets the zero-based index range to be used with all data series.
    * 
@@ -318,6 +321,25 @@ class XYTimeSeriesPlotBuilderElements {
     return Double.isNaN(yAxisTickSize); // USE_DEFAULT_Y_AXIS_TICK_SIZE
   }
 
+  /**
+   * Sets the main y-axis tick format to be used when building the plot.
+   * 
+   * @param format The plot's y-axis tick format to use
+   */
+  public void yTickFormat(NumberFormat format) {
+
+    yAxisTickFormat = format == null ? BuilderConstants.getDefaultNumberFormat() : format;
+  }
+
+  /**
+   * Gets the main y-axis tick number format to be used when building the plot.
+   * 
+   * @return The plot's y-axis tick format to use
+   */
+  public NumberFormat yAxisTickFormat() {
+    return yAxisTickFormat;
+  }
+  
   /**
    * Sets the plot background color to use when building the plot.
    * 

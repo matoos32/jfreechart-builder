@@ -25,8 +25,6 @@ import java.util.Collections;
 
 import org.jfree.chart.ui.TextAnchor;
 
-import com.jfcbuilder.types.BuilderConstants;
-
 /**
  * Helper class for storing and accessing properties common to different kinds of XYAnnotation
  * builders. Intended for use in composition-type implementations.

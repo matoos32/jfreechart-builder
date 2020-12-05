@@ -22,6 +22,7 @@ package com.jfcbuilder.builders;
 
 import java.awt.Color;
 import java.awt.Paint;
+import java.text.NumberFormat;
 
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
@@ -33,7 +34,6 @@ import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
-import com.jfcbuilder.types.BuilderConstants;
 import com.jfcbuilder.types.Orientation;
 import com.jfcbuilder.types.ZeroBasedIndexRange;
 
@@ -217,6 +217,12 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
   }
 
   @Override
+  public VolumeXYPlotBuilder yTickFormat(NumberFormat format) {
+    elements.yTickFormat(format);
+    return this;
+  }
+
+  @Override
   public VolumeXYPlotBuilder backgroundColor(Paint color) {
     elements.backgroundColor(color);
     return this;
@@ -299,7 +305,11 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
     yAxis.setAutoRangeStickyZero(false);
     yAxis.setAxisLinePaint(elements.axisColor());
     yAxis.setTickLabelPaint(elements.axisFontColor());
-
+    yAxis.setNumberFormatOverride(elements.yAxisTickFormat());
+    if (!elements.usingDefaultYAxisTickSize()) {
+      yAxis.setTickUnit(new NumberTickUnit(elements.yAxisTickSize()));
+    }
+    
     final XYPlot plot = new XYPlot(xyCollection, xAxis, yAxis, stdXRenderer);
     plot.setBackgroundPaint(elements.backgroundColor());
     plot.setDomainGridlinesVisible(elements.showGridLines());
@@ -395,15 +405,10 @@ public class VolumeXYPlotBuilder implements IXYPlotBuilder<VolumeXYPlotBuilder> 
       yAxis.setRange(yMin * ((yMin > 0.0) ? 0.95 : 1.05), yMax * ((yMax < 0.0) ? 0.99 : 1.05));
     }
 
-    if (!elements.usingDefaultYAxisTickSize()) {
-      yAxis.setTickUnit(new NumberTickUnit(elements.yAxisTickSize()));
-    }
-
     return plot;
   }
 
   private XYBarRenderer createXYBarRenderer(Color fillColor, Color outlineColor) {
     return XYBarRendererBuilder.get().fillColor(fillColor).outlineColor(outlineColor).build();
   }
-
 }

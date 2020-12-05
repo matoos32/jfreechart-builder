@@ -22,9 +22,11 @@ package com.jfcbuilder.builders;
 
 import java.awt.Color;
 import java.awt.Paint;
+import java.text.NumberFormat;
 import java.util.List;
 
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
@@ -34,7 +36,6 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 
-import com.jfcbuilder.types.BuilderConstants;
 import com.jfcbuilder.types.Orientation;
 import com.jfcbuilder.types.ZeroBasedIndexRange;
 
@@ -54,6 +55,7 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
    */
   private OhlcPlotBuilder() {
     elements = new XYTimeSeriesPlotBuilderElements();
+    elements.yAxisTickFormat().setMinimumFractionDigits(2);
     ohlcSeriesBuilder = null;
     yAxisName(DEFAULT_Y_AXIS_NAME);
   }
@@ -161,6 +163,12 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
   }
 
   @Override
+  public OhlcPlotBuilder yTickFormat(NumberFormat format) {
+    elements.yTickFormat(format);
+    return this;
+  }
+
+  @Override
   public OhlcPlotBuilder backgroundColor(Paint color) {
     elements.backgroundColor(color);
     return this;
@@ -234,6 +242,10 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
     yAxis.setAutoRangeStickyZero(false);
     yAxis.setAxisLinePaint(elements.axisColor());
     yAxis.setTickLabelPaint(elements.axisFontColor());
+    yAxis.setNumberFormatOverride(elements.yAxisTickFormat());
+    if (!elements.usingDefaultYAxisTickSize()) {
+      yAxis.setTickUnit(new NumberTickUnit(elements.yAxisTickSize()));
+    }
 
     XYPlot plot = new XYPlot(ohlc, xAxis, yAxis, getCandleRenderer());
     plot.setBackgroundPaint(elements.backgroundColor());

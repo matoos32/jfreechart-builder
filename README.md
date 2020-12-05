@@ -81,7 +81,7 @@ ChartBuilder.get()
     .line(LineBuilder.get().horizontal().at(resistanceLevel)
     .color(Color.LIGHT_GRAY).style(SOLID_LINE)))
 
-  .xyPlot(VolumeXYPlotBuilder.get().yAxisName("Volume").plotWeight(1).gridLines()
+  .xyPlot(VolumeXYPlotBuilder.get().yAxisName("Volume").yTickFormat(volNumFormat).plotWeight(1).gridLines()
     .series(VolumeXYTimeSeriesBuilder.get().ohlcv(dohlcv).closeUpSeries().color(Color.WHITE))
     .series(VolumeXYTimeSeriesBuilder.get().ohlcv(dohlcv).closeDownSeries().color(Color.RED))
     .series(XYTimeSeriesBuilder.get().name("MA(90)").data(volSma90).color(Color.BLUE).style(SOLID_LINE))
@@ -123,11 +123,13 @@ ChartBuilder.get()
 
 * Toggle grid lines
 
-In the future, more parameterization may be added to leverage more of what [jfreechart](https://github.com/jfree/jfreechart) provides.
+In the future, more parameterization may be added to leverage more of what
+[jfreechart](https://github.com/jfree/jfreechart) provides.
 
 ## Demo App
 
-See the [jfreechart-builder-demo](https://github.com/matoos32/jfreechart-builder-demo) for an interactive demo used for development.
+See the [jfreechart-builder-demo](https://github.com/matoos32/jfreechart-builder-demo) for an
+interactive demo used for development.
 
 
 ## Incorporating into your project
@@ -149,9 +151,8 @@ git clone <this repo's URL>
 
 ### Versioning
 
-The major and minor numbers are the same as the **jfreechart** major and minor to denote what
-version is compatible. The incremental ("patch") number is the monolithic version number of
-**jfreechart-builder**.
+The major and minor numbers are the same as the **jfreechart** major and minor to denote compatibility.
+The incremental ("patch") number is the monolithic version number of **jfreechart-builder**.
 
 
 ### Branching model
@@ -159,8 +160,8 @@ version is compatible. The incremental ("patch") number is the monolithic versio
 If you want the latest and greatest contributions use the `develop` branch. These commits give you a
 preview of what's to come.
 
-Each time `develop` is merged into `main`, a version tag is added onto that merge commit so that
-each commit to `main` represents the next released version.
+Each time `develop` is merged into `main`, a version tag is added onto that merge commit.
+Each commit to `main` represents the next released version.
 
 
 ### Building
@@ -233,4 +234,6 @@ If you need clarification on the LGPL vs. Java, please see the [FSF's tech note 
 
 Contributions are welcome and will be accepted as the maintainers' time permits.
 
-Please use indentations of two spaces (no tabs) and wrap lines at a max width of 100 characters.
+* Please use indentations of two spaces (no tabs)
+* Wrap lines at a width of 100 characters.
+* To help others, write good Javadoc at least for class descriptions and public methods.
