@@ -20,6 +20,8 @@
 
 package com.jfcbuilder.types;
 
+import com.jfcbuilder.builders.BuilderConstants;
+
 /**
  * Class for aggregating and representing a stock market Date Open High Low Close Volume (DOHLCV)
  * series. The values are stored in an individual primitive array for each component series. A

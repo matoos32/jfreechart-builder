@@ -18,12 +18,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.jfcbuilder.types;
+package com.jfcbuilder.builders;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Stroke;
+import java.text.NumberFormat;
+
+import com.jfcbuilder.types.Orientation;
 
 /**
  * A family of constants used throughout this builder framework.
@@ -99,4 +102,12 @@ public abstract class BuilderConstants {
    */
   public static final Orientation DEFAULT_ORIENTATION = Orientation.HORIZONTAL;
 
+  /**
+   * Factory method for getting new instances of the default axis number format.
+   * 
+   * @return New instance of the default NumberFormat that can be used throughout the application.
+   */
+  public static NumberFormat getDefaultNumberFormat() {
+    return NumberFormat.getNumberInstance();
+  }
 }

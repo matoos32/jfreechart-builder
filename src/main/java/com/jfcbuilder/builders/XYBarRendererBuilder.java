@@ -27,8 +27,6 @@ import java.util.Objects;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 
-import com.jfcbuilder.types.BuilderConstants;
-
 /**
  * Builder for creating configured XYBarRenderer instances.
  */

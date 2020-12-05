@@ -21,6 +21,7 @@
 package com.jfcbuilder.builders;
 
 import java.awt.Paint;
+import java.text.NumberFormat;
 
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
@@ -144,6 +145,14 @@ public interface IXYPlotBuilder<T extends IXYPlotBuilder<T>> {
    */
   T yAxisTickSize(double size);
 
+  /**
+   * Sets the plot's y-axis tick format.
+   * 
+   * @param format The tick format to be set
+   * @return Reference to this builder instance for method chaining
+   */
+  T yTickFormat(NumberFormat format);
+  
   /**
    * Sets the plot background color to use when building the plot.
    * 

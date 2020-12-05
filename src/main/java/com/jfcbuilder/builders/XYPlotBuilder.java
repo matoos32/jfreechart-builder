@@ -21,6 +21,7 @@
 package com.jfcbuilder.builders;
 
 import java.awt.Paint;
+import java.text.NumberFormat;
 
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
@@ -31,7 +32,6 @@ import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
-import com.jfcbuilder.types.BuilderConstants;
 import com.jfcbuilder.types.Orientation;
 import com.jfcbuilder.types.ZeroBasedIndexRange;
 
@@ -131,6 +131,12 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
   }
 
   @Override
+  public XYPlotBuilder yTickFormat(NumberFormat format) {
+    elements.yTickFormat(format);
+    return this;
+  }
+
+  @Override
   public XYPlotBuilder backgroundColor(Paint color) {
     elements.backgroundColor(color);
     return this;
@@ -213,7 +219,11 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
     yAxis.setAutoRangeStickyZero(false);
     yAxis.setAxisLinePaint(elements.axisColor());
     yAxis.setTickLabelPaint(elements.axisFontColor());
-
+    yAxis.setNumberFormatOverride(elements.yAxisTickFormat());
+    if (!elements.usingDefaultYAxisTickSize()) {
+      yAxis.setTickUnit(new NumberTickUnit(elements.yAxisTickSize()));
+    }
+    
     final XYPlot plot = new XYPlot(collection, xAxis, yAxis, renderer);
     plot.setBackgroundPaint(elements.backgroundColor());
     plot.setDomainGridlinesVisible(elements.showGridLines());
@@ -245,10 +255,6 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
       // Pad the y-axis so the min and max don't go right against the limit. Setting lower/upper
       // margin doesn't do it.
       yAxis.setRange(yMin * ((yMin > 0.0) ? 0.95 : 1.05), yMax * ((yMax < 0.0) ? 0.99 : 1.01));
-    }
-
-    if (!elements.usingDefaultYAxisTickSize()) {
-      yAxis.setTickUnit(new NumberTickUnit(elements.yAxisTickSize()));
     }
 
     return plot;
