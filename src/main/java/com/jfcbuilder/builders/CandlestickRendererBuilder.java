@@ -18,19 +18,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.jfcbuilder.builders.renderers;
+package com.jfcbuilder.builders;
 
 import java.awt.Color;
 import java.util.Objects;
 
 import org.jfree.chart.renderer.xy.CandlestickRenderer;
 
-import com.jfcbuilder.builders.types.BuilderConstants;
+import com.jfcbuilder.types.BuilderConstants;
 
 /**
  * Builder for creating configured CandlestickRenderer instances.
  */
-public class CandlestickRendererBuilder {
+class CandlestickRendererBuilder {
 
   private Color upColor;
   private Color downColor;

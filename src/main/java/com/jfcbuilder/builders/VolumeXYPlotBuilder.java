@@ -33,10 +33,9 @@ import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
-import com.jfcbuilder.builders.renderers.XYBarRendererBuilder;
-import com.jfcbuilder.builders.types.BuilderConstants;
-import com.jfcbuilder.builders.types.Orientation;
-import com.jfcbuilder.builders.types.ZeroBasedIndexRange;
+import com.jfcbuilder.types.BuilderConstants;
+import com.jfcbuilder.types.Orientation;
+import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
  * Builder for producing stock market volume plots using configured builder properties, series, and

@@ -37,8 +37,8 @@ import org.jfree.chart.ui.RectangleInsets;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.RegularTimePeriod;
 
-import com.jfcbuilder.builders.types.BuilderConstants;
-import com.jfcbuilder.builders.types.ZeroBasedIndexRange;
+import com.jfcbuilder.types.BuilderConstants;
+import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
  * The top-level builder for creating JFreeChart instances using configured parameters.
@@ -128,7 +128,7 @@ public class ChartBuilder {
    * Registers an IXYPlotBuilder whose {@code build()} method will be called to generate its plot
    * when this chart builder's {@code build()} method is called.
    * 
-   * @param series The series builder representing the series that it will build
+   * @param builder The series builder representing the series that it will build
    * @return Same instance of this builder for chaining method calls
    */
   public ChartBuilder xyPlot(IXYPlotBuilder<?> builder) {
@@ -202,9 +202,7 @@ public class ChartBuilder {
 
   /**
    * Creates a new JFreeChart object using an XYPlot instance.
-   * 
-   * @param width Desired pixel width of the chart
-   * @param height Desired pixel height of the chart
+   *
    * @param plot The plot to be rendered
    * @param title A title string to render at the top of the chart
    * @return new instance of the image object

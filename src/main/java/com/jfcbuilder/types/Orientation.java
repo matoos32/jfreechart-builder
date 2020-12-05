@@ -18,13 +18,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.jfcbuilder.builders.types;
+package com.jfcbuilder.types;
 
 /**
  * Represent an orientation.
  */
 public enum Orientation {
   
+  /**
+   * The related item is horizontal in nature.
+   */
   HORIZONTAL,
+  
+  /**
+   * The related item is vertical in nature.
+   */
   VERTICAL
 }

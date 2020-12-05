@@ -24,8 +24,8 @@ import java.awt.Color;
 import java.awt.Stroke;
 import java.util.Objects;
 
-import com.jfcbuilder.builders.types.BuilderConstants;
-import com.jfcbuilder.builders.types.ZeroBasedIndexRange;
+import com.jfcbuilder.types.BuilderConstants;
+import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
  * Helper class for storing and accessing properties common to different kinds of XY TimeSeries
@@ -155,7 +155,7 @@ class XYTimeSeriesElements {
   /**
    * Gets the line style to be used when rendering the series.
    * 
-   * return The series rendering line style
+   * @return The series rendering line style
    */
   public Stroke style() {
     return style;

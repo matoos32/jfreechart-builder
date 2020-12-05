@@ -28,7 +28,7 @@ import org.jfree.data.general.SeriesException;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 
-import com.jfcbuilder.builders.types.ZeroBasedIndexRange;
+import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
  * Builder for producing TimeSeries instances from configured properties and source data.

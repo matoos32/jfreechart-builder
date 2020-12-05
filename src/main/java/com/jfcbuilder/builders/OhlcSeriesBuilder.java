@@ -30,9 +30,9 @@ import org.jfree.data.time.ohlc.OHLCSeries;
 import org.jfree.data.time.ohlc.OHLCSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 
-import com.jfcbuilder.builders.types.BuilderConstants;
-import com.jfcbuilder.builders.types.OhlcvSeries;
-import com.jfcbuilder.builders.types.ZeroBasedIndexRange;
+import com.jfcbuilder.types.BuilderConstants;
+import com.jfcbuilder.types.OhlcvSeries;
+import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
  * Builder for producing stock market Open High Low Close (OHLC) data sets that can be used in OHLC
@@ -66,28 +66,58 @@ public class OhlcSeriesBuilder implements IXYDatasetBuilder<OhlcSeriesBuilder> {
     return new OhlcSeriesBuilder();
   }
 
+  /**
+   * Sets the OHLCV data to be used for building the XYDataset.
+   * 
+   * @param ohlcv The data to be set
+   * @return Reference to this builder instance for method chaining
+   */
   public OhlcSeriesBuilder ohlcv(OhlcvSeries ohlcv) {
     Objects.requireNonNull(ohlcv, "OHLCV series cannot be set to null");
     this.ohlcv = ohlcv;
     return this;
   }
 
-  public OhlcSeriesBuilder upColor(Color c) {
-    Objects.requireNonNull(c, "Color cannot be set to null");
-    upColor = c;
+  /**
+   * Sets the color to use for drawing OHLCV items on days where price closed up (higher than open).
+   * 
+   * @param color The color to be set
+   * @return Reference to this builder instance for method chaining
+   */
+  public OhlcSeriesBuilder upColor(Color color) {
+    Objects.requireNonNull(color, "Color cannot be set to null");
+    upColor = color;
     return this;
   }
 
+  /**
+   * Gets the color to use for drawing OHLCV items on days where price closed up (higher than open).
+   * 
+   * @return The color
+   */
   public Color upColor() {
     return upColor;
   }
 
-  public OhlcSeriesBuilder downColor(Color c) {
-    Objects.requireNonNull(c, "Color cannot be set to null");
-    downColor = c;
+  /**
+   * Sets the color to use for drawing OHLCV items on days where price closed down (lower than
+   * open).
+   * 
+   * @param color The color to be set
+   * @return Reference to this builder instance for method chaining
+   */
+  public OhlcSeriesBuilder downColor(Color color) {
+    Objects.requireNonNull(color, "Color cannot be set to null");
+    downColor = color;
     return this;
   }
 
+  /**
+   * Gets the color to use for drawing OHLCV items on days where price closed down (lower than
+   * open).
+   * 
+   * @return The color
+   */
   public Color downColor() {
     return downColor;
   }
@@ -105,12 +135,6 @@ public class OhlcSeriesBuilder implements IXYDatasetBuilder<OhlcSeriesBuilder> {
     return this;
   }
 
-  /**
-   * 
-   * @return
-   * @throws IllegalStateException If DOHLC array sizes don't match or if an index range is
-   *         configured and its indexes are out of bounds.
-   */
   @Override
   public XYDataset build() throws IllegalStateException {
 

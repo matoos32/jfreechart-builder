@@ -25,8 +25,8 @@ import java.awt.Stroke;
 
 import org.jfree.chart.plot.ValueMarker;
 
-import com.jfcbuilder.builders.types.BuilderConstants;
-import com.jfcbuilder.builders.types.Orientation;
+import com.jfcbuilder.types.BuilderConstants;
+import com.jfcbuilder.types.Orientation;
 
 /**
  * Uses configured properties to Build a ValueMarker representing a plot overlay line.
@@ -79,7 +79,7 @@ public class LineBuilder {
     this.orientation = Orientation.HORIZONTAL;
     return this;
   }
-  
+
   /**
    * Sets the orientation of the line to vertical.
    * 
@@ -89,7 +89,7 @@ public class LineBuilder {
     this.orientation = Orientation.VERTICAL;
     return this;
   }
-  
+
   /**
    * Gets the currently configured line orientation
    * 
@@ -113,7 +113,7 @@ public class LineBuilder {
   /**
    * Sets the color to be used when drawing the line
    * 
-   * @param value The desired color
+   * @param color The desired color
    * @return Reference to this builder for chaining method calls
    */
   public LineBuilder color(Color color) {
