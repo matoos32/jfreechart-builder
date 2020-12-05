@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.jfcbuilder.builders.renderers;
+package com.jfcbuilder.builders;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -27,12 +27,12 @@ import java.util.Objects;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 
-import com.jfcbuilder.builders.types.BuilderConstants;
+import com.jfcbuilder.types.BuilderConstants;
 
 /**
  * Builder for creating configured XYBarRenderer instances.
  */
-public class XYBarRendererBuilder {
+class XYBarRendererBuilder {
 
   private static final BasicStroke DEFAULT_OUTLINE_STROKE = new BasicStroke(1.0f);
 

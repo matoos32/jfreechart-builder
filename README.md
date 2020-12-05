@@ -26,7 +26,7 @@ ChartBuilder.get()
 ![A multi-plot minute time series chart](./screenshots/simple-time-series-with-annotations.png "Screenshot")
 
 
-### Multiple series can be multi-plotted like this ...
+### Multiple series plots
 
 ```
 ChartBuilder.get()
@@ -63,7 +63,7 @@ ChartBuilder.get()
 ![A multi-plot minute time series chart](./screenshots/multi-plot-minute-time-series.png "Screenshot")
 
 
-### Stock market data can be plotted like this ...
+### Stock market plots
 
 ```
 ChartBuilder.get()
@@ -130,18 +130,6 @@ In the future, more parameterization may be added to leverage more of what [jfre
 See the [jfreechart-builder-demo](https://github.com/matoos32/jfreechart-builder-demo) for an interactive demo used for development.
 
 
-## Versioning
-
-The major and minor numbers are the same as the **jfreechart** major and minor to denote what version is compatible. The incremental ("patch") number is the monolithic version number of **jfreechart-builder**.
-
-
-## Branching model
-
-If you want the latest and greatest contributions use the `develop` branch. These commits have not yet been merged into `main` nor received a version tag, but give you a preview of what's to come.
-
-Each time `develop` is merged into `main`, a version tag is added onto that merge commit so that each commit to `main` represents the next version.
-
-
 ## Incorporating into your project
 
 
@@ -149,25 +137,42 @@ Each time `develop` is merged into `main`, a version tag is added onto that merg
 
 * JDK 8 or greater [[1](https://openjdk.java.net/)] [[2](https://www.oracle.com/java/)] installed.
 * [Apache Maven](https://maven.apache.org/) installed.
-* Internet connection for Maven downloads or you add them to your local Maven repo by other means.
+* Internet connection for Maven downloads or you add them to your local Maven repo yourself.
 
 
 ### Installing source code
 
 ```
-git clone <repo URL>
+git clone <this repo's URL>
 ```
 
 
-### Building and installing the JAR
+### Versioning
+
+The major and minor numbers are the same as the **jfreechart** major and minor to denote what
+version is compatible. The incremental ("patch") number is the monolithic version number of
+**jfreechart-builder**.
+
+
+### Branching model
+
+If you want the latest and greatest contributions use the `develop` branch. These commits give you a
+preview of what's to come.
+
+Each time `develop` is merged into `main`, a version tag is added onto that merge commit so that
+each commit to `main` represents the next released version.
+
+
+### Building
 
 ```
-cd path/to/the/cloned/repo
+cd path/to/cloned/repo
 
 git checkout <desired branch or tag>
 ```
 
-To simply build the jar and figure out what to do with it next:
+
+#### Simple build
 
 ```
 mvn package
@@ -176,14 +181,23 @@ mvn package
 The jar will be in the `target/` folder.
 
 
-To build and install the jar into your Maven repo:
+#### Build and install the jar in your Maven repo
 
 ```
 mvn install
 ```
 
 
-### Including the dependency in a client project
+### Generate and view Javadoc
+
+```
+mvn javadoc:javadoc
+```
+
+Use a browser to open `target/site/apidocs/index.html`
+
+
+### Add the JAR to a client project
 
 Add this dependency to your project's `.pom` file:
 
@@ -194,6 +208,7 @@ Add this dependency to your project's `.pom` file:
   <version>1.5.2</version>
 <dependency>
 ```
+
 
 ## Thread-safety and garbage collection
 

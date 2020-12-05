@@ -31,13 +31,13 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.Range;
 
-import com.jfcbuilder.builders.types.ZeroBasedIndexRange;
+import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
  * Helper class for storing and accessing properties common to different kinds of XY plot builders.
  * Intended for use in composition-type implementations.
  */
-public class XYTimeSeriesPlotBuilderElements {
+class XYTimeSeriesPlotBuilderElements {
 
   /**
    * Value used to indicate the default y-axis tick size should be used.
@@ -229,7 +229,7 @@ public class XYTimeSeriesPlotBuilderElements {
   /**
    * Sets the layout weight to be used when rendering the plot.
    * 
-   * @param name The plot's layout weight to be used
+   * @param weight The plot's layout weight to be used
    */
   public void plotWeight(int weight) {
     this.plotWeight = weight;

@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.jfcbuilder.builders.types;
+package com.jfcbuilder.types;
 
 /**
  * Represents a range of container elements by defining both a start and end zero-based index.
@@ -27,7 +27,7 @@ public class ZeroBasedIndexRange {
 
   private int startIndex;
   private int endIndex;
-  
+
   /**
    * Constructor.
    */
@@ -39,7 +39,7 @@ public class ZeroBasedIndexRange {
   /**
    * Constructor that sets the zero-based indexes defining the range.
    * 
-   * @param startIndex Zero based index of the start of the range 
+   * @param startIndex Zero based index of the start of the range
    * @param endIndex Zero based index of the end of the range
    * @throws IllegalArgumentException If startIndex or endIndex are negative, or if startIndex is
    *         greater than endIndex.
@@ -47,7 +47,7 @@ public class ZeroBasedIndexRange {
   public ZeroBasedIndexRange(int startIndex, int endIndex) throws IllegalArgumentException {
     set(startIndex, endIndex);
   }
-  
+
   /**
    * Sets the zero-based indexes defining the range.
    * 
@@ -69,15 +69,25 @@ public class ZeroBasedIndexRange {
     if (startIndex > endIndex) {
       throw new IllegalArgumentException("Start index must be smaller than end index");
     }
-    
+
     this.startIndex = startIndex;
     this.endIndex = endIndex;
   }
 
+  /**
+   * Gets the zero-based start index defining the range.
+   * 
+   * @return Zero based start index of the start of the range
+   */
   public int getStartIndex() {
     return startIndex;
   }
 
+  /**
+   * Gets the zero-based end index defining the range.
+   * 
+   * @return Zero based end index of the start of the range
+   */
   public int getEndIndex() {
     return endIndex;
   }

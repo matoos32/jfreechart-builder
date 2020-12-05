@@ -25,17 +25,18 @@ import java.awt.Paint;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 
-import com.jfcbuilder.builders.types.ZeroBasedIndexRange;
+import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
- * Interface for all XYPlot builders. Uses a generic to specify the concrete implementation of the
- * interface as the return type of setter methods. This is done to support method chaining on the
- * same builder instance. In the framework there can be different builder types that have
- * specialized methods so making the return types here be this interface can and will hide those
- * specialized methods from clients when they chain the method calls.
+ * Interface for all XYPlot builders.  Uses a generic to specify the concrete implementation of
+ * the interface as the return type of setter methods. This is done to support method chaining on
+ * the same builder instance. In this framework there can be different builder types that have
+ * specialized methods. If the return types were made to be this interface instead of the concrete
+ * class then those specialized methods of the classes not defined in the interface would be hidden
+ * by only having access to the interface.
  * 
- * @param T The method chaining return type, which must be the type of the builder implementing this
- *        interface.
+ * @param <T> The method chaining return type, which must be the type of the builder implementing
+ *        this interface.
  */
 public interface IXYPlotBuilder<T extends IXYPlotBuilder<T>> {
 
@@ -180,7 +181,7 @@ public interface IXYPlotBuilder<T extends IXYPlotBuilder<T>> {
    * @return Reference to this builder instance for method chaining
    */
   T noGridLines();
-  
+
   /**
    * Builds the XYPlot from all configured data and properties.
    * 

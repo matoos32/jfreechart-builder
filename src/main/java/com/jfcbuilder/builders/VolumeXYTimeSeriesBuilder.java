@@ -29,8 +29,8 @@ import org.jfree.data.general.SeriesException;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 
-import com.jfcbuilder.builders.types.DohlcvSeries;
-import com.jfcbuilder.builders.types.ZeroBasedIndexRange;
+import com.jfcbuilder.types.DohlcvSeries;
+import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
  * Builder for producing stock market volume data series using configured builder properties and
@@ -151,6 +151,12 @@ public class VolumeXYTimeSeriesBuilder implements IXYTimeSeriesBuilder<VolumeXYT
     return elements.name();
   }
 
+  /**
+   * Sets the data from which the volume TimeSeries will be built.
+   * 
+   * @param dohlcv The data to be set
+   * @return Instance of this renderer for chaining method calls
+   */
   public VolumeXYTimeSeriesBuilder ohlcv(DohlcvSeries dohlcv) {
     Objects.requireNonNull(dohlcv, "DOHLCV data cannot be set to null");
     dohlcvSeries = dohlcv;
@@ -158,29 +164,63 @@ public class VolumeXYTimeSeriesBuilder implements IXYTimeSeriesBuilder<VolumeXYT
     return this;
   }
 
+  /**
+   * Configures this builder to produce a series for up-closing (closing higher) price values.
+   *
+   * @return Instance of this renderer for chaining method calls
+   */
   public VolumeXYTimeSeriesBuilder closeUpSeries() {
     seriesType = SeriesType.CLOSE_UP;
     return this;
   }
 
+  /**
+   * Checks if this builder is configured to produce an up-closing (closing higher) price values
+   * series.
+   * 
+   * @return True if configured for an up-closing series, false otherwise
+   */
   public boolean isCloseUpSeries() {
     return seriesType == SeriesType.CLOSE_UP;
   }
 
+  /**
+   * Configures this builder to produce a series for down-closing (closing lower) price values.
+   *
+   * @return Instance of this renderer for chaining method calls
+   */
   public VolumeXYTimeSeriesBuilder closeDownSeries() {
     seriesType = SeriesType.CLOSE_DOWN;
     return this;
   }
 
+  /**
+   * Checks if this builder is configured to produce a down-closing (closing lower) price values
+   * series.
+   * 
+   * @return True if configured for an up-closing series, false otherwise
+   */
   public boolean isCloseDownSeries() {
     return seriesType == SeriesType.CLOSE_DOWN;
   }
 
+  /**
+   * Configures this builder to produce a uniform series that's not specific to values closing up or
+   * down relative to the open price.
+   *
+   * @return Instance of this renderer for chaining method calls
+   */
   public VolumeXYTimeSeriesBuilder uniformSeries() {
     seriesType = SeriesType.UNIFORM;
     return this;
   }
 
+  /**
+   * Checks if this builder is configured to produce a uniform series that's not specific to
+   * values closing up or down relative to the open price.
+   * 
+   * @return True if configured for a uniform series, false otherwise.
+   */
   public boolean isUniformSeries() {
     return seriesType == SeriesType.UNIFORM;
   }
