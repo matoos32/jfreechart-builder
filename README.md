@@ -206,7 +206,7 @@ Add this dependency to your project's `.pom` file:
 <dependency>
   <groupId>com.jfcbuilder</groupId>
   <artifactId>jfreechart-builder</artifactId>
-  <version>1.5.2</version>
+  <version>1.5.3</version>
 <dependency>
 ```
 
