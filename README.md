@@ -103,6 +103,12 @@ ChartBuilder.get()
 ![A stock chart time series chart with weekend gaps](./screenshots/stock-chart-time-series-weekend-gaps.png "Screenshot")
 
 
+## Hosted Javadoc
+
+See the [Builders Summary](https://matoos32.github.io/jfreechart-builder-docs/javadoc/com/jfcbuilder/builders/package-summary.html)
+to browse the public API.
+
+
 ## Capabilities
 
 * XY time series plots using a [CombinedDomainXYPlot](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/plot/CombinedDomainXYPlot.java) in all cases.
@@ -125,6 +131,7 @@ ChartBuilder.get()
 
 In the future, more parameterization may be added to leverage more of what
 [jfreechart](https://github.com/jfree/jfreechart) provides.
+
 
 ## Demo App
 
@@ -191,19 +198,21 @@ mvn install
 
 ### Generate and view Javadoc
 
+You can generate the Javadoc locally
+
 ```
 mvn javadoc:javadoc
 ```
 
 Use a browser to open `target/site/apidocs/index.html`
 
-Alternatively you can run the generation script by specifying what version tag to associate with the Javadoc:
+Alternatively, run the generation script by specifying what version tag to associate with the Javadoc:
 
 ```
 ./scripts/generate-javadoc.sh v1.5.3
 ```
 
-The output will be in `target/site/apidocs/javadoc`
+That output will be in `target/site/apidocs/javadoc`
 
 
 ### Add the JAR to a client project

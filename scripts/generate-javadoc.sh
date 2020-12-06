@@ -8,6 +8,7 @@ fi
 TAG=$1
 
 mvn javadoc:javadoc \
+-Dsource=8 \
 -DdestDir=javadoc \
 -Dnotimestamp \
 -Dshow=public \
