@@ -197,6 +197,14 @@ mvn javadoc:javadoc
 
 Use a browser to open `target/site/apidocs/index.html`
 
+Alternatively you can run the generation script by specifying what version tag to associate with the Javadoc:
+
+```
+./scripts/generate-javadoc.sh v1.5.3
+```
+
+The output will be in `target/site/apidocs/javadoc`
+
 
 ### Add the JAR to a client project
 
