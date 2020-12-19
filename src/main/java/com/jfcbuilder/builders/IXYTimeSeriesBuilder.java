@@ -23,6 +23,8 @@ package com.jfcbuilder.builders;
 import java.awt.Color;
 import java.awt.Stroke;
 
+import org.jfree.data.time.TimeSeries;
+
 import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
@@ -36,8 +38,7 @@ import com.jfcbuilder.types.ZeroBasedIndexRange;
  * @param <T> The method chaining return type, which must be the type of the builder implementing
  *        this interface.
  */
-public interface IXYTimeSeriesBuilder<T extends IXYTimeSeriesBuilder<T>>
-    extends ITimeSeriesBuilder<T> {
+interface IXYTimeSeriesBuilder<T extends IXYTimeSeriesBuilder<T>> {
 
   /**
    * Sets the name associated with the series.
@@ -103,4 +104,32 @@ public interface IXYTimeSeriesBuilder<T extends IXYTimeSeriesBuilder<T>>
    * @return The series drawing style
    */
   Stroke style();
+
+  /**
+   * Sets the time data array associated with various other data to be plotted. The array should
+   * define all time instances in milliseconds since the epoch start.
+   * 
+   * @param timeData The time data to be set. <b>Warning: this array's length must be equal to the
+   *        length of all other data to be plotted that will be associated with this time series.
+   *        Failure to do so will result in undefined and possibly fatal behavior.</b>
+   * @return Reference to this builder for chaining method calls
+   */
+  T timeData(long[] timeData);
+
+  /**
+   * Toggle whether to show time gaps at x-values where there is no corresponding time instance.
+   * 
+   * @param showTimeGaps True to show time gaps, false otherwise.
+   * @return Reference to this builder instance for method chaining
+   */
+  T showTimeGaps(boolean showTimeGaps);
+
+  /**
+   * Builds a new TimeSeries instance from all data and settings supplied to this builder.
+   * 
+   * @return The new TimeSeries instance if successful
+   * @throws IllegalStateException If the builder was not setup adequately to properly create new
+   *         TimeSeries instances
+   */
+  TimeSeries build() throws IllegalStateException;
 }

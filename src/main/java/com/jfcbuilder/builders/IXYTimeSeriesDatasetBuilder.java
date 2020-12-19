@@ -25,17 +25,25 @@ import org.jfree.data.xy.XYDataset;
 import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
- * Interface for all XYDataset builders.  Uses a generic to specify the concrete implementation of
- * the interface as the return type of setter methods. This is done to support method chaining on
- * the same builder instance. In this framework there can be different builder types that have
- * specialized methods. If the return types were made to be this interface instead of the concrete
- * class then those specialized methods of the classes not defined in the interface would be hidden
- * by only having access to the interface.
+ * Interface for all time series based dataset builders. Uses a generic to specify the concrete
+ * implementation of the interface as the return type of setter methods. This is done to support
+ * method chaining on the same builder instance. In this framework there can be different builder
+ * types that have specialized methods. If the return types were made to be this interface instead
+ * of the concrete class then those specialized methods of the classes not defined in the interface
+ * would be hidden by only having access to the interface.
  * 
  * @param <T> The method chaining return type, which must be the type of the builder implementing
  *        this interface.
  */
-public interface IXYDatasetBuilder<T extends IXYDatasetBuilder<T>> {
+interface IXYTimeSeriesDatasetBuilder<T extends IXYTimeSeriesDatasetBuilder<T>> {
+
+  /**
+   * Sets the time data to be used for generating the XYDataset.
+   * 
+   * @param timeData Ascending date-time values represented as milliseconds since the epoch start
+   * @return Reference to this builder instance for method chaining
+   */
+  T timeData(long[] timeData);
 
   /**
    * Sets the zero-based index range used to index into all source data for building the XYDataset.
@@ -48,14 +56,6 @@ public interface IXYDatasetBuilder<T extends IXYDatasetBuilder<T>> {
   T indexRange(ZeroBasedIndexRange indexRange);
 
   /**
-   * Sets the time data to be used for generating the XYDataset.
-   * 
-   * @param timeData Ascending date-time values represented as milliseconds since the epoch start
-   * @return Reference to this builder instance for method chaining
-   */
-  T timeData(long[] timeData);
-
-  /**
    * Builds the XYDataset
    * 
    * @return New instance of the corresponding XYDataset
@@ -63,5 +63,4 @@ public interface IXYDatasetBuilder<T extends IXYDatasetBuilder<T>> {
    *         configured and its indexes are out of bounds.
    */
   XYDataset build() throws IllegalStateException;
-
 }

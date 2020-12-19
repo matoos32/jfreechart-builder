@@ -29,17 +29,33 @@ import org.jfree.chart.plot.XYPlot;
 import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
- * Interface for all XYPlot builders.  Uses a generic to specify the concrete implementation of
- * the interface as the return type of setter methods. This is done to support method chaining on
- * the same builder instance. In this framework there can be different builder types that have
- * specialized methods. If the return types were made to be this interface instead of the concrete
- * class then those specialized methods of the classes not defined in the interface would be hidden
- * by only having access to the interface.
+ * Interface for all time series based XYPlot builders. Uses a generic to specify the concrete
+ * implementation of the interface as the return type of setter methods. This is done to support
+ * method chaining on the same builder instance. In this framework there can be different builder
+ * types that have specialized methods. If the return types were made to be this interface instead
+ * of the concrete class then those specialized methods of the classes not defined in the interface
+ * would be hidden by only having access to the interface.
  * 
  * @param <T> The method chaining return type, which must be the type of the builder implementing
  *        this interface.
  */
-public interface IXYPlotBuilder<T extends IXYPlotBuilder<T>> {
+interface IXYTimeSeriesPlotBuilder<T extends IXYTimeSeriesPlotBuilder<T>> {
+
+  /**
+   * Sets the date-time values to be used when building the plot.
+   * 
+   * @param timeData The date-time values representing the milliseconds since the epoch start
+   * @return Reference to this builder instance for method chaining
+   */
+  T timeData(long[] timeData);
+
+  /**
+   * Toggle whether to show time gaps at x-values where there is no corresponding time instance.
+   * 
+   * @param showTimeGaps True to show time gaps, false otherwise.
+   * @return Reference to this builder instance for method chaining
+   */
+  T showTimeGaps(boolean showTimeGaps);
 
   /**
    * Sets the zero-based index range used to index into all source data for building the XYPlot.
@@ -60,14 +76,6 @@ public interface IXYPlotBuilder<T extends IXYPlotBuilder<T>> {
   T xAxis(ValueAxis xAxis);
 
   /**
-   * Sets the date-time values to be used when building the plot.
-   * 
-   * @param timeData The date-time values representing the milliseconds since the epoch start
-   * @return Reference to this builder instance for method chaining
-   */
-  T timeData(long[] timeData);
-
-  /**
    * Registers an IXYTimeSeriesBuilder whose {@code build()} method will be called to generate its
    * XYTimeSeries when this plot builder's {@code build()} method is called.
    * 
@@ -83,7 +91,7 @@ public interface IXYPlotBuilder<T extends IXYPlotBuilder<T>> {
    * @param series The series builder representing the series that it will build
    * @return Reference to this builder instance for method chaining
    */
-  T series(IXYDatasetBuilder<?> series);
+  T series(IXYTimeSeriesDatasetBuilder<?> series);
 
   /**
    * Registers a LineBuilder whose {@code build()} method will be called to generate its plot line
@@ -152,7 +160,7 @@ public interface IXYPlotBuilder<T extends IXYPlotBuilder<T>> {
    * @return Reference to this builder instance for method chaining
    */
   T yTickFormat(NumberFormat format);
-  
+
   /**
    * Sets the plot background color to use when building the plot.
    * 
@@ -195,10 +203,8 @@ public interface IXYPlotBuilder<T extends IXYPlotBuilder<T>> {
    * Builds the XYPlot from all configured data and properties.
    * 
    * @return New instance of an XYPlot corresponding to all configured data and properties
-   * @throws IllegalStateException If a XYTimeSeriesBuilder or LineBuilder are not configured,
-   *         possibly if at least one XYTimeSeriesBuilder or LineBuilder are not of a specifically
-   *         needed sub-type based on the implementation, if a time axis was not set, or if time
-   *         data was not set.
+   * @throws IllegalStateException If the minimum needed configuration for building an XYPlot is not
+   *         setup in the builder.
    */
   XYPlot build() throws IllegalStateException;
 

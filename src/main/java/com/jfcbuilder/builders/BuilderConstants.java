@@ -24,7 +24,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Stroke;
-import java.text.NumberFormat;
 
 import com.jfcbuilder.types.Orientation;
 
@@ -103,11 +102,13 @@ public abstract class BuilderConstants {
   public static final Orientation DEFAULT_ORIENTATION = Orientation.HORIZONTAL;
 
   /**
-   * Factory method for getting new instances of the default axis number format.
-   * 
-   * @return New instance of the default NumberFormat that can be used throughout the application.
+   * Whether or not to render time gaps by default in time series plots.
    */
-  public static NumberFormat getDefaultNumberFormat() {
-    return NumberFormat.getNumberInstance();
-  }
+  public static final boolean DEFAULT_SHOW_TIME_GAPS = true;
+
+  /**
+   * Percentage of total possible bar width to use for drawing XY bars and candlesticks. Use a large
+   * value to create small spacing between bars and vice versa for creating large spacing.
+   */
+  public static final double DEFAULT_BAR_WIDTH_PERCENT = 0.95;
 }

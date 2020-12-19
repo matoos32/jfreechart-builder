@@ -56,11 +56,21 @@ public class XYTextBuilder implements IXYAnnotationBuilder<XYTextBuilder> {
   }
 
   @Override
+  public double x() {
+    return elems.x();
+  }
+  
+  @Override
   public XYTextBuilder y(double y) {
     elems.y(y);
     return this;
   }
 
+  @Override
+  public double y() {
+    return elems.y();
+  }
+  
   @Override
   public XYTextBuilder angle(double degrees) {
     elems.angle(degrees);

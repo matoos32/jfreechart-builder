@@ -14,13 +14,13 @@ Takes an opinionated approach to creating "good enough" charts while providing a
 ChartBuilder.get()
   .title("Simple Time Series With Annotations")
   .timeData(timeArray)
-  .xyPlot(XYPlotBuilder.get().gridLines()
+  .xyPlot(XYTimeSeriesPlotBuilder.get().gridLines()
     .series(XYTimeSeriesBuilder.get().name("Amplitude").data(array1).color(Color.BLUE).style(SOLID_LINE))
     .annotation(XYArrowBuilder.get().x(arrowX).y(arrowY).angle(180.0).color(Color.RED).text(arrowTxt))
     .annotation(XYArrowBuilder.get().x(arrowX).y(arrowY).angle(0.0).color(Color.RED))
     .annotation(XYTextBuilder.get().x(arrowX).y(arrowY).color(DARK_GREEN)
-      .text("This value!").textPaddingLeft(5).textAlign(TextAnchor.BASELINE_LEFT).angle(90.0)))
-  .build()
+        .text("This value!").textPaddingLeft(5).textAlign(TextAnchor.BASELINE_LEFT).angle(90.0)))
+  .build();
 ```
 
 ![A multi-plot minute time series chart](./screenshots/simple-time-series-with-annotations.png "Screenshot")
@@ -34,30 +34,30 @@ ChartBuilder.get()
   .title("Multi Plot Minute Time Series")
   .timeData(timeArray)
 
-  .xyPlot(XYPlotBuilder.get().yAxisName("Values")
+  .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Values")
     .backgroundColor(Color.DARK_GRAY).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
     .series(XYTimeSeriesBuilder.get().data(array1).color(Color.YELLOW).style(SOLID_LINE))
     .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID_LINE))
     .series(XYTimeSeriesBuilder.get().data(array3).color(Color.GREEN).style(SOLID_LINE))
     .series(XYTimeSeriesBuilder.get().data(array4).color(Color.MAGENTA).style(SOLID_LINE)))
 
-  .xyPlot(XYPlotBuilder.get().yAxisName("Amplitudes").noGridLines()
+  .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Amplitudes").noGridLines()
     .series(XYTimeSeriesBuilder.get().data(array2).color(Color.BLACK).style(SOLID_LINE))
     .series(XYTimeSeriesBuilder.get().data(array3).color(Color.LIGHT_GRAY).style(SOLID_LINE)))
 
-  .xyPlot(XYPlotBuilder.get().yAxisName("Series 1")
+  .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Series 1")
     .backgroundColor(DARK_GREEN).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
     .series(XYTimeSeriesBuilder.get().data(array1).color(Color.GREEN).style(SOLID_LINE)))
 
-  .xyPlot(XYPlotBuilder.get().yAxisName("Series 2")
+  .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Series 2")
     .backgroundColor(DARK_RED).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
     .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID_LINE)))
 
-  .xyPlot(XYPlotBuilder.get().yAxisName("Series 3")
+  .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Series 3")
     .backgroundColor(DARK_BLUE).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
     .series(XYTimeSeriesBuilder.get().data(array3).color(Color.CYAN).style(SOLID_LINE)))
 
-  .build()
+  .build();
 ```
 
 ![A multi-plot minute time series chart](./screenshots/multi-plot-minute-time-series.png "Screenshot")
@@ -78,32 +78,43 @@ ChartBuilder.get()
     .series(XYTimeSeriesBuilder.get().name("MA(200)").data(sma200).color(Color.RED).style(SOLID_LINE))
     .annotation(XYArrowBuilder.get().x(stockEventDate).y(stockEventPrice).angle(270.0).color(DARK_GREEN)
       .textAlign(TextAnchor.BOTTOM_CENTER).text(String.format("%.2f", stockEventPrice)))
-    .line(LineBuilder.get().horizontal().at(resistanceLevel)
-    .color(Color.LIGHT_GRAY).style(SOLID_LINE)))
+    .line(LineBuilder.get().horizontal().at(resistanceLevel).color(Color.LIGHT_GRAY).style(SOLID_LINE)))
 
-  .xyPlot(VolumeXYPlotBuilder.get().yAxisName("Volume").yTickFormat(volNumFormat).plotWeight(1).gridLines()
-    .series(VolumeXYTimeSeriesBuilder.get().ohlcv(dohlcv).closeUpSeries().color(Color.WHITE))
-    .series(VolumeXYTimeSeriesBuilder.get().ohlcv(dohlcv).closeDownSeries().color(Color.RED))
+  .xyPlot(VolumeXYPlotBuilder.get().yAxisName("Volume").yTickFormat(volNumFormat).gridLines()
+    .series(VolumeXYTimeSeriesBuilder.get().ohlcv(dohlcv).upColor(Color.DARK_GRAY).downColor(Color.RED))
     .series(XYTimeSeriesBuilder.get().name("MA(90)").data(volSma90).color(Color.BLUE).style(SOLID_LINE))
     .annotation(XYArrowBuilder.get().x(stockEventDate).y(stockEventVolume).angle(270.0).color(DARK_GREEN)
       .textAlign(TextAnchor.BOTTOM_CENTER).text(String.format("%.0f", stockEventVolume)))
-    .line(LineBuilder.get().horizontal().at(volumeLine)
-    .color(DARK_GREEN).style(SOLID_LINE)))
+    .line(LineBuilder.get().horizontal().at(volumeLine).color(DARK_GREEN).style(SOLID_LINE)))
 
-  .xyPlot(XYPlotBuilder.get().yAxisName("Stoch").yAxisRange(0.0, 100.0).yAxisTickSize(50.0).plotWeight(1).gridLines()
+  .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Stoch").yAxisRange(0.0, 100.0).yAxisTickSize(50.0).gridLines()
     .series(XYTimeSeriesBuilder.get().name("K(" + K + ")").data(stoch.getPctK()).color(Color.RED).style(SOLID_LINE))
     .series(XYTimeSeriesBuilder.get().name("D(" + D + ")").data(stoch.getPctD()).color(Color.BLUE).style(SOLID_LINE))
     .line(LineBuilder.get().horizontal().at(80.0).color(Color.BLACK).style(SOLID_LINE))
     .line(LineBuilder.get().horizontal().at(50.0).color(Color.BLUE).style(SOLID_LINE))
     .line(LineBuilder.get().horizontal().at(20.0).color(Color.BLACK).style(SOLID_LINE)))
 
-  .build()
+  .build();
 ```
 
 ![A stock chart time series chart with weekend gaps](./screenshots/stock-chart-time-series-weekend-gaps.png "Screenshot")
 
+Using `showTimeGaps(boolean)` you can remove time gaps that JFreeChart renders by default when no data is defined at expected time instances (like on weekends):
 
-## Hosted Javadoc
+```
+ChartBuilder.get()
+
+  .title("Stock Chart Time Series No Gaps for Weekends")
+  .showTimeGaps(false)
+
+  ...
+```
+
+![A stock chart time series chart with weekend gaps not rendered](./screenshots/stock-chart-time-series-no-time-gaps.png "Screenshot")
+
+**Note: the x-axis month label in the gapless time chart currently doesn't always correspond to the first day (or trading day) of the month.**
+
+## Javadoc
 
 See the [Builders Summary](https://matoos32.github.io/jfreechart-builder-docs/javadoc/com/jfcbuilder/builders/package-summary.html)
 to browse the public API.
@@ -121,9 +132,13 @@ to browse the public API.
 
 * Stock market volume bar charts
 
-* Stright lines
+* Stright line charts
+
+* Overlay series
 
 * Annotations (arrows and text)
+
+* Time gap removal
 
 * Set various colors
 

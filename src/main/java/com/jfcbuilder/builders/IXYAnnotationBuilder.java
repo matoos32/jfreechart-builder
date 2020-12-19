@@ -36,7 +36,7 @@ import org.jfree.chart.ui.TextAnchor;
  * @param <T> The method chaining return type, which must be the type of the builder implementing
  *        this interface.
  */
-public interface IXYAnnotationBuilder<T extends IXYAnnotationBuilder<T>> {
+interface IXYAnnotationBuilder<T extends IXYAnnotationBuilder<T>> {
 
   /**
    * Sets the color used to draw the annotation.
@@ -97,12 +97,26 @@ public interface IXYAnnotationBuilder<T extends IXYAnnotationBuilder<T>> {
   T x(double x);
 
   /**
+   * Gets the x-coordinate of the annotation.
+   * 
+   * @return The x-coordinate
+   */
+  double x();
+  
+  /**
    * Sets the y-coordinate of the annotation.
    * 
    * @param y The y-coordinate
    * @return Reference to this builder for chaining method calls
    */
   T y(double y);
+
+  /**
+   * Gets the y-coordinate of the annotation.
+   * 
+   * @return The y-coordinate
+   */
+  double y();
 
   /**
    * Builds the XYAnnotation from all configured data and properties.
