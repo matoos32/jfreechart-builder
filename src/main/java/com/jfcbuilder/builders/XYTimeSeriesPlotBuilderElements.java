@@ -54,11 +54,12 @@ class XYTimeSeriesPlotBuilderElements {
   private static final Paint DEFAULT_AXIS_COLOR = Axis.DEFAULT_AXIS_LINE_PAINT;
   
   private List<IXYTimeSeriesBuilder<?>> seriesBuilders;
-  private List<IXYDatasetBuilder<?>> datasetBuilders;
+  private List<IXYTimeSeriesDatasetBuilder<?>> datasetBuilders;
   private List<LineBuilder> lineBuilders;
   private List<IXYAnnotationBuilder<?>> annotationBuilders;
   private ValueAxis xAxis;
   private long[] timeData;
+  private boolean showTimeGaps;
   private ZeroBasedIndexRange indexRange;
   private int plotWeight;
   private String yAxisName;
@@ -80,12 +81,13 @@ class XYTimeSeriesPlotBuilderElements {
     annotationBuilders = new ArrayList<>();
     xAxis = null;
     timeData = null;
+    showTimeGaps = BuilderConstants.DEFAULT_SHOW_TIME_GAPS;
     indexRange = null;
     plotWeight = DEFAULT_PLOT_WEIGHT;
     yAxisName = "";
     yAxisRange = null;
     yAxisTickSize = USE_DEFAULT_Y_AXIS_TICK_SIZE;
-    yAxisTickFormat = BuilderConstants.getDefaultNumberFormat();
+    yAxisTickFormat = BuilderUtils.getDefaultNumberFormat();
     backgroundColor = DEFAULT_BACKGROUND_COLOR;
     axisFontColor = DEFAULT_AXIS_FONT_COLOR;
     axisColor = DEFAULT_AXIS_COLOR;
@@ -149,6 +151,25 @@ class XYTimeSeriesPlotBuilderElements {
     return timeData;
   }
 
+
+  /**
+   * Sets whether or not time gaps should be rendered.
+   * 
+   * @param showTimeGaps True to render time gaps, false otherwise
+   */
+  public void showTimeGaps(boolean showTimeGaps) {
+    this.showTimeGaps = showTimeGaps;
+  }
+  
+  /**
+   * Gets whether to render time gaps.
+   * 
+   * @return True if time gaps should be rendered, false otherwise
+   */
+  public boolean showTimeGaps() {
+    return showTimeGaps;
+  }
+  
   /**
    * Registers an XY time series builder to be used for building the plot.
    * 
@@ -174,7 +195,7 @@ class XYTimeSeriesPlotBuilderElements {
    * 
    * @param dataset The builder to be registered
    */
-  public void dataset(IXYDatasetBuilder<?> dataset) {
+  public void dataset(IXYTimeSeriesDatasetBuilder<?> dataset) {
     if (dataset != null) {
       datasetBuilders.add(dataset);
     }
@@ -185,7 +206,7 @@ class XYTimeSeriesPlotBuilderElements {
    * 
    * @return The unmodifiable list of dataset builders
    */
-  public List<IXYDatasetBuilder<?>> unmodifiableDatasets() {
+  public List<IXYTimeSeriesDatasetBuilder<?>> unmodifiableDatasets() {
     return Collections.unmodifiableList(datasetBuilders);
   }
 
@@ -328,7 +349,7 @@ class XYTimeSeriesPlotBuilderElements {
    */
   public void yTickFormat(NumberFormat format) {
 
-    yAxisTickFormat = format == null ? BuilderConstants.getDefaultNumberFormat() : format;
+    yAxisTickFormat = format == null ? BuilderUtils.getDefaultNumberFormat() : format;
   }
 
   /**

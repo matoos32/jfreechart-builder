@@ -65,13 +65,13 @@ class CandlestickRendererBuilder {
   public CandlestickRenderer build() {
 
     CandlestickRenderer renderer = new CandlestickRenderer();
-
     renderer.setAutoWidthMethod(CandlestickRenderer.WIDTHMETHOD_AVERAGE);
     renderer.setUseOutlinePaint(true); // Make sure the desired outline paint actually gets used
     renderer.setSeriesOutlinePaint(0, BuilderConstants.DEFAULT_OUTLINE_COLOR);
     renderer.setUpPaint(upColor);
     renderer.setDownPaint(downColor);
     renderer.setDrawVolume(false);
+    renderer.setAutoWidthFactor(BuilderConstants.DEFAULT_BAR_WIDTH_PERCENT);
 
     return renderer;
   }

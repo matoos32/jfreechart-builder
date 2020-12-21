@@ -21,6 +21,12 @@
 package com.jfcbuilder.builders;
 
 import java.awt.Color;
+import java.text.FieldPosition;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +35,7 @@ import java.util.Objects;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.XYPlot;
@@ -52,7 +59,8 @@ public class ChartBuilder {
   private String title;
   private ZeroBasedIndexRange indexRange;
   private long[] timeData;
-  private List<IXYPlotBuilder<?>> xyPlotBuilders;
+  private boolean showTimeGaps;
+  private List<IXYTimeSeriesPlotBuilder<?>> xyPlotBuilders;
 
   /**
    * Hidden constructor.
@@ -61,6 +69,7 @@ public class ChartBuilder {
     title = DEFAULT_TITLE;
     indexRange = NO_INDEX_RANGE;
     timeData = NO_TIME_DATA;
+    showTimeGaps = true;
     xyPlotBuilders = new ArrayList<>();
   }
 
@@ -124,13 +133,33 @@ public class ChartBuilder {
   }
 
   /**
-   * Registers an IXYPlotBuilder whose {@code build()} method will be called to generate its plot
-   * when this chart builder's {@code build()} method is called.
+   * Sets whether or not time gaps should be rendered.
+   * 
+   * @param showTimeGaps True to render time gaps, false otherwise
+   * @return Same instance of this builder for chaining method calls
+   */
+  public ChartBuilder showTimeGaps(boolean showTimeGaps) {
+    this.showTimeGaps = showTimeGaps;
+    return this;
+  }
+
+  /**
+   * Gets whether to render time gaps.
+   * 
+   * @return True if time gaps should be rendered, false otherwise
+   */
+  public boolean showTimeGaps() {
+    return showTimeGaps;
+  }
+
+  /**
+   * Registers an IXYTimeSeriesPlotBuilder whose {@code build()} method will be called to
+   * generate its plot when this chart builder's {@code build()} method is called.
    * 
    * @param builder The series builder representing the series that it will build
    * @return Same instance of this builder for chaining method calls
    */
-  public ChartBuilder xyPlot(IXYPlotBuilder<?> builder) {
+  public ChartBuilder xyPlot(IXYTimeSeriesPlotBuilder<?> builder) {
     xyPlotBuilders.add(builder);
     return this;
   }
@@ -155,13 +184,30 @@ public class ChartBuilder {
     ZeroBasedIndexRange range = (indexRange != null) ? indexRange
         : new ZeroBasedIndexRange(0, timeData.length - 1);
 
-    ValueAxis sharedAxis = createTimeAxis(timeData[range.getStartIndex()],
-        timeData[range.getEndIndex()]);
+    ValueAxis sharedAxis;
+
+    if (showTimeGaps) {
+
+      sharedAxis = createTimeAxis(timeData[range.getStartIndex()], timeData[range.getEndIndex()]);
+
+    } else {
+
+      sharedAxis = createGaplessTimeAxis(range, timeData);
+    }
 
     CombinedDomainXYPlot parent = new CombinedDomainXYPlot(sharedAxis);
 
-    for (IXYPlotBuilder<?> b : xyPlotBuilders) {
-      XYPlot xyPlot = b.indexRange(range).xAxis(sharedAxis).timeData(timeData).build();
+    for (IXYTimeSeriesPlotBuilder<?> b : xyPlotBuilders) {
+
+      b = b.indexRange(range).xAxis(sharedAxis);
+
+      if (b instanceof IXYTimeSeriesPlotBuilder) {
+        IXYTimeSeriesPlotBuilder<?> tsBuilder = (IXYTimeSeriesPlotBuilder<?>) b;
+        tsBuilder.timeData(timeData).showTimeGaps(showTimeGaps);
+      }
+
+      XYPlot xyPlot = b.build();
+
       xyPlot.setRangeAxisLocation(AxisLocation.TOP_OR_RIGHT, false);
       xyPlot.setDomainCrosshairVisible(true);
       xyPlot.setRangeCrosshairVisible(true);
@@ -173,6 +219,76 @@ public class ChartBuilder {
     JFreeChart chart = createChart(parent, title);
     return chart;
 
+  }
+
+  private ValueAxis createGaplessTimeAxis(ZeroBasedIndexRange range, long[] timeData) {
+
+    final String timeAxisLabel = null;
+    NumberAxis theTimeAxis = new NumberAxis(timeAxisLabel);
+    theTimeAxis.setAutoRange(true);
+    theTimeAxis.setAutoRangeStickyZero(false);
+    theTimeAxis.setLowerMargin(0.005);
+    theTimeAxis.setUpperMargin(0.005);
+    theTimeAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
+    theTimeAxis.setNumberFormatOverride(new NumberFormat() {
+
+      // Generated value
+      private static final long serialVersionUID = 2306007623536333089L;
+
+      private int lastIntNum = 0;
+
+      @Override
+      public StringBuffer format(double number, StringBuffer toAppendTo, FieldPosition pos) {
+
+        if (Double.isNaN(number)) {
+          return toAppendTo;
+        }
+
+        final int intNum = (int) number;
+
+        if ((intNum < 0) || (intNum >= timeData.length)) {
+          return toAppendTo;
+        } else {
+          final double timeval = (double) timeData[range.getStartIndex() + intNum];
+          final double lastTimeval = (double) timeData[range.getStartIndex() + lastIntNum];
+          lastIntNum = intNum;
+
+          if (Double.isNaN(timeval)) {
+            return toAppendTo;
+          }
+
+          LocalDate date = Instant.ofEpochMilli((long) timeval).atZone(ZoneId.systemDefault())
+              .toLocalDate();
+
+          LocalDate lastDate = Instant.ofEpochMilli((long) lastTimeval)
+              .atZone(ZoneId.systemDefault()).toLocalDate();
+
+          if (!Double.isNaN(lastTimeval) && date.getMonth() != lastDate.getMonth()) {
+            final String monthStr = date.getMonth().toString();
+
+            return toAppendTo.append(
+                monthStr.substring(0, 1).toUpperCase() + monthStr.substring(1, 3).toLowerCase());
+
+          } else {
+            return toAppendTo.append(date.getDayOfMonth());
+          }
+        }
+      }
+
+      @Override
+      public StringBuffer format(long number, StringBuffer toAppendTo, FieldPosition pos) {
+        return format((double) number, toAppendTo, pos);
+      }
+
+      @Override
+      public Number parse(String source, ParsePosition parsePosition) {
+        // Not supported
+        return null;
+      }
+
+    });
+
+    return theTimeAxis;
   }
 
   /**

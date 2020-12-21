@@ -41,6 +41,7 @@ class XYTimeSeriesElements {
   private ZeroBasedIndexRange indexRange;
   private double[] data;
   private long[] timeData;
+  private boolean showTimeGaps;
   private Color color;
   private Stroke style;
 
@@ -52,6 +53,7 @@ class XYTimeSeriesElements {
     indexRange = DEFAULT_INDEX_RANGE;
     data = BuilderConstants.EMPTY_SERIES_DATA;
     timeData = BuilderConstants.EMPTY_TIME_DATA;
+    showTimeGaps = BuilderConstants.DEFAULT_SHOW_TIME_GAPS;
     color = DEFAULT_COLOR;
     style = DEFAULT_STYLE;
   }
@@ -130,6 +132,24 @@ class XYTimeSeriesElements {
   public void timeData(long[] timeData) {
     Objects.requireNonNull(timeData, "Time data cannot be null");
     this.timeData = timeData;
+  }
+
+  /**
+   * Gets whether to render time gaps.
+   * 
+   * @return True if time gaps should be rendered, false otherwise
+   */
+  public boolean showTimeGaps() {
+    return showTimeGaps;
+  }
+
+  /**
+   * Sets whether or not time gaps should be rendered.
+   * 
+   * @param showTimeGaps True to render time gaps, false otherwise
+   */
+  public void showTimeGaps(boolean showTimeGaps) {
+    this.showTimeGaps = showTimeGaps;
   }
 
   /**
