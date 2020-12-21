@@ -37,7 +37,7 @@ import com.jfcbuilder.types.ZeroBasedIndexRange;
  * Builder for producing stock market Open High Low Close (OHLC) data sets that can be used in OHLC
  * plots.
  */
-public class OhlcSeriesBuilder implements IXYDatasetBuilder<OhlcSeriesBuilder> {
+public class OhlcSeriesBuilder implements IXYTimeSeriesDatasetBuilder<OhlcSeriesBuilder> {
 
   private OhlcvSeries ohlcv;
   private Color upColor;
@@ -141,8 +141,10 @@ public class OhlcSeriesBuilder implements IXYDatasetBuilder<OhlcSeriesBuilder> {
       throw new IllegalStateException("No time data configured");
     }
 
-    OHLCSeriesCollection collection = new OHLCSeriesCollection();
-    OHLCSeries series = new OHLCSeries("dohlc");
+    if (indexRange != null && indexRange.getEndIndex() > (timeData.length - 1)) {
+      throw new IllegalStateException(
+          "Configured index range is greater than configured data size");
+    }
 
     final double[] opens = ohlcv.opens();
     final double[] highs = ohlcv.highs();
@@ -155,11 +157,9 @@ public class OhlcSeriesBuilder implements IXYDatasetBuilder<OhlcSeriesBuilder> {
       throw new IllegalStateException("Time and OHLCV array sizes do not match");
     }
 
-    if (indexRange != null && indexRange.getEndIndex() > (timeData.length - 1)) {
-      throw new IllegalStateException(
-          "Configured index range is greater than configured data size");
-    }
-
+    OHLCSeriesCollection collection = new OHLCSeriesCollection();
+    OHLCSeries series = new OHLCSeries("dohlc");
+    
     ZeroBasedIndexRange range = (indexRange != null) ? indexRange
         : new ZeroBasedIndexRange(0, timeData.length - 1);
 

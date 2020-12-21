@@ -78,6 +78,12 @@ public class XYTimeSeriesBuilder implements IXYTimeSeriesBuilder<XYTimeSeriesBui
   }
 
   @Override
+  public XYTimeSeriesBuilder showTimeGaps(boolean showTimeGaps) {
+    elements.showTimeGaps(showTimeGaps);
+    return this;
+  }
+  
+  @Override
   public XYTimeSeriesBuilder color(Color color) {
     elements.color(color);
     return this;

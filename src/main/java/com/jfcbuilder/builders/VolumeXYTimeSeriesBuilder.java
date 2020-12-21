@@ -21,74 +21,39 @@
 package com.jfcbuilder.builders;
 
 import java.awt.Color;
-import java.awt.Stroke;
 import java.util.Date;
 import java.util.Objects;
 
 import org.jfree.data.general.SeriesException;
-import org.jfree.data.time.Day;
-import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.Millisecond;
+import org.jfree.data.time.ohlc.OHLCSeries;
+import org.jfree.data.time.ohlc.OHLCSeriesCollection;
+import org.jfree.data.xy.XYDataset;
 
-import com.jfcbuilder.types.DohlcvSeries;
+import com.jfcbuilder.types.OhlcvSeries;
 import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
- * Builder for producing stock market volume data series using configured builder properties and
- * series data. Supports the ability to produce different series for rendering "close up" and "close
- * down" colors or rendering with a single color without consideration of close up/down days. To
- * configure this, use the {@code closeUpSeries()}, {@code closeDownSeries()}, or
- * {@code uniformSeries()} method calls on the builder to indicate which of these it is. The
- * configured color will be the rendering color for the series.
- * <p>
- * Based on how JFreeChart is believed to work, for up/down colors you can use one of these series
- * for "close up" days, and another for "close down" days. As such, the up day series is given a
- * {@code Double.NaN} value on down days, and the down day series will have a {@code Double.NaN}
- * given on up days.
+ * Builder for producing stock market volume data sets that can be used in Volume XY plots.
  */
-public class VolumeXYTimeSeriesBuilder implements IXYTimeSeriesBuilder<VolumeXYTimeSeriesBuilder> {
+public class VolumeXYTimeSeriesBuilder
+    implements IXYTimeSeriesDatasetBuilder<VolumeXYTimeSeriesBuilder> {
 
-  private enum SeriesType {
-
-    /**
-     * The built series values and drawing settings are for bars where the OHLC price closed higher
-     * than at open.
-     */
-    CLOSE_UP,
-
-    /**
-     * The built series values and drawing settings are for bars where the OHLC price closed lower
-     * than at open.
-     */
-    CLOSE_DOWN,
-
-    /**
-     * The built series values and drawing settings are the same for all bars regardless of closing
-     * up or down.
-     */
-    UNIFORM
-  }
-
-  private static final SeriesType DEFAULT_SERIES_TYPE = SeriesType.UNIFORM;
-
-  /**
-   * What type of series will be built by this builder.
-   */
-  private SeriesType seriesType;
-
-  /**
-   * The associated DOHLCV series from which up/down days will be determined.
-   */
-  private DohlcvSeries dohlcvSeries;
-
-  private XYTimeSeriesElements elements;
+  private OhlcvSeries ohlcv;
+  private Color upColor;
+  private Color downColor;
+  private ZeroBasedIndexRange indexRange;
+  private long[] timeData;
 
   /**
    * Hidden constructor.
    */
   private VolumeXYTimeSeriesBuilder() {
-    seriesType = DEFAULT_SERIES_TYPE;
-    elements = new XYTimeSeriesElements();
-    dohlcvSeries = null;
+    ohlcv = new OhlcvSeries();
+    upColor = BuilderConstants.DEFAULT_UP_COLOR;
+    downColor = BuilderConstants.DEFAULT_DOWN_COLOR;
+    indexRange = null;
+    timeData = BuilderConstants.EMPTY_TIME_DATA;
   }
 
   /**
@@ -100,201 +65,126 @@ public class VolumeXYTimeSeriesBuilder implements IXYTimeSeriesBuilder<VolumeXYT
     return new VolumeXYTimeSeriesBuilder();
   }
 
-  @Override
-  public VolumeXYTimeSeriesBuilder name(String name) {
-    elements.name(name);
+  /**
+   * Sets the OHLCV data to be used for building the XYDataset.
+   * 
+   * @param ohlcv The data to be set
+   * @return Reference to this builder instance for method chaining
+   */
+  public VolumeXYTimeSeriesBuilder ohlcv(OhlcvSeries ohlcv) {
+    Objects.requireNonNull(ohlcv, "OHLCV series cannot be set to null");
+    this.ohlcv = ohlcv;
     return this;
+  }
+
+  /**
+   * Sets the color to use for drawing OHLCV items on days where price closed up (higher than open).
+   * 
+   * @param color The color to be set
+   * @return Reference to this builder instance for method chaining
+   */
+  public VolumeXYTimeSeriesBuilder upColor(Color color) {
+    Objects.requireNonNull(color, "Color cannot be set to null");
+    upColor = color;
+    return this;
+  }
+
+  /**
+   * Gets the color to use for drawing OHLCV items on days where price closed up (higher than open).
+   * 
+   * @return The color
+   */
+  public Color upColor() {
+    return upColor;
+  }
+
+  /**
+   * Sets the color to use for drawing OHLCV items on days where price closed down (lower than
+   * open).
+   * 
+   * @param color The color to be set
+   * @return Reference to this builder instance for method chaining
+   */
+  public VolumeXYTimeSeriesBuilder downColor(Color color) {
+    Objects.requireNonNull(color, "Color cannot be set to null");
+    downColor = color;
+    return this;
+  }
+
+  /**
+   * Gets the color to use for drawing OHLCV items on days where price closed down (lower than
+   * open).
+   * 
+   * @return The color
+   */
+  public Color downColor() {
+    return downColor;
   }
 
   @Override
   public VolumeXYTimeSeriesBuilder indexRange(ZeroBasedIndexRange indexRange) {
-    elements.indexRange(indexRange);
-    return this;
-  }
-
-  @Override
-  public VolumeXYTimeSeriesBuilder data(double[] data) {
-    elements.data(data);
+    this.indexRange = indexRange;
     return this;
   }
 
   @Override
   public VolumeXYTimeSeriesBuilder timeData(long[] timeData) {
-    elements.timeData(timeData);
+    Objects.requireNonNull(timeData, "Time data cannot be set to null");
+    this.timeData = timeData;
     return this;
   }
 
   @Override
-  public VolumeXYTimeSeriesBuilder color(Color color) {
-    elements.color(color);
-    return this;
-  }
+  public XYDataset build() throws IllegalStateException {
 
-  @Override
-  public Color color() {
-    return elements.color();
-  }
-
-  @Override
-  public VolumeXYTimeSeriesBuilder style(Stroke stroke) {
-    elements.style(stroke);
-    return this;
-  }
-
-  @Override
-  public Stroke style() {
-    return elements.style();
-  }
-
-  @Override
-  public String toString() {
-    return elements.name();
-  }
-
-  /**
-   * Sets the data from which the volume TimeSeries will be built.
-   * 
-   * @param dohlcv The data to be set
-   * @return Instance of this renderer for chaining method calls
-   */
-  public VolumeXYTimeSeriesBuilder ohlcv(DohlcvSeries dohlcv) {
-    Objects.requireNonNull(dohlcv, "DOHLCV data cannot be set to null");
-    dohlcvSeries = dohlcv;
-    data(dohlcv.volumes()); // To satisfy xyBuilder precondition check but not needed otherwise.
-    return this;
-  }
-
-  /**
-   * Configures this builder to produce a series for up-closing (closing higher) price values.
-   *
-   * @return Instance of this renderer for chaining method calls
-   */
-  public VolumeXYTimeSeriesBuilder closeUpSeries() {
-    seriesType = SeriesType.CLOSE_UP;
-    return this;
-  }
-
-  /**
-   * Checks if this builder is configured to produce an up-closing (closing higher) price values
-   * series.
-   * 
-   * @return True if configured for an up-closing series, false otherwise
-   */
-  public boolean isCloseUpSeries() {
-    return seriesType == SeriesType.CLOSE_UP;
-  }
-
-  /**
-   * Configures this builder to produce a series for down-closing (closing lower) price values.
-   *
-   * @return Instance of this renderer for chaining method calls
-   */
-  public VolumeXYTimeSeriesBuilder closeDownSeries() {
-    seriesType = SeriesType.CLOSE_DOWN;
-    return this;
-  }
-
-  /**
-   * Checks if this builder is configured to produce a down-closing (closing lower) price values
-   * series.
-   * 
-   * @return True if configured for an up-closing series, false otherwise
-   */
-  public boolean isCloseDownSeries() {
-    return seriesType == SeriesType.CLOSE_DOWN;
-  }
-
-  /**
-   * Configures this builder to produce a uniform series that's not specific to values closing up or
-   * down relative to the open price.
-   *
-   * @return Instance of this renderer for chaining method calls
-   */
-  public VolumeXYTimeSeriesBuilder uniformSeries() {
-    seriesType = SeriesType.UNIFORM;
-    return this;
-  }
-
-  /**
-   * Checks if this builder is configured to produce a uniform series that's not specific to
-   * values closing up or down relative to the open price.
-   * 
-   * @return True if configured for a uniform series, false otherwise.
-   */
-  public boolean isUniformSeries() {
-    return seriesType == SeriesType.UNIFORM;
-  }
-
-  protected void checkBuildPreconditions() throws IllegalStateException {
-    elements.checkBuildPreconditions();
-
-    if (dohlcvSeries == null) {
-      throw new IllegalStateException("No DOHLCV data configured");
+    if (timeData == null) {
+      throw new IllegalStateException("No time data configured");
     }
-  }
 
-  @Override
-  public TimeSeries build() throws IllegalStateException {
-
-    checkBuildPreconditions();
-
-    switch (seriesType) {
-      case CLOSE_UP:
-        return buildSeries(dohlcvSeries.opens(), dohlcvSeries.closes());
-      case CLOSE_DOWN:
-        return buildSeries(dohlcvSeries.closes(), dohlcvSeries.opens());
-      case UNIFORM:
-        return buildSeries();
-      default:
-        // Should never be here
-        throw new IllegalStateException(
-            "Unsupported series type configured (" + seriesType + "). Did someone add a new type?");
+    if (indexRange != null && indexRange.getEndIndex() > (timeData.length - 1)) {
+      throw new IllegalStateException(
+          "Configured index range is greater than configured data size");
     }
-  }
 
-  private TimeSeries buildSeries(double[] lowerPrices, double[] higherPrices) {
+    final double[] opens = ohlcv.opens();
+    final double[] closes = ohlcv.closes();
+    final double[] volumes = ohlcv.volumes();
 
-    final ZeroBasedIndexRange range = elements.indexRange();
-    final long[] timeData = elements.timeData();
-    final double[] data = elements.data();
+    if (timeData.length != opens.length && timeData.length != closes.length
+        && timeData.length != volumes.length) {
 
-    TimeSeries series = new TimeSeries(elements.name());
+      throw new IllegalStateException("Time and OHLCV array sizes do not match");
+    }
+
+    if (timeData.length != volumes.length) {
+
+      throw new IllegalStateException("Time and OHLCV array sizes do not match");
+    }
+
+    OHLCSeriesCollection collection = new OHLCSeriesCollection();
+    OHLCSeries series = new OHLCSeries("volume");
+
+    ZeroBasedIndexRange range = (indexRange != null) ? indexRange
+        : new ZeroBasedIndexRange(0, timeData.length - 1);
+
+    final double low = 0.0;
 
     for (int i = range.getStartIndex(); i <= range.getEndIndex(); ++i) {
-
       try {
-        // FIXME: Using Millisecond prevents rendering volume bars.
-        series.add(new Day(new Date(timeData[i])),
-            lowerPrices[i] <= higherPrices[i] ? data[i] : Double.NaN, false);
+        final double open = opens[i] <= closes[i] ? 0.0 : volumes[i];
+        final double high = volumes[i];
+        final double close = opens[i] <= closes[i] ? volumes[i] : 0.0;
+
+        series.add(new Millisecond(new Date(timeData[i])), open, high, low, close);
       } catch (SeriesException e) {
         // Duplicate value being added within the time period.
         continue;
       }
     }
 
-    return series;
-  }
+    collection.addSeries(series);
 
-  private TimeSeries buildSeries() {
-
-    final ZeroBasedIndexRange range = elements.indexRange();
-    final long[] timeData = elements.timeData();
-    final double[] data = elements.data();
-
-    TimeSeries series = new TimeSeries(elements.name());
-
-    for (int i = range.getStartIndex(); i <= range.getEndIndex(); ++i) {
-
-      try {
-        // FIXME: Using Millisecond prevents rendering volume bars.
-        series.add(new Day(new Date(timeData[i])), data[i], false);
-      } catch (SeriesException e) {
-        // Duplicate value being added within the time period.
-        continue;
-      }
-    }
-
-    return series;
+    return collection;
   }
 
 }

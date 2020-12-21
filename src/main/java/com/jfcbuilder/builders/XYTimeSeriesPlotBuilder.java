@@ -24,7 +24,6 @@ import java.awt.Paint;
 import java.text.NumberFormat;
 
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
@@ -39,14 +38,14 @@ import com.jfcbuilder.types.ZeroBasedIndexRange;
  * Builder for producing general XYPlot plots using configured builder properties, series, and
  * datasets.
  */
-public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
+public class XYTimeSeriesPlotBuilder implements IXYTimeSeriesPlotBuilder<XYTimeSeriesPlotBuilder> {
 
   private XYTimeSeriesPlotBuilderElements elements;
 
   /**
    * Hidden constructor.
    */
-  private XYPlotBuilder() {
+  private XYTimeSeriesPlotBuilder() {
     elements = new XYTimeSeriesPlotBuilderElements();
   }
 
@@ -55,54 +54,60 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
    * 
    * @return New instance of this class
    */
-  public static XYPlotBuilder get() {
-    return new XYPlotBuilder();
+  public static XYTimeSeriesPlotBuilder get() {
+    return new XYTimeSeriesPlotBuilder();
   }
 
   @Override
-  public XYPlotBuilder indexRange(ZeroBasedIndexRange indexRange) {
+  public XYTimeSeriesPlotBuilder indexRange(ZeroBasedIndexRange indexRange) {
     elements.indexRange(indexRange);
     return this;
   }
 
   @Override
-  public XYPlotBuilder xAxis(ValueAxis xAxis) {
+  public XYTimeSeriesPlotBuilder xAxis(ValueAxis xAxis) {
     elements.xAxis(xAxis);
     return this;
   }
 
   @Override
-  public XYPlotBuilder timeData(long[] timeData) {
+  public XYTimeSeriesPlotBuilder timeData(long[] timeData) {
     elements.timeData(timeData);
     return this;
   }
 
   @Override
-  public XYPlotBuilder series(IXYTimeSeriesBuilder<?> series) {
+  public XYTimeSeriesPlotBuilder showTimeGaps(boolean showTimeGaps) {
+    elements.showTimeGaps(showTimeGaps);
+    return this;
+  }
+
+  @Override
+  public XYTimeSeriesPlotBuilder series(IXYTimeSeriesBuilder<?> series) {
     elements.series(series);
     return this;
   }
 
   @Override
-  public XYPlotBuilder series(IXYDatasetBuilder<?> dataset) {
+  public XYTimeSeriesPlotBuilder series(IXYTimeSeriesDatasetBuilder<?> dataset) {
     elements.dataset(dataset);
     return this;
   }
 
   @Override
-  public XYPlotBuilder line(LineBuilder line) {
+  public XYTimeSeriesPlotBuilder line(LineBuilder line) {
     elements.line(line);
     return this;
   }
 
   @Override
-  public XYPlotBuilder annotation(IXYAnnotationBuilder<?> annotation) {
+  public XYTimeSeriesPlotBuilder annotation(IXYAnnotationBuilder<?> annotation) {
     elements.annotation(annotation);
     return this;
   }
 
   @Override
-  public XYPlotBuilder plotWeight(int weight) {
+  public XYTimeSeriesPlotBuilder plotWeight(int weight) {
     elements.plotWeight(weight);
     return this;
   }
@@ -113,55 +118,56 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
   }
 
   @Override
-  public XYPlotBuilder yAxisName(String name) {
+  public XYTimeSeriesPlotBuilder yAxisName(String name) {
     elements.yAxisName(name);
     return this;
   }
 
   @Override
-  public XYPlotBuilder yAxisRange(double lower, double upper) throws IllegalArgumentException {
+  public XYTimeSeriesPlotBuilder yAxisRange(double lower, double upper)
+      throws IllegalArgumentException {
     elements.yAxisRange(lower, upper);
     return this;
   }
 
   @Override
-  public XYPlotBuilder yAxisTickSize(double size) {
+  public XYTimeSeriesPlotBuilder yAxisTickSize(double size) {
     elements.yAxisTickSize(size);
     return this;
   }
 
   @Override
-  public XYPlotBuilder yTickFormat(NumberFormat format) {
+  public XYTimeSeriesPlotBuilder yTickFormat(NumberFormat format) {
     elements.yTickFormat(format);
     return this;
   }
 
   @Override
-  public XYPlotBuilder backgroundColor(Paint color) {
+  public XYTimeSeriesPlotBuilder backgroundColor(Paint color) {
     elements.backgroundColor(color);
     return this;
   }
 
   @Override
-  public XYPlotBuilder axisFontColor(Paint color) {
+  public XYTimeSeriesPlotBuilder axisFontColor(Paint color) {
     elements.axisFontColor(color);
     return this;
   }
 
   @Override
-  public XYPlotBuilder axisColor(Paint color) {
+  public XYTimeSeriesPlotBuilder axisColor(Paint color) {
     elements.axisColor(color);
     return this;
   }
 
   @Override
-  public XYPlotBuilder gridLines() {
+  public XYTimeSeriesPlotBuilder gridLines() {
     elements.gridLines();
     return this;
   }
 
   @Override
-  public XYPlotBuilder noGridLines() {
+  public XYTimeSeriesPlotBuilder noGridLines() {
     elements.noGridLines();
     return this;
   }
@@ -179,7 +185,9 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
 
     StringBuilder axisSubName = new StringBuilder();
 
-    TimeSeriesCollection collection = new TimeSeriesCollection();
+    TimeSeriesCollection collection = elements.showTimeGaps() ? new TimeSeriesCollection()
+        : new NumberMappedTimeSeriesCollection();
+
     StandardXYItemRenderer renderer = new StandardXYItemRenderer();
 
     double yMax = Double.MIN_VALUE;
@@ -209,27 +217,9 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
       }
     }
 
-    // TODO: Extract this code common with other classes to a factory method
-    final NumberAxis yAxis = new NumberAxis(elements.yAxisName() + axisSubName.toString());
-    yAxis.setMinorTickMarksVisible(true);
-    yAxis.setMinorTickCount(2);
-    yAxis.setMinorTickMarkOutsideLength(2);
-    yAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
-    yAxis.setAutoRangeIncludesZero(false);
-    yAxis.setAutoRangeStickyZero(false);
-    yAxis.setAxisLinePaint(elements.axisColor());
-    yAxis.setTickLabelPaint(elements.axisFontColor());
-    yAxis.setNumberFormatOverride(elements.yAxisTickFormat());
-    if (!elements.usingDefaultYAxisTickSize()) {
-      yAxis.setTickUnit(new NumberTickUnit(elements.yAxisTickSize()));
-    }
-    
-    final XYPlot plot = new XYPlot(collection, xAxis, yAxis, renderer);
-    plot.setBackgroundPaint(elements.backgroundColor());
-    plot.setDomainGridlinesVisible(elements.showGridLines());
-    plot.setRangeGridlinesVisible(elements.showGridLines());
-    plot.setDomainGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
-    plot.setRangeGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
+    final NumberAxis yAxis = BuilderUtils.createYAxis(elements);
+
+    final XYPlot plot = BuilderUtils.createPlot(xAxis, yAxis, collection, renderer, elements);
 
     for (LineBuilder builder : elements.unmodifiableLines()) {
       ValueMarker line = builder.build();
@@ -245,6 +235,13 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
     }
 
     for (IXYAnnotationBuilder<?> builder : elements.unmodifiableAnnotations()) {
+
+      if (!elements.showTimeGaps()) {
+        // We need to map the annotation time series x-axis value to the number axis.
+        BuilderUtils.mapAnnotationXToTimeIndex(timeData, builder,
+            elements.indexRange().getStartIndex());
+      }
+
       // Annotations don't have ability to get their max/min y-value to adjust y-axis range :(
       plot.addAnnotation(builder.build());
     }
@@ -259,5 +256,4 @@ public class XYPlotBuilder implements IXYPlotBuilder<XYPlotBuilder> {
 
     return plot;
   }
-
 }

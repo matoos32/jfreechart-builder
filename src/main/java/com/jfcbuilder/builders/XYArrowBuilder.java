@@ -66,11 +66,21 @@ public class XYArrowBuilder implements IXYAnnotationBuilder<XYArrowBuilder> {
   }
 
   @Override
+  public double x() {
+    return elems.x();
+  }
+
+  @Override
   public XYArrowBuilder y(double y) {
     elems.y(y);
     return this;
   }
 
+  @Override
+  public double y() {
+    return elems.y();
+  }
+  
   @Override
   public XYArrowBuilder angle(double degrees) {
     elems.angle(degrees);
@@ -124,5 +134,4 @@ public class XYArrowBuilder implements IXYAnnotationBuilder<XYArrowBuilder> {
     arrow.setArrowPaint(elems.color());
     return arrow;
   }
-
 }

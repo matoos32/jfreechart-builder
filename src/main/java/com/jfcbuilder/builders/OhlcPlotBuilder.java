@@ -26,7 +26,6 @@ import java.text.NumberFormat;
 import java.util.List;
 
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
@@ -34,6 +33,7 @@ import org.jfree.chart.renderer.xy.CandlestickRenderer;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.data.time.ohlc.OHLCSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 
 import com.jfcbuilder.types.Orientation;
@@ -43,17 +43,17 @@ import com.jfcbuilder.types.ZeroBasedIndexRange;
  * Builder for producing stock market Open High Low Close (OHLC) plots using configured builder
  * properties, series, and datasets.
  */
-public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
+public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder> {
 
   private static final String DEFAULT_Y_AXIS_NAME = "Price";
 
-  private XYTimeSeriesPlotBuilderElements elements;
+  protected XYTimeSeriesPlotBuilderElements elements;
   private OhlcSeriesBuilder ohlcSeriesBuilder;
 
   /**
    * Hidden constructor.
    */
-  private OhlcPlotBuilder() {
+  protected OhlcPlotBuilder() {
     elements = new XYTimeSeriesPlotBuilderElements();
     elements.yAxisTickFormat().setMinimumFractionDigits(2);
     ohlcSeriesBuilder = null;
@@ -88,20 +88,26 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
   }
 
   @Override
+  public OhlcPlotBuilder showTimeGaps(boolean showTimeGaps) {
+    elements.showTimeGaps(showTimeGaps);
+    return this;
+  }
+
+  @Override
   public OhlcPlotBuilder series(IXYTimeSeriesBuilder<?> series) {
     elements.series(series);
     return this;
   }
 
   /**
-   * Same as interface {@code IXYPlotBuilder<?>.series(IXYDatasetBuilder<?>)} but also checks that
-   * only one {@code OhlcSeriesBuilder} is ever added because only one is allowed per plot.
+   * Same as interface {@code IXYTimeSeriesPlotBuilder<?>.series(IXYTimeSeriesDatasetBuilder<?>)}
+   * but also checks that only one {@code OhlcSeriesBuilder} is ever added because only one is
+   * allowed per plot.
    * 
-   * @see IXYPlotBuilder#series(IXYTimeSeriesBuilder)
    * @throws IllegalArgumentException If an OhlcSeriesBuilder was already added.
    */
   @Override
-  public OhlcPlotBuilder series(IXYDatasetBuilder<?> dataset) {
+  public OhlcPlotBuilder series(IXYTimeSeriesDatasetBuilder<?> dataset) {
 
     if (dataset instanceof OhlcSeriesBuilder) {
 
@@ -199,15 +205,7 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
   }
 
   private void checkBuildPreconditions() throws IllegalStateException {
-
     elements.checkBuildPreconditions();
-
-    if (ohlcSeriesBuilder == null) {
-      final String ohlcBuilderName = OhlcSeriesBuilder.class.getSimpleName();
-      throw new IllegalStateException("No " + ohlcBuilderName + " configured. Use series("
-          + IXYDatasetBuilder.class.getSimpleName() + ") to add a just one instance of "
-          + ohlcBuilderName);
-    }
   }
 
   /**
@@ -228,32 +226,17 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
 
     final long[] timeData = elements.timeData();
 
-    ohlcSeriesBuilder.indexRange(elements.indexRange());
-    ohlcSeriesBuilder.timeData(elements.timeData());
-    XYDataset ohlc = ohlcSeriesBuilder.build();
+    XYDataset ohlc = buildOhlcDataset();
 
-    // TODO: Extract this code common with other classes to a factory method
-    NumberAxis yAxis = new NumberAxis();
-    yAxis.setMinorTickMarksVisible(true);
-    yAxis.setMinorTickCount(2);
-    yAxis.setMinorTickMarkOutsideLength(2);
-    yAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
-    yAxis.setAutoRangeIncludesZero(false);
-    yAxis.setAutoRangeStickyZero(false);
-    yAxis.setAxisLinePaint(elements.axisColor());
-    yAxis.setTickLabelPaint(elements.axisFontColor());
-    yAxis.setNumberFormatOverride(elements.yAxisTickFormat());
-    if (!elements.usingDefaultYAxisTickSize()) {
-      yAxis.setTickUnit(new NumberTickUnit(elements.yAxisTickSize()));
+    if (!elements.showTimeGaps()) {
+      if (ohlc instanceof OHLCSeriesCollection) {
+        ohlc = new NumberMappedOHLCSeriesCollection((OHLCSeriesCollection) ohlc);
+      }
     }
 
-    XYPlot plot = new XYPlot(ohlc, xAxis, yAxis, getCandleRenderer());
-    plot.setBackgroundPaint(elements.backgroundColor());
-    plot.setForegroundAlpha(0.65f); // TODO: is this alpha needed?
-    plot.setDomainGridlinesVisible(elements.showGridLines());
-    plot.setRangeGridlinesVisible(elements.showGridLines());
-    plot.setDomainGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
-    plot.setRangeGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
+    final NumberAxis yAxis = BuilderUtils.createYAxis(elements);
+
+    final XYPlot plot = BuilderUtils.createPlot(xAxis, yAxis, ohlc, getCandleRenderer(), elements);
 
     StringBuilder axisSubName = new StringBuilder();
 
@@ -262,12 +245,14 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
     if (!seriesBuilders.isEmpty()) {
 
       StandardXYItemRenderer renderer = new StandardXYItemRenderer();
-      TimeSeriesCollection collection = new TimeSeriesCollection();
+
+      TimeSeriesCollection collection = elements.showTimeGaps() ? new TimeSeriesCollection()
+          : new NumberMappedTimeSeriesCollection();
 
       for (IXYTimeSeriesBuilder<?> builder : seriesBuilders) {
 
-        builder.indexRange(elements.indexRange());
-        builder.timeData(timeData);
+        builder.indexRange(elements.indexRange()).timeData(timeData);
+
         TimeSeries series = builder.build();
 
         if (!series.isEmpty()) {
@@ -292,7 +277,16 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
         }
       }
 
-      for (IXYAnnotationBuilder<?> builder : elements.unmodifiableAnnotations()) {
+      final List<IXYAnnotationBuilder<?>> annotationBuilders = elements.unmodifiableAnnotations();
+
+      for (IXYAnnotationBuilder<?> builder : annotationBuilders) {
+
+        if (!elements.showTimeGaps()) {
+          // We need to map the annotation time series x-axis value to the number axis.
+          BuilderUtils.mapAnnotationXToTimeIndex(timeData, builder,
+              elements.indexRange().getStartIndex());
+        }
+
         // Annotations don't have ability to get their max/min y-value to adjust y-axis range :(
         plot.addAnnotation(builder.build());
       }
@@ -323,11 +317,31 @@ public class OhlcPlotBuilder implements IXYPlotBuilder<OhlcPlotBuilder> {
   }
 
   /**
+   * Helper method to get the OHLC XYDataset to be plotted.
+   * 
+   * @return The OHLC XYDataset
+   * @throws IllegalStateException If ohlcSeriesBuilder is null, if source array sizes don't match,
+   *         or if an index range is configured and its indexes are out of bounds
+   */
+  protected XYDataset buildOhlcDataset() throws IllegalStateException {
+
+    if (ohlcSeriesBuilder == null) {
+      final String ohlcBuilderName = OhlcSeriesBuilder.class.getSimpleName();
+      throw new IllegalStateException("No " + ohlcBuilderName + " configured. Use series("
+          + IXYTimeSeriesDatasetBuilder.class.getSimpleName()
+          + "<T>) to add a just one instance of " + ohlcBuilderName);
+    }
+
+    return ohlcSeriesBuilder.indexRange(elements.indexRange()).timeData(elements.timeData())
+        .build();
+  }
+
+  /**
    * Creates and configures a new candlestick renderer instance for use with plots
    * 
    * @return New renderer instance
    */
-  private CandlestickRenderer getCandleRenderer() {
+  protected CandlestickRenderer getCandleRenderer() {
 
     Color upColor = (ohlcSeriesBuilder != null) ? ohlcSeriesBuilder.upColor()
         : BuilderConstants.DEFAULT_UP_COLOR;
