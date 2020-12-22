@@ -103,10 +103,15 @@ abstract class BuilderUtils {
    * @param timeData The array of source time values
    * @param builder The builder whose x-value is to be mapped to the source time index
    * @param indexRangeStartIndex The start index of the series index range
+   * @param indexRangeEndIndex The end index of the series index range
    */
   public static void mapAnnotationXToTimeIndex(long[] timeData, IXYAnnotationBuilder<?> builder,
-      int indexRangeStartIndex) {
-    int xIndex = Arrays.binarySearch(timeData, (long) builder.x());
+      int indexRangeStartIndex, int indexRangeEndIndex) {
+    
+    // +1 as the binary search method end index is exclusive.
+    int xIndex = Arrays.binarySearch(timeData, indexRangeStartIndex, indexRangeEndIndex + 1,
+        (long) builder.x());
+
     if (xIndex >= 0) {
       builder.x((double) (xIndex - indexRangeStartIndex));
     }
