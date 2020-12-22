@@ -33,11 +33,34 @@ import com.jfcbuilder.types.Orientation;
 public abstract class BuilderConstants {
 
   /**
-   * Stroke configured for trading a solid line.
+   * Stroke configured for drawing a solid line.
    */
   public static final Stroke SOLID_LINE = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
       BasicStroke.JOIN_ROUND);
+  
+  /**
+   * Stroke configured for drawing a thin solid line.
+   */
+  public static final Stroke THIN_SOLID_LINE = new BasicStroke(0.5f, BasicStroke.CAP_BUTT,
+      BasicStroke.JOIN_ROUND);
 
+  /**
+   * BasicStroke dash pattern array.
+   */
+  private static final float dash_pattern[] = { 1.5f, 1.5f };
+  
+  /**
+   * Stroke configured for drawing a thin dashed line.
+   */
+  public static final BasicStroke DASHED_LINE = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
+      BasicStroke.JOIN_ROUND, 10.0f, dash_pattern, 0.0f);
+  
+  /**
+   * Stroke configured for drawing a thin dashed line.
+   */
+  public static final BasicStroke THIN_DASHED_LINE = new BasicStroke(0.5f, BasicStroke.CAP_BUTT,
+      BasicStroke.JOIN_ROUND, 10.0f, dash_pattern, 0.0f);
+  
   /**
    * A default font that can be used throughout the application.
    */

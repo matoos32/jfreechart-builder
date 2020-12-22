@@ -219,6 +219,8 @@ public class XYTimeSeriesPlotBuilder implements IXYTimeSeriesPlotBuilder<XYTimeS
 
     final NumberAxis yAxis = BuilderUtils.createYAxis(elements);
 
+    yAxis.setLabel(elements.yAxisName() + axisSubName.toString());
+    
     final XYPlot plot = BuilderUtils.createPlot(xAxis, yAxis, collection, renderer, elements);
 
     for (LineBuilder builder : elements.unmodifiableLines()) {

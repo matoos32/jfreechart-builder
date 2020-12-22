@@ -91,4 +91,9 @@ public class ZeroBasedIndexRange {
   public int getEndIndex() {
     return endIndex;
   }
+
+  @Override
+  public String toString() {
+    return "ZeroBasedIndexRange [startIndex=" + startIndex + ", endIndex=" + endIndex + "]";
+  }
 }
