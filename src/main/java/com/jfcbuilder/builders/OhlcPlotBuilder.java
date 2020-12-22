@@ -267,32 +267,6 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
         }
       }
 
-      for (LineBuilder builder : elements.unmodifiableLines()) {
-        ValueMarker line = builder.build();
-
-        if (builder.orientation() == Orientation.HORIZONTAL) {
-          plot.addRangeMarker(line);
-        } else {
-          plot.addDomainMarker(line);
-        }
-      }
-
-      final List<IXYAnnotationBuilder<?>> annotationBuilders = elements.unmodifiableAnnotations();
-
-      for (IXYAnnotationBuilder<?> builder : annotationBuilders) {
-
-        if (!elements.showTimeGaps()) {
-          // We need to map the annotation time series x-axis value to the number axis.
-          BuilderUtils.mapAnnotationXToTimeIndex(timeData, builder,
-              elements.indexRange().getStartIndex());
-        }
-
-        // Annotations don't have ability to get their max/min y-value to adjust y-axis range :(
-        plot.addAnnotation(builder.build());
-      }
-
-      yAxis.setLabel(elements.yAxisName() + axisSubName.toString());
-
       final int seriesIndex = plot.getSeriesCount();
 
       // We don't create a new axis but map datasets to the time axis (i.e. domain axis used for the
@@ -312,6 +286,32 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
       plot.setDataset(seriesIndex, collection);
 
     }
+
+    for (LineBuilder builder : elements.unmodifiableLines()) {
+      ValueMarker line = builder.build();
+
+      if (builder.orientation() == Orientation.HORIZONTAL) {
+        plot.addRangeMarker(line);
+      } else {
+        plot.addDomainMarker(line);
+      }
+    }
+
+    final List<IXYAnnotationBuilder<?>> annotationBuilders = elements.unmodifiableAnnotations();
+
+    for (IXYAnnotationBuilder<?> builder : annotationBuilders) {
+
+      if (!elements.showTimeGaps()) {
+        // We need to map the annotation time series x-axis value to the number axis.
+        BuilderUtils.mapAnnotationXToTimeIndex(timeData, builder,
+            elements.indexRange().getStartIndex(), elements.indexRange().getEndIndex());
+      }
+
+      // Annotations don't have ability to get their max/min y-value to adjust y-axis range :(
+      plot.addAnnotation(builder.build());
+    }
+
+    yAxis.setLabel(elements.yAxisName() + axisSubName.toString());
 
     return plot;
   }

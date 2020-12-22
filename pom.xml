@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.jfcbuilder</groupId>
   <artifactId>jfreechart-builder</artifactId>
-  <version>1.5.4</version>
+  <version>1.5.5</version>
   <name>JFreeChartBuilder</name>
   <description>A builder framework for creating JFreeChart charts.</description>
 
@@ -40,6 +40,20 @@
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+            <execution>
+                <id>attach-sources</id>
+                <goals>
+                    <goal>jar</goal>
+                </goals>
+            </execution>
+        </executions>
       </plugin>
 
     </plugins>
