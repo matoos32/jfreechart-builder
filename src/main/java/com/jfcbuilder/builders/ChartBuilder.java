@@ -209,8 +209,11 @@ public class ChartBuilder {
       XYPlot xyPlot = b.build();
 
       xyPlot.setRangeAxisLocation(AxisLocation.TOP_OR_RIGHT, false);
-      xyPlot.setDomainCrosshairVisible(true);
+      xyPlot.setDomainCrosshairVisible(true); // Enabled now to allow clicking to move crosshair
       xyPlot.setRangeCrosshairVisible(true);
+      xyPlot.setDomainCrosshairLockedOnData(false);
+      xyPlot.setDomainCrosshairValue(-1.0, false); // Start off the screen so not visible until click
+
       parent.add(xyPlot, b.plotWeight());
     }
 
@@ -246,11 +249,14 @@ public class ChartBuilder {
 
         final int intNum = (int) number;
 
-        if ((intNum < 0) || (intNum >= timeData.length)) {
+        final int timeIndex = range.getStartIndex() + intNum;
+        final int lastTimeIndex = range.getStartIndex() + lastIntNum;
+        
+        if ((intNum < 0) || (timeIndex >= timeData.length)) {
           return toAppendTo;
         } else {
-          final double timeval = (double) timeData[range.getStartIndex() + intNum];
-          final double lastTimeval = (double) timeData[range.getStartIndex() + lastIntNum];
+          final double timeval = (double) timeData[timeIndex];
+          final double lastTimeval = (double) timeData[lastTimeIndex];
           lastIntNum = intNum;
 
           if (Double.isNaN(timeval)) {
