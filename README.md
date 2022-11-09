@@ -150,8 +150,7 @@ In the future, more parameterization may be added to leverage more of what
 
 ## Demo App
 
-See the [jfreechart-builder-demo](https://github.com/matoos32/jfreechart-builder-demo) for an
-interactive demo used for development.
+See the [demo-app](./demo-app) solution for an interactive demo. Used for development and testing.
 
 
 ## Incorporating into your project
@@ -186,6 +185,13 @@ Each time `develop` is merged into `main`, a version tag is added onto that merg
 Each commit to `main` represents the next released version.
 
 
+### Folder Structure
+
+[framework/](./framework) contains the builder library code and produces the consumable `jfreechart-builder` JAR file.
+
+[demo-app/](./demo-app) contains the demo app code and produces the launchable `jfreechart-builder-demo` JAR file.
+
+
 ### Building
 
 ```
@@ -197,29 +203,59 @@ git checkout <desired branch or tag>
 
 #### Simple build
 
+Build everything:
+
 ```
 mvn package
 ```
 
-The jar will be in the `target/` folder.
+The jars will be in the `framework/target/` and `demo-app/target/` folders.
 
 
-#### Build and install the jar in your Maven repo
+Build each module independently:
+
+```
+cd framework
+mvn package
+
+cd ../demo-app
+mvn package
+```
+
+#### Build and install the jars into your Maven repo
+
+Build and install everything:
 
 ```
 mvn install
 ```
 
+Build and install each module independently:
+
+```
+cd framework
+mvn install
+
+cd ../demo-app
+mvn install
+```
+
+### Testing
+
+Run the demo-app from your IDE or launch it from the command line:
+
+```
+java -jar jfreechart-builder-demo.jar
+```
+
 
 ### Generate and view Javadoc
 
-You can generate the Javadoc locally
-
 ```
-mvn javadoc:javadoc
+mvn javadoc:javadoc -Dsource=8
 ```
 
-Use a browser to open `target/site/apidocs/index.html`
+Use a browser to open `framework/target/site/apidocs/index.html`
 
 Alternatively, run the generation script by specifying what version tag to associate with the Javadoc:
 
@@ -230,7 +266,7 @@ Alternatively, run the generation script by specifying what version tag to assoc
 That output will be in `target/site/apidocs/javadoc`
 
 
-### Add the JAR to a client project
+### Add the jfreechart-builder JAR to a client project
 
 Add this dependency to your project's `.pom` file:
 
@@ -253,7 +289,7 @@ the objects you provided (and other objects that may be referencing them) should
 
 ## License
 
-**jfreechart-builder** is not affiliated with the **jfreechart** project but for compatibility is provided under the terms of the same [LGPL 2.1 license](./license-LGPL.txt).
+**jfreechart-builder** is not affiliated with the **jfreechart** project but for compatibility it and the jfreechart-builder-demo app are provided under the terms of the same [LGPL 2.1 license](./license-LGPL.txt).
 
 You should be aware of the contents of the **jfreechart-builder** JAR file built from this project.
 
