@@ -37,6 +37,12 @@ public abstract class BuilderConstants {
    */
   public static final Stroke SOLID_LINE = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
       BasicStroke.JOIN_ROUND);
+
+  /**
+   * Stroke configured for drawing a thick solid line.
+   */
+  public static final Stroke THICK_SOLID_LINE = new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
+      BasicStroke.JOIN_ROUND);
   
   /**
    * Stroke configured for drawing a thin solid line.
@@ -50,9 +56,15 @@ public abstract class BuilderConstants {
   private static final float dash_pattern[] = { 1.5f, 1.5f };
   
   /**
-   * Stroke configured for drawing a thin dashed line.
+   * Stroke configured for drawing a dashed line.
    */
   public static final BasicStroke DASHED_LINE = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
+      BasicStroke.JOIN_ROUND, 10.0f, dash_pattern, 0.0f);
+
+  /**
+   * Stroke configured for drawing a thick dashed line.
+   */
+  public static final BasicStroke THICK_DASHED_LINE = new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
       BasicStroke.JOIN_ROUND, 10.0f, dash_pattern, 0.0f);
   
   /**

@@ -29,26 +29,26 @@ import org.jfree.chart.ui.TextAnchor;
  * Helper class for storing and accessing properties common to different kinds of XYAnnotation
  * builders. Intended for use in composition-type implementations.
  */
-class XYAnnotationElements {
+class XYTextAnnotationElements {
 
   private static final String DEFAULT_TEXT = "";
   private static final int DEFAULT_TEXT_PADDING = 0;
-  protected static final double DEFAULT_ANGLE = 0.0;
-  protected static final TextAnchor DEFAULT_TEXT_ALIGNMENT = TextAnchor.BASELINE_RIGHT;
+  private static final double DEFAULT_ANGLE = 0.0;
+  private static final TextAnchor DEFAULT_TEXT_ALIGNMENT = TextAnchor.BASELINE_RIGHT;
 
-  protected double x;
-  protected double y;
-  protected double angle;
-  protected String text;
+  private double x;
+  private double y;
+  private double angle;
+  private String text;
   private int textPaddingLeft;
   private int textPaddingRight;
-  protected TextAnchor textAlign;
-  protected Color color;
+  private TextAnchor textAlign;
+  private Color color;
 
   /**
    * Constructor.
    */
-  public XYAnnotationElements() {
+  public XYTextAnnotationElements() {
     x = Double.NaN;
     y = Double.NaN;
     angle = DEFAULT_ANGLE;

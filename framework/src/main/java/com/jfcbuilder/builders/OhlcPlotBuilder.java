@@ -302,9 +302,9 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
     for (IXYAnnotationBuilder<?> builder : annotationBuilders) {
 
       if (!elements.showTimeGaps()) {
-        // We need to map the annotation time series x-axis value to the number axis.
-        BuilderUtils.mapAnnotationXToTimeIndex(timeData, builder,
-            elements.indexRange().getStartIndex(), elements.indexRange().getEndIndex());
+        // We need to map the annotation time series x-axis values to the number axis.
+        builder.mapXToTimeIndex(timeData, elements.indexRange().getStartIndex(),
+            elements.indexRange().getEndIndex());
       }
 
       // Annotations don't have ability to get their max/min y-value to adjust y-axis range :(
