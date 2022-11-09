@@ -278,6 +278,19 @@ Add this dependency to your project's `.pom` file:
 <dependency>
 ```
 
+## Test Coverage Warning
+
+Testing of `jfreechart-builder` is limited to manually running the `jfreechart-builder-demo` application locally on Windows or Linux. It's rarely (if ever) run on both operating systems for the same code changes being merged. As of this writing the author(s)/maintainer(s) have not tested it on MacOS.
+
+There is a reliance on the cross-platform natured promise of Java.
+
+There are currently no runnable or automated unit tests, integration tests, regression tests, and the like.
+
+Testing is done by visual inspection of the `jfreechart-builder-demo` app user interface.
+
+You should thoroughly test the use of `jfreechart-builder` in your project and environment to satisfy yourself it does what you need and expect.
+
+If you feel a capability is missing or there's a bug feel free to create an issue or start a discussion thread. Contributions are also welcome (see *Contributing* below)!
 
 ## Thread-safety and garbage collection
 
@@ -303,5 +316,5 @@ If you need clarification on the LGPL vs. Java, please see the [FSF's tech note 
 Contributions are welcome and will be accepted as the maintainers' time permits.
 
 * Please use indentations of two spaces (no tabs)
-* Wrap lines at a width of 100 characters.
-* To help others, write good Javadoc at least for class descriptions and public methods.
+* Wrap lines at a width of 120 characters.
+* To help others, write good Javadoc at least for interfaces, class descriptions, and public methods.
