@@ -21,7 +21,6 @@
 package com.jfcbuilder.builders;
 
 import java.text.NumberFormat;
-import java.util.Arrays;
 
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
@@ -89,32 +88,6 @@ abstract class BuilderUtils {
     plot.setDomainGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
     plot.setRangeGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
     return plot;
-  }
-
-  /**
-   * Helper method for replacing an annotation builder's configured x-axis date value with a
-   * corresponding source array element index value. Uses {@code Arrays.binarySearch()} to search
-   * the source array for the the date value. If found, replaces that value in the builder with the
-   * found array index relative to the configured index range. The source time values are assumed to
-   * be timestamps in milliseconds since the epoch start. It's also assumed these are in ascending
-   * chronologic order. Failure to provide them in sorted order will result in undefined behavior as
-   * per {@code Arrays.binarySearch()}.
-   * 
-   * @param timeData The array of source time values
-   * @param builder The builder whose x-value is to be mapped to the source time index
-   * @param indexRangeStartIndex The start index of the series index range
-   * @param indexRangeEndIndex The end index of the series index range
-   */
-  public static void mapAnnotationXToTimeIndex(long[] timeData, IXYAnnotationBuilder<?> builder,
-      int indexRangeStartIndex, int indexRangeEndIndex) {
-    
-    // +1 as the binary search method end index is exclusive.
-    int xIndex = Arrays.binarySearch(timeData, indexRangeStartIndex, indexRangeEndIndex + 1,
-        (long) builder.x());
-
-    if (xIndex >= 0) {
-      builder.x((double) (xIndex - indexRangeStartIndex));
-    }
   }
 
 }

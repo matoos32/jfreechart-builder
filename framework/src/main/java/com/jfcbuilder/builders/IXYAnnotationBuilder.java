@@ -20,10 +20,7 @@
 
 package com.jfcbuilder.builders;
 
-import java.awt.Color;
-
 import org.jfree.chart.annotations.XYAnnotation;
-import org.jfree.chart.ui.TextAnchor;
 
 /**
  * Interface for all XYAnnotation builders. Uses a generic to specify the concrete implementation of
@@ -39,86 +36,6 @@ import org.jfree.chart.ui.TextAnchor;
 interface IXYAnnotationBuilder<T extends IXYAnnotationBuilder<T>> {
 
   /**
-   * Sets the color used to draw the annotation.
-   * 
-   * @param color The color to be used when drawing the annotation
-   * @return Reference to this builder for chaining method calls
-   */
-  T color(Color color);
-
-  /**
-   * Sets the alignment of the annotation relative to the XY anchor point.
-   * 
-   * @param alignment The TextAnchor specifying the alignment
-   * @return Reference to this builder for chaining method calls
-   */
-  T textAlign(TextAnchor alignment);
-
-  /**
-   * Sets the annotation text to be drawn
-   * 
-   * @param text The text to be drawn
-   * @return Reference to this builder for chaining method calls
-   */
-  T text(String text);
-
-  /**
-   * Pads the right side of the text with a number of spaces. Use this to offset the text a desired
-   * distance from the anchored XY coordinate.
-   * 
-   * @param n Number of space characters to insert at right of text
-   * @return Reference to this builder instance for method chaining
-   */
-  T textPaddingRight(int n);
-
-  /**
-   * Pads the left side of the text with a number of spaces. Use this to offset the text a desired
-   * distance from the anchored XY coordinate.
-   * 
-   * @param n Number of space characters to insert at left of text
-   * @return Reference to this builder instance for method chaining
-   */
-  T textPaddingLeft(int n);
-
-  /**
-   * Sets the rotational orientation angle of the annotation in degrees.
-   * 
-   * @param degrees The rotation angle of the annotation
-   * @return Reference to this builder for chaining method calls
-   */
-  T angle(double degrees);
-
-  /**
-   * Sets the x-coordinate of the annotation.
-   * 
-   * @param x The x-coordinate
-   * @return Reference to this builder for chaining method calls
-   */
-  T x(double x);
-
-  /**
-   * Gets the x-coordinate of the annotation.
-   * 
-   * @return The x-coordinate
-   */
-  double x();
-  
-  /**
-   * Sets the y-coordinate of the annotation.
-   * 
-   * @param y The y-coordinate
-   * @return Reference to this builder for chaining method calls
-   */
-  T y(double y);
-
-  /**
-   * Gets the y-coordinate of the annotation.
-   * 
-   * @return The y-coordinate
-   */
-  double y();
-
-  /**
    * Builds the XYAnnotation from all configured data and properties.
    * 
    * @return New instance of an XYAnnotation corresponding to all configured data and properties
@@ -126,4 +43,21 @@ interface IXYAnnotationBuilder<T extends IXYAnnotationBuilder<T>> {
    *         called
    */
   XYAnnotation build() throws IllegalStateException;
+
+  /**
+   * Helper mutation method for replacing the configured x-axis date values with corresponding
+   * source array element index value.
+   * <p>
+   * Meant to be called internally by the framework itself, not by framework clients.
+   * <p>
+   * For facilitating the removal of visible time gaps on charts.
+   * <p>
+   * Different implementations may use different methods to map configured x value(s) to
+   * numeric indices, including search algorithms that may have higher order Big-O complexity. 
+   * 
+   * @param timeData             The array of source time values
+   * @param indexRangeStartIndex The start index of the series index range
+   * @param indexRangeEndIndex   The end index of the series index range
+   */
+  void mapXToTimeIndex(long[] timeData, int indexRangeStartIndex, int indexRangeEndIndex);
 }

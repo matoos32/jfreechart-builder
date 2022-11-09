@@ -53,6 +53,7 @@ import com.jfcbuilder.builders.OhlcSeriesBuilder;
 import com.jfcbuilder.builders.VolumeXYPlotBuilder;
 import com.jfcbuilder.builders.VolumeXYTimeSeriesBuilder;
 import com.jfcbuilder.builders.XYArrowBuilder;
+import com.jfcbuilder.builders.XYLineAnnotationBuilder;
 import com.jfcbuilder.builders.XYTextBuilder;
 import com.jfcbuilder.builders.XYTimeSeriesBuilder;
 import com.jfcbuilder.builders.XYTimeSeriesPlotBuilder;
@@ -77,6 +78,7 @@ public class JFreeChartBuilderDemo {
   // Setup constant reusable test data and settings ...
   
   private static final Stroke SOLID_LINE = BuilderConstants.SOLID_LINE;
+  private static final Stroke THICK_DASHED_LINE = BuilderConstants.THICK_DASHED_LINE;
 
   private static final Color DARK_BLUE = new Color(0, 0, 100);
   private static final Color DARK_GREEN = new Color(0, 100, 0);
@@ -234,70 +236,147 @@ public class JFreeChartBuilderDemo {
 
       .build();
   }
-  
-  
-  private static JFreeChart stockChartDailyWithGapsAndAnnotations() {
-
-    return getDailyStockChartBuilder()
-      .title("Stock Chart Time Series With Weekend Gaps, Lines, and Annotations")
-      .build();
-  }
-  
-  private static JFreeChart stockChartDailyNoGaps() {
     
-    return getDailyStockChartBuilder()
-        .title("Stock Chart Time Series No Gaps for Weekends")
-        .showTimeGaps(false)
-        .build();
-  }
-  
-  private static ChartBuilder getDailyStockChartBuilder() {
+  private static ChartBuilder getDailyStockChartBuilder(boolean annotate) {
     
     long[] timeArray = dohlcv.dates();
     int startIndex = ohlcStartIndex;
     int endIndex = ohlcEndIndex;
     
-    final int stockEventIndex = timeArray.length - 10;
-    final long stockEventDate = timeArray[stockEventIndex];
-    final double stockEventPrice = dohlcv.highs()[stockEventIndex];
-    final double stockEventVolume = dohlcv.volumes()[stockEventIndex];
-    final double resistanceLevel = dohlcv.closes()[0];
-    final double volumeLine = dohlcv.volumes()[0];
-    
     final DecimalFormat volNumFormat = new DecimalFormat("#");
     volNumFormat.setGroupingUsed(true);
     volNumFormat.setGroupingSize(3);
-        
-    return ChartBuilder.get()
 
-    .timeData(timeArray)
-    .indexRange(startIndex, endIndex)
+    ChartBuilder chart = ChartBuilder.get();
+    
+    chart.timeData(timeArray).indexRange(startIndex, endIndex);
 
-    .xyPlot(OhlcPlotBuilder.get().yAxisName("Price").plotWeight(3).gridLines()
+    OhlcPlotBuilder ohlcPlot = OhlcPlotBuilder.get()
+      .yAxisName("Price").plotWeight(3).gridLines()
       .series(OhlcSeriesBuilder.get().ohlcv(dohlcv).upColor(Color.WHITE).downColor(Color.RED))
       .series(XYTimeSeriesBuilder.get().name("MA(20)").data(sma20).color(Color.MAGENTA).style(SOLID_LINE))
       .series(XYTimeSeriesBuilder.get().name("MA(50)").data(sma50).color(Color.BLUE).style(SOLID_LINE))
-      .series(XYTimeSeriesBuilder.get().name("MA(200)").data(sma200).color(Color.RED).style(SOLID_LINE))
-      .annotation(XYArrowBuilder.get().x(stockEventDate).y(stockEventPrice).angle(270.0).color(DARK_GREEN)
-        .textAlign(TextAnchor.BOTTOM_CENTER).text(String.format("%.2f", stockEventPrice)))
-      .line(LineBuilder.get().horizontal().at(resistanceLevel).color(Color.LIGHT_GRAY).style(SOLID_LINE)))
-
-    .xyPlot(VolumeXYPlotBuilder.get().yAxisName("Volume").yTickFormat(volNumFormat).gridLines()
+      .series(XYTimeSeriesBuilder.get().name("MA(200)").data(sma200).color(Color.RED).style(SOLID_LINE));
+    
+    OhlcPlotBuilder volumePlot = VolumeXYPlotBuilder.get()
+      .yAxisName("Volume").yTickFormat(volNumFormat).gridLines()
       .series(VolumeXYTimeSeriesBuilder.get().ohlcv(dohlcv).upColor(Color.DARK_GRAY).downColor(Color.RED))
-      .series(XYTimeSeriesBuilder.get().name("MA(90)").data(volSma90).color(Color.BLUE).style(SOLID_LINE))
-      .annotation(XYArrowBuilder.get().x(stockEventDate).y(stockEventVolume).angle(270.0).color(DARK_GREEN)
-        .textAlign(TextAnchor.BOTTOM_CENTER).text(String.format("%.0f", stockEventVolume)))
-      .line(LineBuilder.get().horizontal().at(volumeLine).color(DARK_GREEN).style(SOLID_LINE)))
-
-    .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisRange(0.0, 100.0).yAxisTickSize(50.0).gridLines()
+      .series(XYTimeSeriesBuilder.get().name("MA(90)").data(volSma90).color(Color.BLUE).style(SOLID_LINE));
+    
+    XYTimeSeriesPlotBuilder tsPlot = XYTimeSeriesPlotBuilder.get()
+      .yAxisRange(0.0, 100.0).yAxisTickSize(50.0).gridLines()
       .yAxisName("Stochastics(" + K + ", " + D + ")")
       .series(XYTimeSeriesBuilder.get().data(stoch.getPctK()).color(Color.RED).style(SOLID_LINE))
       .series(XYTimeSeriesBuilder.get().data(stoch.getPctD()).color(Color.BLUE).style(SOLID_LINE))
       .line(LineBuilder.get().horizontal().at(80.0).color(Color.BLACK).style(SOLID_LINE))
       .line(LineBuilder.get().horizontal().at(50.0).color(Color.BLUE).style(SOLID_LINE))
-      .line(LineBuilder.get().horizontal().at(20.0).color(Color.BLACK).style(SOLID_LINE)));
+      .line(LineBuilder.get().horizontal().at(20.0).color(Color.BLACK).style(SOLID_LINE));
+    
+    if (annotate) {
+
+      // Points ("p") of interest in the plots
+      int lookback = 10;
+      int p1Index = timeArray.length - 1 - lookback;
+      long p1Date = timeArray[p1Index];
+      double p1Price = dohlcv.highs()[p1Index];
+      double p1Volume = dohlcv.volumes()[p1Index];
+      double p1Stoch = stoch.getPctK()[p1Index];
+      
+      lookback = 5;
+      int p2Index = timeArray.length - 1 - lookback;
+      long p2Date = timeArray[p2Index];
+      double p2Price = dohlcv.highs()[p2Index];
+      double p2Volume = dohlcv.volumes()[p2Index];
+      double p2Stoch = stoch.getPctK()[p2Index];
+      
+      double resistanceLevel = dohlcv.closes()[0];
+      double volumeLine = dohlcv.volumes()[0];
+      
+      ohlcPlot
+
+        .annotation(XYArrowBuilder.get()
+          .x(p1Date).y(p1Price)
+          .text(String.format("%.2f", p1Price))
+          .angle(270.0).textAlign(TextAnchor.BOTTOM_CENTER)
+          .arrowLength(40.0).tipRadius(3.0)
+          .color(DARK_GREEN))
+
+        .annotation(XYLineAnnotationBuilder.get()
+          .x1(p1Date).y1(p1Price)
+          .x2(p2Date).y2(p2Price)
+          .color(Color.MAGENTA).style(THICK_DASHED_LINE))
+        
+        .line(LineBuilder.get().horizontal().at(resistanceLevel)
+          .color(Color.LIGHT_GRAY).style(SOLID_LINE));
+
+
+      volumePlot
+      
+        .annotation(XYArrowBuilder.get()
+          .x(p1Date).y(p1Volume)
+          .text(String.format("%.0f", p1Volume))
+          .angle(325.0).textAlign(TextAnchor.BOTTOM_CENTER)
+          .arrowLength(30.0).tipRadius(4.0)
+          .color(DARK_GREEN))
+
+        .annotation(XYLineAnnotationBuilder.get()
+          .x1(p1Date).y1(p1Volume)
+          .x2(p2Date).y2(p2Volume)
+          .color(Color.MAGENTA).style(THICK_DASHED_LINE))
+
+        .line(LineBuilder.get().horizontal().at(volumeLine)
+          .color(DARK_GREEN).style(SOLID_LINE));
+
+
+      tsPlot
+
+        .annotation(XYArrowBuilder.get()
+          .x(p1Date).y(p1Stoch)
+          .text(String.format("%.0f", p1Stoch))
+          .angle(90.0).textAlign(TextAnchor.BOTTOM_CENTER).textPaddingLeft(5)
+          .color(DARK_GREEN))
+  
+        .annotation(XYLineAnnotationBuilder.get()
+          .x1(p1Date).y1(p1Stoch)
+          .x2(p2Date).y2(p2Stoch)
+          .color(Color.MAGENTA).style(THICK_DASHED_LINE));
+    }
+    
+    chart.xyPlot(ohlcPlot);
+
+    chart.xyPlot(volumePlot);
+
+    chart.xyPlot(tsPlot);
+    
+    return chart;
   }
   
+  private static JFreeChart stockChartDailyWithGaps() {
+    return getDailyStockChartBuilder(false)
+      .title("Stock Chart Time Series With Weekend Gaps")
+      .build();
+  }
+  
+  private static JFreeChart stockChartDailyWithGapsWithAnnotations() {
+    return getDailyStockChartBuilder(true)
+      .title("Stock Chart Time Series With Weekend Gaps. With Lines, and Annotations.")
+      .build();
+  }
+  
+  private static JFreeChart stockChartDailyNoGaps() {
+    return getDailyStockChartBuilder(false)
+      .title("Stock Chart Time Series No Weekend Gaps")
+      .showTimeGaps(false)
+      .build();
+  }
+  
+  private static JFreeChart stockChartDailyNoGapsWithAnnotations() {
+    return getDailyStockChartBuilder(true)
+      .title("Stock Chart Time Series No Weekend Gaps. With Lines, and Annotations.")
+      .showTimeGaps(false)
+      .build();
+  }
+
   /**
    * Main entry point to this demonstration application.
    * 
@@ -313,13 +392,16 @@ public class JFreeChartBuilderDemo {
 
     charts.add(multiPlotMinuteTimeSeries());
 
-    charts.add(stockChartDailyWithGapsAndAnnotations());
-    
+    charts.add(stockChartDailyWithGaps());
+
+    charts.add(stockChartDailyWithGapsWithAnnotations());
+
     charts.add(stockChartDailyNoGaps());
+
+    charts.add(stockChartDailyNoGapsWithAnnotations());
 
     launchChartDemoWindow(charts);
   }
-
 
   /**
    * Helper method to build a GUI for showcasing the demo charts.
