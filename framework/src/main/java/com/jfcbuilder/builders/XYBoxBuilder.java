@@ -20,51 +20,59 @@
 
 package com.jfcbuilder.builders;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Paint;
 import java.awt.Stroke;
 import java.util.Arrays;
 
 import org.jfree.chart.annotations.XYAnnotation;
-import org.jfree.chart.annotations.XYLineAnnotation;
+import org.jfree.chart.annotations.XYBoxAnnotation;
 
 /**
- * Builder for producing {@link XYLineAnnotation} objects.
+ * Builder for producing {@link XYBoxAnnotation} objects.
  */
-public class XYLineAnnotationBuilder implements IXYAnnotationBuilder<XYLineAnnotationBuilder> {
+public class XYBoxBuilder implements IXYAnnotationBuilder<XYBoxBuilder> {
+
+  // See XYBoxAnnotation for source of these defaults (they're hard-coded, no constants).
+  public static final Color DEFAULT_OUTLINE_COLOR = Color.BLACK;
+  public static final Stroke DEFAULT_OUTLINE_STYLE = new BasicStroke(1.0f);
 
   private double x1;
   private double y1;
   private double x2;
   private double y2;
-  private Stroke style;
-  private Paint color;
-  
+  private Stroke outlineStyle;
+  private Paint outlineColor;
+  private Paint fillColor;
+
   /**
    * Hidden constructor.
    */
-  private XYLineAnnotationBuilder() {
+  private XYBoxBuilder() {
     x1 = Double.NaN;
     y1 = Double.NaN;
     x2 = Double.NaN;
     y2 = Double.NaN;
-    style = BuilderConstants.SOLID_LINE;
-    color = BuilderConstants.DEFAULT_LINE_COLOR;
+    outlineStyle = null;
+    outlineColor = null;
+    fillColor = null;
   }
-  
+
   /**
    * Factory method for obtaining new instances of this class.
    * 
    * @return New instance of this class
    */
-  public static XYLineAnnotationBuilder get() {
-    return new XYLineAnnotationBuilder();
+  public static XYBoxBuilder get() {
+    return new XYBoxBuilder();
   }
-  
+
   public double x1() {
     return x1;
   }
 
-  public XYLineAnnotationBuilder x1(double x1) {
+  public XYBoxBuilder x1(double x1) {
     this.x1 = x1;
     return this;
   }
@@ -73,7 +81,7 @@ public class XYLineAnnotationBuilder implements IXYAnnotationBuilder<XYLineAnnot
     return y1;
   }
 
-  public XYLineAnnotationBuilder y1(double y1) {
+  public XYBoxBuilder y1(double y1) {
     this.y1 = y1;
     return this;
   }
@@ -82,7 +90,7 @@ public class XYLineAnnotationBuilder implements IXYAnnotationBuilder<XYLineAnnot
     return x2;
   }
 
-  public XYLineAnnotationBuilder x2(double x2) {
+  public XYBoxBuilder x2(double x2) {
     this.x2 = x2;
     return this;
   }
@@ -91,26 +99,35 @@ public class XYLineAnnotationBuilder implements IXYAnnotationBuilder<XYLineAnnot
     return y2;
   }
 
-  public XYLineAnnotationBuilder y2(double y2) {
+  public XYBoxBuilder y2(double y2) {
     this.y2 = y2;
     return this;
   }
 
-  public Stroke style() {
-    return style;
+  public Stroke outlineStyle() {
+    return outlineStyle;
   }
 
-  public XYLineAnnotationBuilder style(Stroke style) {
-    this.style = style;
+  public XYBoxBuilder outlineStyle(Stroke outlineStyle) {
+    this.outlineStyle = outlineStyle;
     return this;
   }
 
-  public Paint color() {
-    return color;
+  public Paint outlineColor() {
+    return outlineColor;
   }
 
-  public XYLineAnnotationBuilder color(Paint color) {
-    this.color = color;
+  public XYBoxBuilder outlineColor(Paint outlineColor) {
+    this.outlineColor = outlineColor;
+    return this;
+  }
+
+  public Paint fillColor() {
+    return fillColor;
+  }
+
+  public XYBoxBuilder fillColor(Paint fillColor) {
+    this.fillColor = fillColor;
     return this;
   }
 
@@ -130,13 +147,70 @@ public class XYLineAnnotationBuilder implements IXYAnnotationBuilder<XYLineAnnot
     }
   }
 
-
   @Override
   public XYAnnotation build() throws IllegalStateException {
 
     checkBuildPreconditions();
+
+    double lowerX, lowerY, upperX, upperY;
     
-    return new XYLineAnnotation(x1, y1, x2, y2, style, color);
+    // XYBoxAnnotation requires its (x0, y0) to be the lower coordinate and (x1, y1) to be the upper one.
+    //
+    // As a convenience sort this out for the class client ...
+    //
+    // Based on the configured values of x1, y1, x2, y2 the transformations here can be:
+    //
+    // With points:
+    //
+    //   top left    | top right
+    //   ------------|-------------
+    //   bottom left | bottom right
+    //
+    // Idempotent:
+    //        | x2y2            | x2y2
+    //   -----|-----  ==>  -----|-----
+    //   x1y1 |            x1y1 |
+    //
+    // Swap the y-values:
+    //   x1y2 |                 | x2y2
+    //   -----|-----  ==>  -----|-----
+    //        | x2y1       x1y1 |
+    //
+    // Swap the x-values:
+    //        | x1y2            | x2y2
+    //   -----|-----  ==>  -----|-----
+    //   x2y1 |            x1y1 |
+    //
+    // Swap both x and y values:
+    //   x2y1 |                 | x2y2
+    //   -----|-----  ==>  -----|-----
+    //        | x1y2       x1y1 |
+    
+    if(y2 > y1) {
+      upperY = y2;
+      lowerY = y1;
+    } else {
+      upperY = y1;
+      lowerY = y2;
+    }
+    
+    if(x2 > x1) {
+      upperX = x2;
+      lowerX = x1;
+    } else {
+      upperX = x1;
+      lowerX = x2;
+    }
+    
+    if (outlineStyle == null && outlineColor == null && fillColor == null) {
+      return new XYBoxAnnotation(lowerX, lowerY, upperX, upperY);
+    }
+
+    Stroke theOutlineStyle = (outlineStyle != null) ? outlineStyle : DEFAULT_OUTLINE_STYLE;
+    Paint theOutlineColor = (outlineColor != null) ? outlineColor : DEFAULT_OUTLINE_COLOR;
+
+    // A null fill color is accepted
+    return new XYBoxAnnotation(lowerX, lowerY, upperX, upperY, theOutlineStyle, theOutlineColor, fillColor);
   }
 
   /**

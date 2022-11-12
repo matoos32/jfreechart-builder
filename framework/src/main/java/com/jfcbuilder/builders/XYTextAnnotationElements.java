@@ -26,8 +26,8 @@ import java.util.Collections;
 import org.jfree.chart.ui.TextAnchor;
 
 /**
- * Helper class for storing and accessing properties common to different kinds of XYAnnotation
- * builders. Intended for use in composition-type implementations.
+ * Helper class for storing and accessing properties common to different kinds of XYAnnotation builders. Intended for
+ * use in composition-type implementations.
  */
 class XYTextAnnotationElements {
 
@@ -132,8 +132,8 @@ class XYTextAnnotationElements {
   }
 
   /**
-   * Sets the number of padding spaces to left side of the text. Use this to offset the text a
-   * desired distance from the anchored XY coordinate.
+   * Sets the number of padding spaces to left side of the text. Use this to offset the text a desired distance from the
+   * anchored XY coordinate.
    * 
    * @param n Number of space characters to insert at left of text
    */
@@ -151,8 +151,8 @@ class XYTextAnnotationElements {
   }
 
   /**
-   * Sets the number of padding spaces to right side of the text. Use this to offset the text a
-   * desired distance from the anchored XY coordinate.
+   * Sets the number of padding spaces to right side of the text. Use this to offset the text a desired distance from
+   * the anchored XY coordinate.
    * 
    * @param n Number of space characters to insert at right of text
    */
@@ -206,8 +206,7 @@ class XYTextAnnotationElements {
   }
 
   /**
-   * Checks to see if all preconditions for building the annotation are satisfied and throws an
-   * exception if not.
+   * Checks to see if all preconditions for building the annotation are satisfied and throws an exception if not.
    * 
    * @throws IllegalStateException If x or y have not been configured.
    */
