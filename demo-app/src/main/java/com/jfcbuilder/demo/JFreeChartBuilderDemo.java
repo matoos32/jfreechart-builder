@@ -53,6 +53,7 @@ import com.jfcbuilder.builders.OhlcSeriesBuilder;
 import com.jfcbuilder.builders.VolumeXYPlotBuilder;
 import com.jfcbuilder.builders.VolumeXYTimeSeriesBuilder;
 import com.jfcbuilder.builders.XYArrowBuilder;
+import com.jfcbuilder.builders.XYBoxBuilder;
 import com.jfcbuilder.builders.XYLineAnnotationBuilder;
 import com.jfcbuilder.builders.XYTextBuilder;
 import com.jfcbuilder.builders.XYTimeSeriesBuilder;
@@ -84,6 +85,9 @@ public class JFreeChartBuilderDemo {
   private static final Color DARK_GREEN = new Color(0, 100, 0);
   private static final Color DARK_RED = new Color(100, 0, 0);
 
+  private static final Color TRANSPARENT_GREEN = new Color(0f, 1f, 0f, 0.1f);
+  private static final Color TRANSPARENT_DARK_GREEN = new Color(0f, 0.5f, 0f, 0.3f);
+  
   // Prepare the application data to be plotted ...
 
   private static final LocalDateTime endDate = LocalDateTime.now();
@@ -276,18 +280,29 @@ public class JFreeChartBuilderDemo {
 
       // Points ("p") of interest in the plots
       int lookback = 10;
-      int p1Index = timeArray.length - 1 - lookback;
+      int p1Index = ohlcEndIndex - lookback;
       long p1Date = timeArray[p1Index];
       double p1Price = dohlcv.highs()[p1Index];
       double p1Volume = dohlcv.volumes()[p1Index];
       double p1Stoch = stoch.getPctK()[p1Index];
       
       lookback = 5;
-      int p2Index = timeArray.length - 1 - lookback;
+      int p2Index = ohlcEndIndex - lookback;
       long p2Date = timeArray[p2Index];
       double p2Price = dohlcv.highs()[p2Index];
       double p2Volume = dohlcv.volumes()[p2Index];
       double p2Stoch = stoch.getPctK()[p2Index];
+      
+      lookback = 36;
+      int p3Index = ohlcEndIndex - lookback;
+      long p3Date = timeArray[p3Index];
+      double p3Open = dohlcv.opens()[p3Index];
+      double p3Close = dohlcv.closes()[p3Index];
+      double p3Volume = dohlcv.volumes()[p3Index];
+      
+      lookback = 28;
+      int p4Index = ohlcEndIndex - lookback;
+      long p4Date = timeArray[p4Index];
       
       double resistanceLevel = dohlcv.closes()[0];
       double volumeLine = dohlcv.volumes()[0];
@@ -305,6 +320,12 @@ public class JFreeChartBuilderDemo {
           .x1(p1Date).y1(p1Price)
           .x2(p2Date).y2(p2Price)
           .color(Color.MAGENTA).style(THICK_DASHED_LINE))
+        
+        .annotation(XYBoxBuilder.get()
+          .x1(p3Date).y1(p3Open)
+          .x2(p4Date).y2(p3Close)
+          .outlineStyle(SOLID_LINE).outlineColor(TRANSPARENT_DARK_GREEN)
+          .fillColor(TRANSPARENT_GREEN))
         
         .line(LineBuilder.get().horizontal().at(resistanceLevel)
           .color(Color.LIGHT_GRAY).style(SOLID_LINE));
@@ -324,6 +345,12 @@ public class JFreeChartBuilderDemo {
           .x2(p2Date).y2(p2Volume)
           .color(Color.MAGENTA).style(THICK_DASHED_LINE))
 
+        .annotation(XYBoxBuilder.get()
+          .x1(p3Date).y1(p3Volume)
+          .x2(p4Date).y2(p3Volume/2.0)
+          .outlineStyle(THICK_DASHED_LINE).outlineColor(Color.CYAN)
+          .fillColor(Color.YELLOW))
+        
         .line(LineBuilder.get().horizontal().at(volumeLine)
           .color(DARK_GREEN).style(SOLID_LINE));
 
@@ -339,7 +366,12 @@ public class JFreeChartBuilderDemo {
         .annotation(XYLineAnnotationBuilder.get()
           .x1(p1Date).y1(p1Stoch)
           .x2(p2Date).y2(p2Stoch)
-          .color(Color.MAGENTA).style(THICK_DASHED_LINE));
+          .color(Color.MAGENTA).style(THICK_DASHED_LINE))
+      
+        .annotation(XYBoxBuilder.get()
+          .x1(p3Date).y1(70.0)
+          .x2(p4Date).y2(30.0)
+          .outlineStyle(THICK_DASHED_LINE));
     }
     
     chart.xyPlot(ohlcPlot);
@@ -359,7 +391,7 @@ public class JFreeChartBuilderDemo {
   
   private static JFreeChart stockChartDailyWithGapsWithAnnotations() {
     return getDailyStockChartBuilder(true)
-      .title("Stock Chart Time Series With Weekend Gaps. With Lines, and Annotations.")
+      .title("Stock Chart Time Series With Weekend Gaps. With Lines and Annotations.")
       .build();
   }
   
@@ -372,7 +404,7 @@ public class JFreeChartBuilderDemo {
   
   private static JFreeChart stockChartDailyNoGapsWithAnnotations() {
     return getDailyStockChartBuilder(true)
-      .title("Stock Chart Time Series No Weekend Gaps. With Lines, and Annotations.")
+      .title("Stock Chart Time Series No Weekend Gaps. With Lines and Annotations.")
       .showTimeGaps(false)
       .build();
   }

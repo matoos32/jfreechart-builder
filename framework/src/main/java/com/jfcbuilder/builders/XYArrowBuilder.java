@@ -36,12 +36,12 @@ public class XYArrowBuilder implements IXYAnnotationBuilder<XYArrowBuilder> {
   private static final double DEFAULT_XY_COORD_SPACING = 5.0;
 
   private XYTextAnnotationElements elems;
-  
+
   /**
    * Radial length of the arrow.
    */
   private double arrowLength;
-  
+
   /**
    * Radial spacing the tip of the arrow will be away from the anchored XY coordinate.
    */
@@ -82,7 +82,7 @@ public class XYArrowBuilder implements IXYAnnotationBuilder<XYArrowBuilder> {
   public double y() {
     return elems.y();
   }
-  
+
   public XYArrowBuilder angle(double degrees) {
     elems.angle(degrees);
     return this;
@@ -122,7 +122,7 @@ public class XYArrowBuilder implements IXYAnnotationBuilder<XYArrowBuilder> {
     tipRadius = radius;
     return this;
   }
-  
+
   private void checkBuildPreconditions() throws IllegalStateException {
     elems.checkBuildPreconditions();
   }
@@ -132,21 +132,20 @@ public class XYArrowBuilder implements IXYAnnotationBuilder<XYArrowBuilder> {
 
     checkBuildPreconditions();
 
-    XYPointerAnnotation annotation = new XYPointerAnnotation(elems.paddedText(), elems.x(),
-      elems.y(), Math.toRadians(elems.angle()));
+    XYPointerAnnotation annotation = new XYPointerAnnotation(elems.paddedText(), elems.x(), elems.y(),
+      Math.toRadians(elems.angle()));
     annotation.setTextAnchor(elems.textAlignment());
     annotation.setBaseRadius(arrowLength);
     annotation.setTipRadius(tipRadius);
     annotation.setArrowPaint(elems.color());
     return annotation;
   }
-  
+
   /**
-   * Uses {@code Arrays.binarySearch()} to search the source array for the date value. If found,
-   * replaces that value in the builder with the found array index relative to the configured index
-   * range. The source time values are assumed to be timestamps in milliseconds since the epoch
-   * start. It's also assumed these are in ascending chronologic order. Failure to provide them in
-   * sorted order will result in undefined behavior as per {@code Arrays.binarySearch()}.
+   * Uses {@code Arrays.binarySearch()} to search the source array for the date value. If found, replaces that value in
+   * the builder with the found array index relative to the configured index range. The source time values are assumed
+   * to be timestamps in milliseconds since the epoch start. It's also assumed these are in ascending chronologic order.
+   * Failure to provide them in sorted order will result in undefined behavior as per {@code Arrays.binarySearch()}.
    */
   @Override
   public void mapXToTimeIndex(long[] timeData, int indexRangeStartIndex, int indexRangeEndIndex) {
