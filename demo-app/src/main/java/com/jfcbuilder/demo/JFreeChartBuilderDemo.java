@@ -27,12 +27,14 @@ import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.swing.ButtonGroup;
@@ -67,6 +69,7 @@ import com.jfcbuilder.demo.data.providers.numeric.Sma;
 import com.jfcbuilder.demo.data.providers.numeric.StochasticOscillator;
 import com.jfcbuilder.demo.data.providers.numeric.StochasticOscillator.StochData;
 import com.jfcbuilder.types.DohlcvSeries;
+import com.jfcbuilder.types.MinimalDateFormat;
 
 /**
  * Test class for demonstrating JFreeChartBuilder capabilities. Contains a main application that
@@ -385,27 +388,51 @@ public class JFreeChartBuilderDemo {
   
   private static JFreeChart stockChartDailyWithGaps() {
     return getDailyStockChartBuilder(false)
-      .title("Stock Chart Time Series With Weekend Gaps")
+      .title("Stock Chart Time Series | Weekend Gaps | Default date labels (default locale)")
       .build();
   }
   
   private static JFreeChart stockChartDailyWithGapsWithAnnotations() {
     return getDailyStockChartBuilder(true)
-      .title("Stock Chart Time Series With Weekend Gaps. With Lines and Annotations.")
+      .title("Stock Chart Time Series | Weekend Gaps | Default date labels | Lines and Annotations")
+      .build();
+  }
+  
+  private static JFreeChart stockChartDailyWithGapsCustomDateLabels() {
+    return getDailyStockChartBuilder(false)
+      .title("Stock Chart Time Series | Weekend Gaps | SimpleDateFormat English locale")
+      .dateFormat(new SimpleDateFormat("yy-MMM-dd", Locale.ENGLISH))
+      .verticalTickLabels(true)
+      .build();
+  }
+  
+  private static JFreeChart stockChartDailyWithGapsMinimalDateLabels() {
+    return getDailyStockChartBuilder(false)
+      .title("Stock Chart Time Series | Weekend Gaps | Derived DateFormat (MinimalDateFormat(1) default locale)")
+      .dateFormat(new MinimalDateFormat(1))
       .build();
   }
   
   private static JFreeChart stockChartDailyNoGaps() {
     return getDailyStockChartBuilder(false)
-      .title("Stock Chart Time Series No Weekend Gaps")
+      .title("Stock Chart Time Series | Gapless | Default date labels (MinimalDateFormat(3) default locale)")
       .showTimeGaps(false)
       .build();
   }
-  
+
   private static JFreeChart stockChartDailyNoGapsWithAnnotations() {
     return getDailyStockChartBuilder(true)
-      .title("Stock Chart Time Series No Weekend Gaps. With Lines and Annotations.")
+      .title("Stock Chart Time Series | Gapless | Default date labels | Lines and Annotations")
       .showTimeGaps(false)
+      .build();
+  }
+
+  private static JFreeChart stockChartDailyNoGapsCustomDateLabels() {
+    return getDailyStockChartBuilder(false)
+      .title("Stock Chart Time Series | Gapless | SimpleDateFormat numeric month default locale")
+      .showTimeGaps(false)
+      .dateFormat(new SimpleDateFormat("yy-MM-dd"))
+      .verticalTickLabels(true)
       .build();
   }
 
@@ -415,7 +442,7 @@ public class JFreeChartBuilderDemo {
    * @param args The command line arguments
    */
   public static void main(String[] args) {
-
+    
     List<JFreeChart> charts = new ArrayList<>();
 
     charts.add(simpleTimeSeriesWithAnnotations());
@@ -427,13 +454,20 @@ public class JFreeChartBuilderDemo {
     charts.add(stockChartDailyWithGaps());
 
     charts.add(stockChartDailyWithGapsWithAnnotations());
+    
+    charts.add(stockChartDailyWithGapsCustomDateLabels());
+
+    charts.add(stockChartDailyWithGapsMinimalDateLabels());
 
     charts.add(stockChartDailyNoGaps());
 
     charts.add(stockChartDailyNoGapsWithAnnotations());
 
+    charts.add(stockChartDailyNoGapsCustomDateLabels());
+    
     launchChartDemoWindow(charts);
   }
+
 
   /**
    * Helper method to build a GUI for showcasing the demo charts.
@@ -443,6 +477,7 @@ public class JFreeChartBuilderDemo {
    */
   protected static void launchChartDemoWindow(List<JFreeChart> charts)
       throws HeadlessException {
+
     ChartPanel panel = new ChartPanel(null);
 
     JFrame frame = new JFrame(ChartBuilder.class.getSimpleName() + " Demo App");
@@ -453,9 +488,10 @@ public class JFreeChartBuilderDemo {
 
     JMenuBar menuBar = new JMenuBar();
     frame.setJMenuBar(menuBar);
+
     JMenu demoMenu = new JMenu("Demonstrations");
     menuBar.add(demoMenu);
-
+    
     ButtonGroup group = new ButtonGroup();
     JRadioButtonMenuItem item;
 

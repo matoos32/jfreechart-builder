@@ -21,12 +21,7 @@
 package com.jfcbuilder.builders;
 
 import java.awt.Color;
-import java.text.FieldPosition;
-import java.text.NumberFormat;
-import java.text.ParsePosition;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +39,7 @@ import org.jfree.chart.ui.RectangleInsets;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.RegularTimePeriod;
 
+import com.jfcbuilder.types.MinimalDateFormat;
 import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
@@ -55,10 +51,13 @@ public class ChartBuilder {
 
   private static final ZeroBasedIndexRange NO_INDEX_RANGE = null;
   private static final long[] NO_TIME_DATA = null;
+  private static final DateFormat DEFAULT_DATE_FORMAT = null;
 
   private String title;
   private ZeroBasedIndexRange indexRange;
   private long[] timeData;
+  private DateFormat dateFormat;
+  private boolean verticalTickLabels;
   private boolean showTimeGaps;
   private List<IXYTimeSeriesPlotBuilder<?>> xyPlotBuilders;
 
@@ -69,6 +68,8 @@ public class ChartBuilder {
     title = DEFAULT_TITLE;
     indexRange = NO_INDEX_RANGE;
     timeData = NO_TIME_DATA;
+    dateFormat = DEFAULT_DATE_FORMAT;
+    verticalTickLabels = false;
     showTimeGaps = true;
     xyPlotBuilders = new ArrayList<>();
   }
@@ -129,6 +130,30 @@ public class ChartBuilder {
 
     this.timeData = timeData;
 
+    return this;
+  }
+
+  /**
+   * Overrides the time axis tick label format.
+   * 
+   * @param format The {@link DateFormat} to use
+   * @return Same instance of this builder for chaining method calls
+   * @throws NullPointerException If format is null
+   */
+  public ChartBuilder dateFormat(DateFormat format) {
+    Objects.requireNonNull(format, "Date format is required.");
+    dateFormat = format;
+    return this;
+  }
+  
+  /**
+   * Override the time axis flag specifying if tick labels should be drawn vertical or horizontal.
+   * 
+   * @param useVertical True to draw vertical labels, false for horizontal
+   * @return Same instance of this builder for chaining method calls
+   */
+  public ChartBuilder verticalTickLabels(boolean useVertical) {
+    this.verticalTickLabels = useVertical;
     return this;
   }
 
@@ -225,76 +250,27 @@ public class ChartBuilder {
   }
 
   private ValueAxis createGaplessTimeAxis(ZeroBasedIndexRange range, long[] timeData) {
-
     final String timeAxisLabel = null;
-    NumberAxis theTimeAxis = new NumberAxis(timeAxisLabel);
-    theTimeAxis.setAutoRange(true);
-    theTimeAxis.setAutoRangeStickyZero(false);
-    theTimeAxis.setLowerMargin(0.005);
-    theTimeAxis.setUpperMargin(0.005);
-    theTimeAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
-    theTimeAxis.setNumberFormatOverride(new NumberFormat() {
+    NumberAxis timeAxis = new NumberAxis(timeAxisLabel);
+    timeAxis.setAutoRange(true);
+    timeAxis.setAutoRangeStickyZero(false);
+    timeAxis.setLowerMargin(0.005);
+    timeAxis.setUpperMargin(0.005);
+    timeAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
 
-      // Generated value
-      private static final long serialVersionUID = 2306007623536333089L;
-
-      private int lastIntNum = 0;
-
-      @Override
-      public StringBuffer format(double number, StringBuffer toAppendTo, FieldPosition pos) {
-
-        if (Double.isNaN(number)) {
-          return toAppendTo;
-        }
-
-        final int intNum = (int) number;
-
-        final int timeIndex = range.getStartIndex() + intNum;
-        final int lastTimeIndex = range.getStartIndex() + lastIntNum;
-        
-        if ((intNum < 0) || (timeIndex >= timeData.length)) {
-          return toAppendTo;
-        } else {
-          final double timeval = (double) timeData[timeIndex];
-          final double lastTimeval = (double) timeData[lastTimeIndex];
-          lastIntNum = intNum;
-
-          if (Double.isNaN(timeval)) {
-            return toAppendTo;
-          }
-
-          LocalDate date = Instant.ofEpochMilli((long) timeval).atZone(ZoneId.systemDefault())
-              .toLocalDate();
-
-          LocalDate lastDate = Instant.ofEpochMilli((long) lastTimeval)
-              .atZone(ZoneId.systemDefault()).toLocalDate();
-
-          if (!Double.isNaN(lastTimeval) && date.getMonth() != lastDate.getMonth()) {
-            final String monthStr = date.getMonth().toString();
-
-            return toAppendTo.append(
-                monthStr.substring(0, 1).toUpperCase() + monthStr.substring(1, 3).toLowerCase());
-
-          } else {
-            return toAppendTo.append(date.getDayOfMonth());
-          }
-        }
-      }
-
-      @Override
-      public StringBuffer format(long number, StringBuffer toAppendTo, FieldPosition pos) {
-        return format((double) number, toAppendTo, pos);
-      }
-
-      @Override
-      public Number parse(String source, ParsePosition parsePosition) {
-        // Not supported
-        return null;
-      }
-
-    });
-
-    return theTimeAxis;
+    DateFormat df = dateFormat != null ? dateFormat : new MinimalDateFormat();
+    
+    // A means is needed to receive number axis values, which in this context are zero-based indices actual time values
+    // stored in the timeData array. We then need to convert the time values to a desired date string format. Java's
+    // NumberFormat defines abstract format() methods that receive that number axis value for formatting. Using that, we
+    // then need to produce the date formatting behavior of DateFormat. There is no practical means to lookup the time
+    // values outside of a specialized NumberFormat implementation. This is the stateful NumberFormatDateAdapter below.
+    // This probably means a chart/plot can't subsequently have its data updated without recreating a whole new chart
+    // unless the timeAxis created here is accessed in the existing chart, with setNumberFormatOverride() called on it
+    // again using updated range, timeData, and date format.
+    timeAxis.setNumberFormatOverride(new NumberFormatDateAdapter(range, timeData, df));
+    timeAxis.setVerticalTickLabels(verticalTickLabels);
+    return timeAxis;
   }
 
   /**
@@ -317,6 +293,12 @@ public class ChartBuilder {
     RegularTimePeriod endDate = new Millisecond(new Date(endDateMs));
 
     timeAxis.setRange(startDate.getStart(), endDate.getEnd());
+    
+    if(dateFormat != null) {
+      timeAxis.setDateFormatOverride(dateFormat);
+    }
+
+    timeAxis.setVerticalTickLabels(verticalTickLabels);
 
     return timeAxis;
   }
