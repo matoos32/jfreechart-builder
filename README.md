@@ -1,8 +1,26 @@
 # jfreechart-builder
 
-A [builder pattern](https://en.wikipedia.org/wiki/Builder_pattern) module for working with the [jfreechart](https://github.com/jfree/jfreechart) library. Meant as a companion to [ChartFactory.java](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/ChartFactory.java) to build more complex charts with fewer lines of code.
+A [builder pattern](https://en.wikipedia.org/wiki/Builder_pattern) module for working with the [jfreechart](https://github.com/jfree/jfreechart) library.
 
-Takes an opinionated approach to creating "good enough" charts while providing a more declarative way of parameterizing them.
+It's a companion to [ChartFactory.java](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/ChartFactory.java) for using a declarative approach to creating complex charts with fewer lines of code.
+
+
+## Features
+
+* XY time series charts using [CombinedDomainXYPlot](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/plot/CombinedDomainXYPlot.java) for data alignment on sub-plots
+* Time gap removal solution
+* Time axis tick format control
+* General XY time series charts
+* Stock market OHLC candlestick charts
+* Stock market volume bar charts
+* Overlay series
+* Annotations (arrows, text, lines, boxes)
+* Set various colors
+* Toggle grid lines
+* [Demo app](./demo-app/src/main/java/com/jfcbuilder/demo/JFreeChartBuilderDemo.java) for testing and prototyping
+
+In the future, more facilities may be added to leverage more of what
+[jfreechart](https://github.com/jfree/jfreechart) provides.
 
 
 ## Samples
@@ -99,7 +117,12 @@ ChartBuilder.get()
 
 ![A stock chart time series chart with weekend gaps](./screenshots/stock-chart-time-series-weekend-gaps.png "Screenshot")
 
-Using `showTimeGaps(boolean)` you can remove time gaps that JFreeChart renders by default when no data is defined at expected time instances (like on weekends):
+
+### Time Gap Removal
+
+Implements a solution for removing visible time gaps where no data exists (like on weekends). Accomplishes this with a family of adapter classes mapping `NumberAxis` values as indices in time value arrays.
+
+Configured using `showTimeGaps(boolean)`:
 
 ```
 ChartBuilder.get()
@@ -114,38 +137,34 @@ ChartBuilder.get()
 
 **Note: the x-axis month label in the gapless time chart currently doesn't always correspond to the first day (or trading day) of the month.**
 
+
+### Time Axis Tick Label Formats
+
+You can supply `DateFormat` instances to render time axis tick labels by calling  `dateFormat(DateFormat format)`. You can even implement your own sub-class.
+
+You can also set the vertical label flag to draw them vertically.
+
+
+```
+ChartBuilder.get()
+
+  .dateFormat( /* supply your DateFormat instance here */ )
+
+  .verticalTickLabels(true)
+
+  ...
+```
+
+
+### Convenience Minimal Tick Format
+
+An optional [MinimalDateFormat](./framework/src/main/java/com/jfcbuilder/types/MinimalDateFormat.java) class is implemented to format dates with month letter(s) on first instance of a new month then only month days until a new month is reached.
+
+
 ## Javadoc
 
 See the [Builders Summary](https://matoos32.github.io/jfreechart-builder-docs/javadoc/com/jfcbuilder/builders/package-summary.html)
 to browse the public API.
-
-
-## Capabilities
-
-* XY time series plots using a [CombinedDomainXYPlot](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/plot/CombinedDomainXYPlot.java) in all cases.
-
-  * This produces left-to-right horizontal time axes and vertical value axes.
-  * The time axis is meant to be shared by all sub-plots.
-  * If you need different time axes then you'll need to `build()` multiple charts and lay those out as desired in your app.
-
-* Stock market OHLC candlestick charts
-
-* Stock market volume bar charts
-
-* Stright line charts
-
-* Overlay series
-
-* Annotations (arrows and text)
-
-* Time gap removal
-
-* Set various colors
-
-* Toggle grid lines
-
-In the future, more parameterization may be added to leverage more of what
-[jfreechart](https://github.com/jfree/jfreechart) provides.
 
 
 ## Demo App
@@ -155,12 +174,14 @@ See the [demo-app](./demo-app) solution for an interactive demo. Used for develo
 
 ## Incorporating into your project
 
+The module is not published to Maven Central so you must build the solution locally and install it in local Maven repositories.
+
 
 ### Prerequisites
 
 * JDK 8 or greater [[1](https://openjdk.java.net/)] [[2](https://www.oracle.com/java/)] installed.
 * [Apache Maven](https://maven.apache.org/) installed.
-* Internet connection for Maven downloads or you add them to your local Maven repo yourself.
+* Internet connection for Maven dependency downloads or you add those to your local Maven repo yourself.
 
 
 ### Installing source code
