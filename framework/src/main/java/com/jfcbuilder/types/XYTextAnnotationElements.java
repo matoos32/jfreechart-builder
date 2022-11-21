@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.jfcbuilder.builders;
+package com.jfcbuilder.types;
 
 import java.awt.Color;
 import java.util.Collections;
@@ -29,7 +29,7 @@ import org.jfree.chart.ui.TextAnchor;
  * Helper class for storing and accessing properties common to different kinds of XYAnnotation builders. Intended for
  * use in composition-type implementations.
  */
-class XYTextAnnotationElements {
+public class XYTextAnnotationElements {
 
   private static final String DEFAULT_TEXT = "";
   private static final int DEFAULT_TEXT_PADDING = 0;

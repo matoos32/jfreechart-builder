@@ -18,14 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.jfcbuilder.builders;
+package com.jfcbuilder.types;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Stroke;
-
-import com.jfcbuilder.types.Orientation;
 
 /**
  * A family of constants used throughout this builder framework.

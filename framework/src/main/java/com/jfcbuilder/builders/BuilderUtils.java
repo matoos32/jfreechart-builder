@@ -30,10 +30,13 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.xy.XYDataset;
 
+import com.jfcbuilder.types.BuilderConstants;
+import com.jfcbuilder.types.XYTimeSeriesPlotBuilderElements;
+
 /**
  * Utility methods that can be used throughout the application.
  */
-abstract class BuilderUtils {
+public abstract class BuilderUtils {
 
   /**
    * Factory method for getting new instances of the default axis number format.

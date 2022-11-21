@@ -18,12 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.jfcbuilder.builders;
+package com.jfcbuilder.adapters;
 
 /**
  * Interface for all wrappers that map a collection's values to x-axis index numbers.
  */
-interface INumberMappedCollection {
+public interface INumberMappedCollection {
 
   /**
    * Returns a series item's x-value element index as a double instead of the x-value itself.

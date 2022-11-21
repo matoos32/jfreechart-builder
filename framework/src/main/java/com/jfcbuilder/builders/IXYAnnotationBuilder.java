@@ -33,7 +33,7 @@ import org.jfree.chart.annotations.XYAnnotation;
  * @param <T> The method chaining return type, which must be the type of the builder implementing
  *        this interface.
  */
-interface IXYAnnotationBuilder<T extends IXYAnnotationBuilder<T>> {
+public interface IXYAnnotationBuilder<T extends IXYAnnotationBuilder<T>> {
 
   /**
    * Builds the XYAnnotation from all configured data and properties.

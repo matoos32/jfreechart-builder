@@ -22,8 +22,6 @@ package com.jfcbuilder.types;
 
 import java.util.Objects;
 
-import com.jfcbuilder.builders.BuilderConstants;
-
 /**
  * Class for aggregating and representing a stock market Open High Low Close Volume (OHLCV) series.
  * The values are stored in an individual primitive array for each component series. A record

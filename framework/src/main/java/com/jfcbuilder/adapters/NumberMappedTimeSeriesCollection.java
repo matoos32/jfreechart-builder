@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.jfcbuilder.builders;
+package com.jfcbuilder.adapters;
 
 import org.jfree.data.time.RegularTimePeriod;
 import org.jfree.data.time.TimePeriodAnchor;
@@ -27,7 +27,7 @@ import org.jfree.data.time.TimeSeriesCollection;
 /**
  * Extension to TimeSeriesCollection to map timestamp values to x-axis numeric indexes.
  */
-class NumberMappedTimeSeriesCollection extends TimeSeriesCollection
+public class NumberMappedTimeSeriesCollection extends TimeSeriesCollection
     implements INumberMappedCollection {
 
   /**

@@ -47,16 +47,15 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ui.TextAnchor;
 
-import com.jfcbuilder.builders.BuilderConstants;
 import com.jfcbuilder.builders.ChartBuilder;
-import com.jfcbuilder.builders.LineBuilder;
+import com.jfcbuilder.builders.MarkerBuilder;
 import com.jfcbuilder.builders.OhlcPlotBuilder;
 import com.jfcbuilder.builders.OhlcSeriesBuilder;
 import com.jfcbuilder.builders.VolumeXYPlotBuilder;
 import com.jfcbuilder.builders.VolumeXYTimeSeriesBuilder;
 import com.jfcbuilder.builders.XYArrowBuilder;
 import com.jfcbuilder.builders.XYBoxBuilder;
-import com.jfcbuilder.builders.XYLineAnnotationBuilder;
+import com.jfcbuilder.builders.XYLineBuilder;
 import com.jfcbuilder.builders.XYTextBuilder;
 import com.jfcbuilder.builders.XYTimeSeriesBuilder;
 import com.jfcbuilder.builders.XYTimeSeriesPlotBuilder;
@@ -68,6 +67,7 @@ import com.jfcbuilder.demo.data.providers.numeric.Sinusoid;
 import com.jfcbuilder.demo.data.providers.numeric.Sma;
 import com.jfcbuilder.demo.data.providers.numeric.StochasticOscillator;
 import com.jfcbuilder.demo.data.providers.numeric.StochasticOscillator.StochData;
+import com.jfcbuilder.types.BuilderConstants;
 import com.jfcbuilder.types.DohlcvSeries;
 import com.jfcbuilder.types.MinimalDateFormat;
 
@@ -275,9 +275,9 @@ public class JFreeChartBuilderDemo {
       .yAxisName("Stochastics(" + K + ", " + D + ")")
       .series(XYTimeSeriesBuilder.get().data(stoch.getPctK()).color(Color.RED).style(SOLID_LINE))
       .series(XYTimeSeriesBuilder.get().data(stoch.getPctD()).color(Color.BLUE).style(SOLID_LINE))
-      .line(LineBuilder.get().horizontal().at(80.0).color(Color.BLACK).style(SOLID_LINE))
-      .line(LineBuilder.get().horizontal().at(50.0).color(Color.BLUE).style(SOLID_LINE))
-      .line(LineBuilder.get().horizontal().at(20.0).color(Color.BLACK).style(SOLID_LINE));
+      .marker(MarkerBuilder.get().horizontal().at(80.0).color(Color.BLACK).style(SOLID_LINE))
+      .marker(MarkerBuilder.get().horizontal().at(50.0).color(Color.BLUE).style(SOLID_LINE))
+      .marker(MarkerBuilder.get().horizontal().at(20.0).color(Color.BLACK).style(SOLID_LINE));
     
     if (annotate) {
 
@@ -319,7 +319,7 @@ public class JFreeChartBuilderDemo {
           .arrowLength(40.0).tipRadius(3.0)
           .color(DARK_GREEN))
 
-        .annotation(XYLineAnnotationBuilder.get()
+        .annotation(XYLineBuilder.get()
           .x1(p1Date).y1(p1Price)
           .x2(p2Date).y2(p2Price)
           .color(Color.MAGENTA).style(THICK_DASHED_LINE))
@@ -330,7 +330,7 @@ public class JFreeChartBuilderDemo {
           .outlineStyle(SOLID_LINE).outlineColor(TRANSPARENT_DARK_GREEN)
           .fillColor(TRANSPARENT_GREEN))
         
-        .line(LineBuilder.get().horizontal().at(resistanceLevel)
+        .marker(MarkerBuilder.get().horizontal().at(resistanceLevel)
           .color(Color.LIGHT_GRAY).style(SOLID_LINE));
 
 
@@ -343,7 +343,7 @@ public class JFreeChartBuilderDemo {
           .arrowLength(30.0).tipRadius(4.0)
           .color(DARK_GREEN))
 
-        .annotation(XYLineAnnotationBuilder.get()
+        .annotation(XYLineBuilder.get()
           .x1(p1Date).y1(p1Volume)
           .x2(p2Date).y2(p2Volume)
           .color(Color.MAGENTA).style(THICK_DASHED_LINE))
@@ -354,7 +354,7 @@ public class JFreeChartBuilderDemo {
           .outlineStyle(THICK_DASHED_LINE).outlineColor(Color.CYAN)
           .fillColor(Color.YELLOW))
         
-        .line(LineBuilder.get().horizontal().at(volumeLine)
+        .marker(MarkerBuilder.get().horizontal().at(volumeLine)
           .color(DARK_GREEN).style(SOLID_LINE));
 
 
@@ -366,7 +366,7 @@ public class JFreeChartBuilderDemo {
           .angle(90.0).textAlign(TextAnchor.BOTTOM_CENTER).textPaddingLeft(5)
           .color(DARK_GREEN))
   
-        .annotation(XYLineAnnotationBuilder.get()
+        .annotation(XYLineBuilder.get()
           .x1(p1Date).y1(p1Stoch)
           .x2(p2Date).y2(p2Stoch)
           .color(Color.MAGENTA).style(THICK_DASHED_LINE))
@@ -394,7 +394,7 @@ public class JFreeChartBuilderDemo {
   
   private static JFreeChart stockChartDailyWithGapsWithAnnotations() {
     return getDailyStockChartBuilder(true)
-      .title("Stock Chart Time Series | Weekend Gaps | Default date labels | Lines and Annotations")
+      .title("Stock Chart Time Series | Weekend Gaps | Default date labels | Markers and Annotations")
       .build();
   }
   
@@ -422,7 +422,7 @@ public class JFreeChartBuilderDemo {
 
   private static JFreeChart stockChartDailyNoGapsWithAnnotations() {
     return getDailyStockChartBuilder(true)
-      .title("Stock Chart Time Series | Gapless | Default date labels | Lines and Annotations")
+      .title("Stock Chart Time Series | Gapless | Default date labels | Markers and Annotations")
       .showTimeGaps(false)
       .build();
   }

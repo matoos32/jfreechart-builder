@@ -36,7 +36,11 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.ohlc.OHLCSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 
+import com.jfcbuilder.adapters.NumberMappedOHLCSeriesCollection;
+import com.jfcbuilder.adapters.NumberMappedTimeSeriesCollection;
+import com.jfcbuilder.types.BuilderConstants;
 import com.jfcbuilder.types.Orientation;
+import com.jfcbuilder.types.XYTimeSeriesPlotBuilderElements;
 import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
@@ -128,8 +132,8 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
   }
 
   @Override
-  public OhlcPlotBuilder line(LineBuilder line) {
-    elements.line(line);
+  public OhlcPlotBuilder marker(MarkerBuilder line) {
+    elements.marker(line);
     return this;
   }
 
@@ -287,7 +291,7 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
 
     }
 
-    for (LineBuilder builder : elements.unmodifiableLines()) {
+    for (MarkerBuilder builder : elements.unmodifiableLines()) {
       ValueMarker line = builder.build();
 
       if (builder.orientation() == Orientation.HORIZONTAL) {

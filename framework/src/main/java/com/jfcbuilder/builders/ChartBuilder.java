@@ -40,6 +40,8 @@ import org.jfree.chart.ui.RectangleInsets;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.RegularTimePeriod;
 
+import com.jfcbuilder.adapters.NumberFormatDateAdapter;
+import com.jfcbuilder.types.BuilderConstants;
 import com.jfcbuilder.types.MinimalDateFormat;
 import com.jfcbuilder.types.ZeroBasedIndexRange;
 

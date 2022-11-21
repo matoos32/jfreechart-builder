@@ -27,10 +27,12 @@ import java.util.Arrays;
 import org.jfree.chart.annotations.XYAnnotation;
 import org.jfree.chart.annotations.XYLineAnnotation;
 
+import com.jfcbuilder.types.BuilderConstants;
+
 /**
  * Builder for producing {@link XYLineAnnotation} objects.
  */
-public class XYLineAnnotationBuilder implements IXYAnnotationBuilder<XYLineAnnotationBuilder> {
+public class XYLineBuilder implements IXYAnnotationBuilder<XYLineBuilder> {
 
   private double x1;
   private double y1;
@@ -42,7 +44,7 @@ public class XYLineAnnotationBuilder implements IXYAnnotationBuilder<XYLineAnnot
   /**
    * Hidden constructor.
    */
-  private XYLineAnnotationBuilder() {
+  private XYLineBuilder() {
     x1 = Double.NaN;
     y1 = Double.NaN;
     x2 = Double.NaN;
@@ -56,15 +58,15 @@ public class XYLineAnnotationBuilder implements IXYAnnotationBuilder<XYLineAnnot
    * 
    * @return New instance of this class
    */
-  public static XYLineAnnotationBuilder get() {
-    return new XYLineAnnotationBuilder();
+  public static XYLineBuilder get() {
+    return new XYLineBuilder();
   }
   
   public double x1() {
     return x1;
   }
 
-  public XYLineAnnotationBuilder x1(double x1) {
+  public XYLineBuilder x1(double x1) {
     this.x1 = x1;
     return this;
   }
@@ -73,7 +75,7 @@ public class XYLineAnnotationBuilder implements IXYAnnotationBuilder<XYLineAnnot
     return y1;
   }
 
-  public XYLineAnnotationBuilder y1(double y1) {
+  public XYLineBuilder y1(double y1) {
     this.y1 = y1;
     return this;
   }
@@ -82,7 +84,7 @@ public class XYLineAnnotationBuilder implements IXYAnnotationBuilder<XYLineAnnot
     return x2;
   }
 
-  public XYLineAnnotationBuilder x2(double x2) {
+  public XYLineBuilder x2(double x2) {
     this.x2 = x2;
     return this;
   }
@@ -91,7 +93,7 @@ public class XYLineAnnotationBuilder implements IXYAnnotationBuilder<XYLineAnnot
     return y2;
   }
 
-  public XYLineAnnotationBuilder y2(double y2) {
+  public XYLineBuilder y2(double y2) {
     this.y2 = y2;
     return this;
   }
@@ -100,7 +102,7 @@ public class XYLineAnnotationBuilder implements IXYAnnotationBuilder<XYLineAnnot
     return style;
   }
 
-  public XYLineAnnotationBuilder style(Stroke style) {
+  public XYLineBuilder style(Stroke style) {
     this.style = style;
     return this;
   }
@@ -109,7 +111,7 @@ public class XYLineAnnotationBuilder implements IXYAnnotationBuilder<XYLineAnnot
     return color;
   }
 
-  public XYLineAnnotationBuilder color(Paint color) {
+  public XYLineBuilder color(Paint color) {
     this.color = color;
     return this;
   }
