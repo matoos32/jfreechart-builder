@@ -1,5 +1,5 @@
 /*
- * jfreechart-builder-demo: a demonstration app for jfreechart-builder
+ * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
  * (C) Copyright 2022, by Matt E.
  * 
@@ -30,7 +30,7 @@ import java.util.Date;
 
 /**
  * Specialized {@link DateFormat} that generates the first letter(s) of the month for the first axis tick in that month
- * followed by that new months day number for subsequent ticks. Does not generate time strings.
+ * followed by that new month's day number for subsequent ticks. Does not generate time strings.
  * <p>
  * To determine if a new month is seen when formatting, class instances are stateful in remembering the last date value
  * passed to the format method.

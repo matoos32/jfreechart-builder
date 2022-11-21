@@ -22,6 +22,7 @@ package com.jfcbuilder.builders;
 
 import java.awt.Color;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +52,6 @@ public class ChartBuilder {
 
   private static final ZeroBasedIndexRange NO_INDEX_RANGE = null;
   private static final long[] NO_TIME_DATA = null;
-  private static final DateFormat DEFAULT_DATE_FORMAT = null;
 
   private String title;
   private ZeroBasedIndexRange indexRange;
@@ -68,7 +68,7 @@ public class ChartBuilder {
     title = DEFAULT_TITLE;
     indexRange = NO_INDEX_RANGE;
     timeData = NO_TIME_DATA;
-    dateFormat = DEFAULT_DATE_FORMAT;
+    dateFormat = null;
     verticalTickLabels = false;
     showTimeGaps = true;
     xyPlotBuilders = new ArrayList<>();
@@ -95,15 +95,13 @@ public class ChartBuilder {
   }
 
   /**
-   * Sets the zero-based indexes defining what elements to actually use in all the configured data
-   * sets. If you don't call this method the full range of elements in the timeData array will be
-   * used.
+   * Sets the zero-based indexes defining what elements to actually use in all the configured data sets. If you don't
+   * call this method the full range of elements in the timeData array will be used.
    * 
    * @param startIndex Zero based index of the start of the range
-   * @param endIndex Zero based index of the end of the range
+   * @param endIndex   Zero based index of the end of the range
    * @return Same instance of this builder for chaining method calls
-   * @throws IllegalArgumentException If startIndex or endIndex are negative, or if startIndex is
-   *         greater than endIndex
+   * @throws IllegalArgumentException If startIndex or endIndex are negative, or if startIndex is greater than endIndex
    */
   public ChartBuilder indexRange(int startIndex, int endIndex) throws IllegalArgumentException {
     indexRange = new ZeroBasedIndexRange(startIndex, endIndex);
@@ -111,13 +109,12 @@ public class ChartBuilder {
   }
 
   /**
-   * Sets the date-time data common to all plots. Also requires specifying a start and end index
-   * defining what parts of this data to use. This is to allow use of an existing data set without
-   * having to create a truncated copy of it just to be able to use the builder. The result is less
-   * computational and memory usage. This class will not modify the date-time data passed to it but
-   * be warned it will access it without any thread-safe protections. If you require thread-safety
-   * your code should not further modify the data passed-in here, or you should supply a copy of
-   * your data.
+   * Sets the epoch milliseconds date-time data common to all plots. You can also specify a start and end index defining
+   * what parts of this data to use (see {@code indexRange(int, int)} method). This is to allow use of an existing data
+   * set without having to create a truncated copy of it just to be able to use the builder. The result is less
+   * computational and memory usage. This class will not modify the date-time data passed to it but be warned it will
+   * access it without any thread-safe protections. If you require thread-safety your code should not further modify the
+   * data passed-in here, or you should supply a copy of your data.
    * 
    * @param timeData Array of date-time instances represented at milliseconds since the epoch
    * 
@@ -136,12 +133,10 @@ public class ChartBuilder {
   /**
    * Overrides the time axis tick label format.
    * 
-   * @param format The {@link DateFormat} to use
+   * @param format The {@link DateFormat} to use. {@code null} is accepted to use the default format.
    * @return Same instance of this builder for chaining method calls
-   * @throws NullPointerException If format is null
    */
   public ChartBuilder dateFormat(DateFormat format) {
-    Objects.requireNonNull(format, "Date format is required.");
     dateFormat = format;
     return this;
   }
@@ -249,6 +244,17 @@ public class ChartBuilder {
 
   }
 
+  /**
+   * Creates a new {@link NumberAxis} with some opinionated settings for plot layouts.
+   * <p>
+   * The axis is configured with a special {@link NumberFormat} override implemented by {@code jfreechart-builder}'s
+   * {@link NumberFormatDateAdapter}. This number format uses the {@link NumberAxis} values as indices into a supplied
+   * array of millisecond date-time values. Those are subsequently formatted into desired date strings.
+   * 
+   * @param startDateMs The axis range start date in milliseconds since the epoch start
+   * @param endDateMs   The axis range end date in milliseconds since the epoch start
+   * @return The new axis instance
+   */
   private ValueAxis createGaplessTimeAxis(ZeroBasedIndexRange range, long[] timeData) {
     final String timeAxisLabel = null;
     NumberAxis timeAxis = new NumberAxis(timeAxisLabel);
@@ -260,27 +266,29 @@ public class ChartBuilder {
 
     DateFormat df = dateFormat != null ? dateFormat : new MinimalDateFormat();
     
-    // A means is needed to receive number axis values, which in this context are zero-based indices actual time values
-    // stored in the timeData array. We then need to convert the time values to a desired date string format. Java's
-    // NumberFormat defines abstract format() methods that receive that number axis value for formatting. Using that, we
-    // then need to produce the date formatting behavior of DateFormat. There is no practical means to lookup the time
-    // values outside of a specialized NumberFormat implementation. This is the stateful NumberFormatDateAdapter below.
-    // This probably means a chart/plot can't subsequently have its data updated without recreating a whole new chart
-    // unless the timeAxis created here is accessed in the existing chart, with setNumberFormatOverride() called on it
-    // again using updated range, timeData, and date format.
+    // A means is needed to receive number axis values, which in this context are zero-based indices of actual time
+    // values stored in the timeData array. We then need to convert the time values to a desired date string format.
+    // Java's NumberFormat defines abstract format() methods that receive that number axis value for formatting. Using
+    // that, we then need to produce the date formatting behavior of DateFormat. There is no practical means to lookup
+    // the time values outside of a specialized NumberFormat implementation. This is the stateful
+    // NumberFormatDateAdapter below. This probably means a chart/plot can't subsequently have its data updated without
+    // recreating a whole new chart unless the timeAxis created here is accessed in the existing chart, with
+    // setNumberFormatOverride() called on it again using updated range, timeData, and date format.
     timeAxis.setNumberFormatOverride(new NumberFormatDateAdapter(range, timeData, df));
     timeAxis.setVerticalTickLabels(verticalTickLabels);
     return timeAxis;
   }
 
   /**
-   * Creates a new temporal axis with some opinionated settings for plot layouts.
+   * Creates a new {@link DateAxis} with some opinionated settings for plot layouts.
+   * 
+   * This axis renders time gaps on charts where points in time don't have data.
    * 
    * @param startDateMs The axis range start date in milliseconds since the epoch start
    * @param endDateMs The axis range end date in milliseconds since the epoch start
    * @return The new axis instance
    */
-  private DateAxis createTimeAxis(long startDateMs, long endDateMs) {
+  private ValueAxis createTimeAxis(long startDateMs, long endDateMs) {
 
     final String timeAxisLabel = null;
     DateAxis timeAxis = new DateAxis(timeAxisLabel);
