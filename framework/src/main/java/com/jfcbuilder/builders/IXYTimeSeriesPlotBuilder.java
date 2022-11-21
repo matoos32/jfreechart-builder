@@ -39,7 +39,7 @@ import com.jfcbuilder.types.ZeroBasedIndexRange;
  * @param <T> The method chaining return type, which must be the type of the builder implementing
  *        this interface.
  */
-interface IXYTimeSeriesPlotBuilder<T extends IXYTimeSeriesPlotBuilder<T>> {
+public interface IXYTimeSeriesPlotBuilder<T extends IXYTimeSeriesPlotBuilder<T>> {
 
   /**
    * Sets the date-time values to be used when building the plot.
@@ -94,13 +94,13 @@ interface IXYTimeSeriesPlotBuilder<T extends IXYTimeSeriesPlotBuilder<T>> {
   T series(IXYTimeSeriesDatasetBuilder<?> series);
 
   /**
-   * Registers a LineBuilder whose {@code build()} method will be called to generate its plot line
+   * Registers a {@link MarkerBuilder} whose {@code build()} method will be called to generate its plot line
    * when this plot builder's{@code build()} method is called.
    * 
-   * @param line The line builder representing the line that it will build
+   * @param marker The marker builder representing the marker that it will build
    * @return Reference to this builder instance for method chaining
    */
-  T line(LineBuilder line);
+  T marker(MarkerBuilder marker);
 
   /**
    * Registers an IXYAnnotationBuilder whose {@code build()} method will be called to generate its

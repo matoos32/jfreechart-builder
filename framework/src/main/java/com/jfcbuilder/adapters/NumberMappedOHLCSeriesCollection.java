@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.jfcbuilder.builders;
+package com.jfcbuilder.adapters;
 
 import java.util.Objects;
 
@@ -32,7 +32,7 @@ import org.jfree.data.xy.OHLCDataset;
 /**
  * Wrapper for OHLCSeriesCollection to map timestamp values to x-axis numeric indexes.
  */
-class NumberMappedOHLCSeriesCollection implements OHLCDataset, INumberMappedCollection {
+public class NumberMappedOHLCSeriesCollection implements OHLCDataset, INumberMappedCollection {
 
   private OHLCSeriesCollection collection;
   

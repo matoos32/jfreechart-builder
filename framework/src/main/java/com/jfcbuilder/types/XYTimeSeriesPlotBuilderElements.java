@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.jfcbuilder.builders;
+package com.jfcbuilder.types;
 
 import java.awt.Paint;
 import java.text.NumberFormat;
@@ -32,13 +32,17 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.Range;
 
-import com.jfcbuilder.types.ZeroBasedIndexRange;
+import com.jfcbuilder.builders.BuilderUtils;
+import com.jfcbuilder.builders.IXYAnnotationBuilder;
+import com.jfcbuilder.builders.IXYTimeSeriesBuilder;
+import com.jfcbuilder.builders.IXYTimeSeriesDatasetBuilder;
+import com.jfcbuilder.builders.MarkerBuilder;
 
 /**
  * Helper class for storing and accessing properties common to different kinds of XY plot builders.
  * Intended for use in composition-type implementations.
  */
-class XYTimeSeriesPlotBuilderElements {
+public class XYTimeSeriesPlotBuilderElements {
 
   /**
    * Value used to indicate the default y-axis tick size should be used.
@@ -55,7 +59,7 @@ class XYTimeSeriesPlotBuilderElements {
   
   private List<IXYTimeSeriesBuilder<?>> seriesBuilders;
   private List<IXYTimeSeriesDatasetBuilder<?>> datasetBuilders;
-  private List<LineBuilder> lineBuilders;
+  private List<MarkerBuilder> markerBuilders;
   private List<IXYAnnotationBuilder<?>> annotationBuilders;
   private ValueAxis xAxis;
   private long[] timeData;
@@ -77,7 +81,7 @@ class XYTimeSeriesPlotBuilderElements {
   public XYTimeSeriesPlotBuilderElements() {
     seriesBuilders = new ArrayList<>();
     datasetBuilders = new ArrayList<>();
-    lineBuilders = new ArrayList<>();
+    markerBuilders = new ArrayList<>();
     annotationBuilders = new ArrayList<>();
     xAxis = null;
     timeData = null;
@@ -211,23 +215,23 @@ class XYTimeSeriesPlotBuilderElements {
   }
 
   /**
-   * Registers a fixed line builder to be used for building the plot.
+   * Registers a fixed marker builder to be used for building the plot.
    * 
-   * @param line The builder to be registered
+   * @param marker The builder to be registered
    */
-  public void line(LineBuilder line) {
-    if (line != null) {
-      lineBuilders.add(line);
+  public void marker(MarkerBuilder marker) {
+    if (marker != null) {
+      markerBuilders.add(marker);
     }
   }
 
   /**
-   * Gets an unmodifiable list of the line builders to be used for building the plot.
+   * Gets an unmodifiable list of the marker builders to be used for building the plot.
    * 
-   * @return The unmodifiable list of line builders
+   * @return The unmodifiable list of marker builders
    */
-  public List<LineBuilder> unmodifiableLines() {
-    return Collections.unmodifiableList(lineBuilders);
+  public List<MarkerBuilder> unmodifiableLines() {
+    return Collections.unmodifiableList(markerBuilders);
   }
 
   /**

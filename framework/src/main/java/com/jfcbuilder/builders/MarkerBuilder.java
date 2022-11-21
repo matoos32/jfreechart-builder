@@ -25,12 +25,13 @@ import java.awt.Stroke;
 
 import org.jfree.chart.plot.ValueMarker;
 
+import com.jfcbuilder.types.BuilderConstants;
 import com.jfcbuilder.types.Orientation;
 
 /**
- * Uses configured properties to Build a ValueMarker representing a plot overlay line.
+ * Uses configured properties to Build a {@link ValueMarker} representing a plot overlay line.
  */
-public class LineBuilder {
+public class MarkerBuilder {
 
   private static final double DEFAULT_VALUE = 0.0;
 
@@ -42,7 +43,7 @@ public class LineBuilder {
   /**
    * Hidden constructor.
    */
-  private LineBuilder() {
+  private MarkerBuilder() {
     orientation = BuilderConstants.DEFAULT_ORIENTATION;
     value = DEFAULT_VALUE;
     color = BuilderConstants.DEFAULT_LINE_COLOR;
@@ -54,8 +55,8 @@ public class LineBuilder {
    * 
    * @return New instance of this class
    */
-  public static LineBuilder get() {
-    return new LineBuilder();
+  public static MarkerBuilder get() {
+    return new MarkerBuilder();
   }
 
   /**
@@ -64,7 +65,7 @@ public class LineBuilder {
    * @param orientation The desired orientation of the line
    * @return Reference to this builder for chaining method calls
    */
-  public LineBuilder orientation(Orientation orientation) {
+  public MarkerBuilder orientation(Orientation orientation) {
     this.orientation = orientation;
     return this;
   }
@@ -74,7 +75,7 @@ public class LineBuilder {
    * 
    * @return Reference to this builder for chaining method calls
    */
-  public LineBuilder horizontal() {
+  public MarkerBuilder horizontal() {
     this.orientation = Orientation.HORIZONTAL;
     return this;
   }
@@ -84,7 +85,7 @@ public class LineBuilder {
    * 
    * @return Reference to this builder for chaining method calls
    */
-  public LineBuilder vertical() {
+  public MarkerBuilder vertical() {
     this.orientation = Orientation.VERTICAL;
     return this;
   }
@@ -104,7 +105,7 @@ public class LineBuilder {
    * @param value The desired line value
    * @return Reference to this builder for chaining method calls
    */
-  public LineBuilder at(double value) {
+  public MarkerBuilder at(double value) {
     this.value = value;
     return this;
   }
@@ -115,7 +116,7 @@ public class LineBuilder {
    * @param color The desired color
    * @return Reference to this builder for chaining method calls
    */
-  public LineBuilder color(Color color) {
+  public MarkerBuilder color(Color color) {
     this.color = color;
     return this;
   }
@@ -126,7 +127,7 @@ public class LineBuilder {
    * @param style The desired line style
    * @return Reference to this builder for chaining method calls
    */
-  public LineBuilder style(Stroke style) {
+  public MarkerBuilder style(Stroke style) {
     this.style = style;
     return this;
   }

@@ -35,7 +35,7 @@ import com.jfcbuilder.types.ZeroBasedIndexRange;
  * @param <T> The method chaining return type, which must be the type of the builder implementing
  *        this interface.
  */
-interface IXYTimeSeriesDatasetBuilder<T extends IXYTimeSeriesDatasetBuilder<T>> {
+public interface IXYTimeSeriesDatasetBuilder<T extends IXYTimeSeriesDatasetBuilder<T>> {
 
   /**
    * Sets the time data to be used for generating the XYDataset.

@@ -18,19 +18,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.jfcbuilder.builders;
+package com.jfcbuilder.types;
 
 import java.awt.Color;
 import java.awt.Stroke;
 import java.util.Objects;
 
-import com.jfcbuilder.types.ZeroBasedIndexRange;
-
 /**
  * Helper class for storing and accessing properties common to different kinds of XY TimeSeries
  * builders. Intended for use in composition-type implementations.
  */
-class XYTimeSeriesElements {
+public class XYTimeSeriesElements {
 
   private static final String DEFAULT_NAME = "";
   private static final ZeroBasedIndexRange DEFAULT_INDEX_RANGE = new ZeroBasedIndexRange(0, 0);

@@ -28,6 +28,7 @@ import org.jfree.data.general.SeriesException;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 
+import com.jfcbuilder.types.XYTimeSeriesElements;
 import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**

@@ -25,10 +25,12 @@ import java.util.Objects;
 
 import org.jfree.chart.renderer.xy.CandlestickRenderer;
 
+import com.jfcbuilder.types.BuilderConstants;
+
 /**
  * Builder for creating configured CandlestickRenderer instances.
  */
-class CandlestickRendererBuilder {
+public class CandlestickRendererBuilder {
 
   private Color upColor;
   private Color downColor;

@@ -31,7 +31,9 @@ import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
+import com.jfcbuilder.adapters.NumberMappedTimeSeriesCollection;
 import com.jfcbuilder.types.Orientation;
+import com.jfcbuilder.types.XYTimeSeriesPlotBuilderElements;
 import com.jfcbuilder.types.ZeroBasedIndexRange;
 
 /**
@@ -95,8 +97,8 @@ public class XYTimeSeriesPlotBuilder implements IXYTimeSeriesPlotBuilder<XYTimeS
   }
 
   @Override
-  public XYTimeSeriesPlotBuilder line(LineBuilder line) {
-    elements.line(line);
+  public XYTimeSeriesPlotBuilder marker(MarkerBuilder line) {
+    elements.marker(line);
     return this;
   }
 
@@ -223,7 +225,7 @@ public class XYTimeSeriesPlotBuilder implements IXYTimeSeriesPlotBuilder<XYTimeS
     
     final XYPlot plot = BuilderUtils.createPlot(xAxis, yAxis, collection, renderer, elements);
 
-    for (LineBuilder builder : elements.unmodifiableLines()) {
+    for (MarkerBuilder builder : elements.unmodifiableLines()) {
       ValueMarker line = builder.build();
 
       yMax = Math.max(yMax, line.getValue());

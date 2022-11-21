@@ -30,6 +30,7 @@ import org.jfree.data.time.ohlc.OHLCSeries;
 import org.jfree.data.time.ohlc.OHLCSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 
+import com.jfcbuilder.types.BuilderConstants;
 import com.jfcbuilder.types.OhlcvSeries;
 import com.jfcbuilder.types.ZeroBasedIndexRange;
 

@@ -25,6 +25,8 @@ import java.awt.Color;
 import org.jfree.chart.renderer.xy.CandlestickRenderer;
 import org.jfree.data.xy.XYDataset;
 
+import com.jfcbuilder.types.BuilderConstants;
+
 /**
  * Builder for producing stock market volume plots using configured builder properties, series, and
  * datasets. Extends OhlcPlotBuilder to leverage it's bar drawing logic and to ensure bars in the

@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.jfcbuilder.builders;
+package com.jfcbuilder.adapters;
 
 import java.awt.Graphics2D;
 import java.awt.Paint;
@@ -35,11 +35,13 @@ import org.jfree.chart.ui.RectangleEdge;
 import org.jfree.data.xy.IntervalXYDataset;
 import org.jfree.data.xy.XYDataset;
 
+import com.jfcbuilder.types.BuilderConstants;
+
 /**
  * Specialized renderer for rendering XY bars when they have x-axis values mapped to a numeric
  * scale.
  */
-class NumberMappedXYBarRenderer extends XYBarRenderer {
+public class NumberMappedXYBarRenderer extends XYBarRenderer {
 
   /**
    * Generated value

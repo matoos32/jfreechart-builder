@@ -27,6 +27,8 @@ import org.jfree.chart.annotations.XYAnnotation;
 import org.jfree.chart.annotations.XYTextAnnotation;
 import org.jfree.chart.ui.TextAnchor;
 
+import com.jfcbuilder.types.XYTextAnnotationElements;
+
 /**
  * Builder for producing {@link XYTextAnnotation} objects.
  */

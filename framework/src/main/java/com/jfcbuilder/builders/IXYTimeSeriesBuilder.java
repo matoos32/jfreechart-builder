@@ -38,7 +38,7 @@ import com.jfcbuilder.types.ZeroBasedIndexRange;
  * @param <T> The method chaining return type, which must be the type of the builder implementing
  *        this interface.
  */
-interface IXYTimeSeriesBuilder<T extends IXYTimeSeriesBuilder<T>> {
+public interface IXYTimeSeriesBuilder<T extends IXYTimeSeriesBuilder<T>> {
 
   /**
    * Sets the name associated with the series.
