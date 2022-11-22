@@ -23,6 +23,7 @@ package com.jfcbuilder.demo;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
+import java.awt.Paint;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,6 +46,7 @@ import javax.swing.JRadioButtonMenuItem;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.ui.TextAnchor;
 
 import com.jfcbuilder.builders.ChartBuilder;
@@ -84,12 +86,12 @@ public class JFreeChartBuilderDemo {
   private static final Stroke SOLID_LINE = BuilderConstants.SOLID_LINE;
   private static final Stroke THICK_DASHED_LINE = BuilderConstants.THICK_DASHED_LINE;
 
-  private static final Color DARK_BLUE = new Color(0, 0, 100);
-  private static final Color DARK_GREEN = new Color(0, 100, 0);
-  private static final Color DARK_RED = new Color(100, 0, 0);
+  private static final Color DARK_BLUE = BuilderConstants.DARK_BLUE;
+  private static final Color DARK_GREEN = BuilderConstants.DARK_GREEN;
+  private static final Color DARK_RED = BuilderConstants.DARK_RED;
 
-  private static final Color TRANSPARENT_GREEN = new Color(0f, 1f, 0f, 0.1f);
-  private static final Color TRANSPARENT_DARK_GREEN = new Color(0f, 0.5f, 0f, 0.3f);
+  private static final Color TRANSPARENT_GREEN = BuilderConstants.TRANSPARENT_GREEN;
+  private static final Color TRANSPARENT_DARK_GREEN = BuilderConstants.TRANSPARENT_DARK_GREEN;
   
   // Prepare the application data to be plotted ...
 
@@ -153,6 +155,37 @@ public class JFreeChartBuilderDemo {
   private static final int sinusoidMinuteEndIndex = numSinusoiMinuteElems - 1;
   private static final int sinusoidMinuteStartIndex = 0; // All data
   
+  private static class StockChartConfig {
+    
+    public boolean majorGrid;
+    public Paint majorGridColor;
+    public Stroke majorGridStyle;
+    public boolean minorGrid;
+    public Paint minorGridColor;
+    public Stroke minorGridStyle;
+    public boolean annotate;
+    
+    public StockChartConfig() {
+      this(true, XYPlot.DEFAULT_GRIDLINE_PAINT, XYPlot.DEFAULT_GRIDLINE_STROKE,
+           false, XYPlot.DEFAULT_GRIDLINE_PAINT, XYPlot.DEFAULT_GRIDLINE_STROKE,
+           false);
+    }
+    
+    public StockChartConfig(
+      boolean majorGrid, Paint majorGridColor, Stroke majorGridStyle,
+      boolean minorGrid, Paint minorGridColor, Stroke minorGridStyle,
+      boolean annotate) {
+
+      this.majorGrid = majorGrid;
+      this.majorGridColor = majorGridColor;
+      this.majorGridStyle = majorGridStyle;
+      this.minorGrid = minorGrid;
+      this.minorGridColor = minorGridColor;
+      this.minorGridStyle = minorGridStyle;
+      this.annotate = annotate;
+    }    
+  }
+  
   
   private static JFreeChart simpleTimeSeriesWithAnnotations() {
     
@@ -170,7 +203,7 @@ public class JFreeChartBuilderDemo {
       .title("Simple Time Series With Annotations")
       .timeData(timeArray)
       .indexRange(startIndex, endIndex)
-      .xyPlot(XYTimeSeriesPlotBuilder.get().gridLines()
+      .xyPlot(XYTimeSeriesPlotBuilder.get()
         .series(XYTimeSeriesBuilder.get().name("Amplitude").data(array1).color(Color.BLUE).style(SOLID_LINE))
         .annotation(XYArrowBuilder.get().x(arrowX).y(arrowY).angle(180.0).color(Color.RED).text(arrowTxt))
         .annotation(XYArrowBuilder.get().x(arrowX).y(arrowY).angle(0.0).color(Color.RED))
@@ -194,7 +227,7 @@ public class JFreeChartBuilderDemo {
       .title("Multi Daily Time Series")
       .timeData(timeArray)
       .indexRange(startIndex, endIndex)
-      .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Values").gridLines()
+      .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Values")
         .series(XYTimeSeriesBuilder.get().data(array1).color(Color.BLUE).style(SOLID_LINE))
         .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID_LINE))
         .series(XYTimeSeriesBuilder.get().data(array3).color(DARK_GREEN).style(SOLID_LINE))
@@ -218,6 +251,8 @@ public class JFreeChartBuilderDemo {
       .timeData(timeArray)
       .indexRange(startIndex, endIndex)
 
+      // Deprecation note: preserve a call to gridLines() for testing until it's removed.
+      
       .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Values")
         .backgroundColor(Color.DARK_GRAY).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
         .series(XYTimeSeriesBuilder.get().data(array1).color(Color.YELLOW).style(SOLID_LINE))
@@ -230,21 +265,54 @@ public class JFreeChartBuilderDemo {
         .series(XYTimeSeriesBuilder.get().data(array3).color(Color.LIGHT_GRAY).style(SOLID_LINE)))
 
       .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Series 1")
-        .backgroundColor(DARK_GREEN).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
+        .backgroundColor(DARK_GREEN).axisColor(Color.RED).axisFontColor(Color.BLUE)
+        .majorGrid(false).minorGrid(true).minorGridColor(Color.CYAN).minorGridStyle(BuilderConstants.DASHED_LINE)
         .series(XYTimeSeriesBuilder.get().data(array1).color(Color.GREEN).style(SOLID_LINE)))
 
       .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Series 2")
-        .backgroundColor(DARK_RED).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
+        .backgroundColor(DARK_RED).axisColor(Color.RED).axisFontColor(Color.BLUE)
         .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID_LINE)))
 
       .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Series 3")
-        .backgroundColor(DARK_BLUE).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
+        .backgroundColor(DARK_BLUE).axisColor(Color.RED).axisFontColor(Color.BLUE)
         .series(XYTimeSeriesBuilder.get().data(array3).color(Color.CYAN).style(SOLID_LINE)))
 
       .build();
   }
+
+  private static ChartBuilder getDailyStockChartBuilderDefaults() {
+    long[] timeArray = dohlcv.dates();
+    int startIndex = ohlcStartIndex;
+    int endIndex = ohlcEndIndex;
     
-  private static ChartBuilder getDailyStockChartBuilder(boolean annotate) {
+    final DecimalFormat volNumFormat = new DecimalFormat("#");
+    volNumFormat.setGroupingUsed(true);
+    volNumFormat.setGroupingSize(3);
+
+    return ChartBuilder.get()
+
+    .timeData(timeArray).indexRange(startIndex, endIndex)
+
+    .xyPlot(OhlcPlotBuilder.get()
+      .yAxisName("Price").plotWeight(3)
+      .series(OhlcSeriesBuilder.get().ohlcv(dohlcv))
+      .series(XYTimeSeriesBuilder.get().name("MA(50)").data(sma50)))
+    
+    .xyPlot(VolumeXYPlotBuilder.get()
+      .yAxisName("Volume")
+      .series(VolumeXYTimeSeriesBuilder.get().ohlcv(dohlcv))
+      .series(XYTimeSeriesBuilder.get().name("MA(90)").data(volSma90)))
+    
+    .xyPlot(XYTimeSeriesPlotBuilder.get()
+      .yAxisName("Stochastics(" + K + ", " + D + ")").yAxisRange(0.0, 100.0).yAxisTickSize(50.0)
+      .series(XYTimeSeriesBuilder.get().data(stoch.getPctK()))
+      .series(XYTimeSeriesBuilder.get().data(stoch.getPctD()))
+      .marker(MarkerBuilder.get().horizontal().at(80.0))
+      .marker(MarkerBuilder.get().horizontal().at(50.0))
+      .marker(MarkerBuilder.get().horizontal().at(20.0)));
+  }
+  
+  private static ChartBuilder getDailyStockChartBuilder(StockChartConfig cfg) {
     
     long[] timeArray = dohlcv.dates();
     int startIndex = ohlcStartIndex;
@@ -259,27 +327,32 @@ public class JFreeChartBuilderDemo {
     chart.timeData(timeArray).indexRange(startIndex, endIndex);
 
     OhlcPlotBuilder ohlcPlot = OhlcPlotBuilder.get()
-      .yAxisName("Price").plotWeight(3).gridLines()
+      .yAxisName("Price").plotWeight(3)
+      .majorGrid(cfg.majorGrid).majorGridColor(cfg.majorGridColor).majorGridStyle(cfg.majorGridStyle)
+      .minorGrid(cfg.minorGrid).minorGridColor(cfg.minorGridColor).minorGridStyle(cfg.minorGridStyle)
       .series(OhlcSeriesBuilder.get().ohlcv(dohlcv).upColor(Color.WHITE).downColor(Color.RED))
       .series(XYTimeSeriesBuilder.get().name("MA(20)").data(sma20).color(Color.MAGENTA).style(SOLID_LINE))
       .series(XYTimeSeriesBuilder.get().name("MA(50)").data(sma50).color(Color.BLUE).style(SOLID_LINE))
       .series(XYTimeSeriesBuilder.get().name("MA(200)").data(sma200).color(Color.RED).style(SOLID_LINE));
     
     OhlcPlotBuilder volumePlot = VolumeXYPlotBuilder.get()
-      .yAxisName("Volume").yTickFormat(volNumFormat).gridLines()
+      .yAxisName("Volume").yTickFormat(volNumFormat)
+      .majorGrid(cfg.majorGrid).majorGridColor(cfg.majorGridColor).majorGridStyle(cfg.majorGridStyle)
+      .minorGrid(cfg.minorGrid).minorGridColor(cfg.minorGridColor).minorGridStyle(cfg.minorGridStyle)
       .series(VolumeXYTimeSeriesBuilder.get().ohlcv(dohlcv).upColor(Color.DARK_GRAY).downColor(Color.RED))
       .series(XYTimeSeriesBuilder.get().name("MA(90)").data(volSma90).color(Color.BLUE).style(SOLID_LINE));
     
     XYTimeSeriesPlotBuilder tsPlot = XYTimeSeriesPlotBuilder.get()
-      .yAxisRange(0.0, 100.0).yAxisTickSize(50.0).gridLines()
-      .yAxisName("Stochastics(" + K + ", " + D + ")")
+      .yAxisName("Stochastics(" + K + ", " + D + ")").yAxisRange(0.0, 100.0).yAxisTickSize(50.0)
+      .majorGrid(cfg.majorGrid).majorGridColor(cfg.majorGridColor).majorGridStyle(cfg.majorGridStyle)
+      .minorGrid(cfg.minorGrid).minorGridColor(cfg.minorGridColor).minorGridStyle(cfg.minorGridStyle)
       .series(XYTimeSeriesBuilder.get().data(stoch.getPctK()).color(Color.RED).style(SOLID_LINE))
       .series(XYTimeSeriesBuilder.get().data(stoch.getPctD()).color(Color.BLUE).style(SOLID_LINE))
       .marker(MarkerBuilder.get().horizontal().at(80.0).color(Color.BLACK).style(SOLID_LINE))
       .marker(MarkerBuilder.get().horizontal().at(50.0).color(Color.BLUE).style(SOLID_LINE))
       .marker(MarkerBuilder.get().horizontal().at(20.0).color(Color.BLACK).style(SOLID_LINE));
-    
-    if (annotate) {
+
+    if (cfg.annotate) {
 
       // Points ("p") of interest in the plots
       int lookback = 10;
@@ -382,24 +455,66 @@ public class JFreeChartBuilderDemo {
     chart.xyPlot(volumePlot);
 
     chart.xyPlot(tsPlot);
-    
+
     return chart;
   }
   
-  private static JFreeChart stockChartDailyWithGaps() {
-    return getDailyStockChartBuilder(false)
+  private static JFreeChart stockChartDailyWithGapsDefaultDateLabels() {
+    
+    StockChartConfig config = new StockChartConfig();
+
+    return getDailyStockChartBuilder(config)
       .title("Stock Chart Time Series | Weekend Gaps | Default date labels (default locale)")
       .build();
   }
   
+  private static JFreeChart stockChartDailyWithGapsDefaults() {
+    return getDailyStockChartBuilderDefaults()
+      .title("Stock Chart Time Series | Weekend Gaps | Defaults (No Styling)")
+      .build();
+  }
+  
   private static JFreeChart stockChartDailyWithGapsWithAnnotations() {
-    return getDailyStockChartBuilder(true)
+    
+    StockChartConfig config = new StockChartConfig();
+    config.annotate = true;
+    
+    return getDailyStockChartBuilder(config)
       .title("Stock Chart Time Series | Weekend Gaps | Default date labels | Markers and Annotations")
       .build();
   }
   
+  private static JFreeChart stockChartDailyWithGapsNoGrid() {
+    
+    StockChartConfig config = new StockChartConfig();
+    config.majorGrid = false;
+    config.minorGrid = false;
+    
+    return getDailyStockChartBuilder(config)
+      .title("Stock Chart Time Series | Weekend Gaps | Default date labels | No Grid")
+      .build();
+  }
+  
+  private static JFreeChart stockChartDailyWithGapsCustomGrid() {
+    
+    StockChartConfig config = new StockChartConfig();
+    config.majorGrid = true;
+    config.majorGridColor = Color.CYAN;
+    config.majorGridStyle = BuilderConstants.DASHED_LINE;
+    config.minorGrid = true;
+    config.minorGridColor = DARK_GREEN;
+    config.minorGridStyle = BuilderConstants.THIN_DASHED_LINE;
+    
+    return getDailyStockChartBuilder(config)
+      .title("Stock Chart Time Series | Weekend Gaps | Default date labels | Custom Grid")
+      .build();
+  }
+  
   private static JFreeChart stockChartDailyWithGapsCustomDateLabels() {
-    return getDailyStockChartBuilder(false)
+    
+    StockChartConfig config = new StockChartConfig();
+
+    return getDailyStockChartBuilder(config)
       .title("Stock Chart Time Series | Weekend Gaps | SimpleDateFormat English locale")
       .dateFormat(new SimpleDateFormat("yy-MMM-dd", Locale.ENGLISH))
       .verticalTickLabels(true)
@@ -407,28 +522,76 @@ public class JFreeChartBuilderDemo {
   }
   
   private static JFreeChart stockChartDailyWithGapsMinimalDateLabels() {
-    return getDailyStockChartBuilder(false)
+    
+    StockChartConfig config = new StockChartConfig();
+
+    return getDailyStockChartBuilder(config)
       .title("Stock Chart Time Series | Weekend Gaps | Derived DateFormat (MinimalDateFormat(1) default locale)")
       .dateFormat(new MinimalDateFormat(1))
       .build();
   }
   
-  private static JFreeChart stockChartDailyNoGaps() {
-    return getDailyStockChartBuilder(false)
+  private static JFreeChart stockChartDailyNoGapsDefaults() {
+    return getDailyStockChartBuilderDefaults()
+      .title("Stock Chart Time Series | Gapless | Defaults (No Styling)")
+      .showTimeGaps(false)
+      .build();
+  }
+  
+  private static JFreeChart stockChartDailyNoGapsDefaultDateLabels() {
+    
+    StockChartConfig config = new StockChartConfig();
+
+    return getDailyStockChartBuilder(config)
       .title("Stock Chart Time Series | Gapless | Default date labels (MinimalDateFormat(3) default locale)")
       .showTimeGaps(false)
       .build();
   }
-
+  
   private static JFreeChart stockChartDailyNoGapsWithAnnotations() {
-    return getDailyStockChartBuilder(true)
+    
+    StockChartConfig config = new StockChartConfig();
+    config.annotate = true;
+    
+    return getDailyStockChartBuilder(config)
       .title("Stock Chart Time Series | Gapless | Default date labels | Markers and Annotations")
+      .showTimeGaps(false)
+      .build();
+  }
+  
+  private static JFreeChart stockChartDailyNoGapsNoGrid() {
+    
+    StockChartConfig config = new StockChartConfig();
+    config.majorGrid = false;
+    config.minorGrid = false;
+    
+    return getDailyStockChartBuilder(config)
+      .title("Stock Chart Time Series | Gapless | Default date labels | No Grid")
+      .showTimeGaps(false)
+      .build();
+  }
+  
+  private static JFreeChart stockChartDailyNoGapsCustomGrid() {
+    
+    StockChartConfig config = new StockChartConfig();
+    config.majorGrid = true;
+    config.majorGridColor = Color.CYAN;
+    config.majorGridStyle = BuilderConstants.DASHED_LINE;
+    config.minorGrid = true;
+    config.minorGridColor = DARK_GREEN;
+    config.minorGridStyle = BuilderConstants.THIN_DASHED_LINE;
+    
+    return getDailyStockChartBuilder(config)
+      .title("Stock Chart Time Series | Gapless | Default date labels | Custom Grid")
       .showTimeGaps(false)
       .build();
   }
 
   private static JFreeChart stockChartDailyNoGapsCustomDateLabels() {
-    return getDailyStockChartBuilder(false)
+    
+    StockChartConfig config = new StockChartConfig();
+
+    return getDailyStockChartBuilder(config)
       .title("Stock Chart Time Series | Gapless | SimpleDateFormat numeric month default locale")
       .showTimeGaps(false)
       .dateFormat(new SimpleDateFormat("yy-MM-dd"))
@@ -451,17 +614,29 @@ public class JFreeChartBuilderDemo {
 
     charts.add(multiPlotMinuteTimeSeries());
 
-    charts.add(stockChartDailyWithGaps());
+    charts.add(stockChartDailyWithGapsDefaults());
+    
+    charts.add(stockChartDailyWithGapsDefaultDateLabels());
 
     charts.add(stockChartDailyWithGapsWithAnnotations());
+    
+    charts.add(stockChartDailyWithGapsNoGrid());
+    
+    charts.add(stockChartDailyWithGapsCustomGrid());
     
     charts.add(stockChartDailyWithGapsCustomDateLabels());
 
     charts.add(stockChartDailyWithGapsMinimalDateLabels());
 
-    charts.add(stockChartDailyNoGaps());
+    charts.add(stockChartDailyNoGapsDefaults());
+
+    charts.add(stockChartDailyNoGapsDefaultDateLabels());
 
     charts.add(stockChartDailyNoGapsWithAnnotations());
+    
+    charts.add(stockChartDailyNoGapsNoGrid());
+    
+    charts.add(stockChartDailyNoGapsCustomGrid());
 
     charts.add(stockChartDailyNoGapsCustomDateLabels());
     

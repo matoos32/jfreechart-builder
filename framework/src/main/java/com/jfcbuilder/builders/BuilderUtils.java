@@ -73,23 +73,38 @@ public abstract class BuilderUtils {
   /**
    * Helper method to create and initialize an XYPlot
    * 
-   * @param xAxis The x-axis to be used with the plot
-   * @param yAxis The y-axis to be used with the plot
-   * @param dataset An XYDataset to be plotted
-   * @param renderer The renderer used to plot teh dataset
+   * @param xAxis    The x-axis to be used with the plot
+   * @param yAxis    The y-axis to be used with the plot
+   * @param dataset  An XYDataset to be plotted
+   * @param renderer The renderer used to plot the dataset
    * @param elements Various settings used to initialize the plot object
    * @return The new XYPlot instance
    */
-  public static XYPlot createPlot(final ValueAxis xAxis, NumberAxis yAxis, XYDataset dataset,
-      XYItemRenderer renderer, XYTimeSeriesPlotBuilderElements elements) {
+  public static XYPlot createPlot(final ValueAxis xAxis, NumberAxis yAxis, XYDataset dataset, XYItemRenderer renderer,
+    XYTimeSeriesPlotBuilderElements elements) {
 
     final XYPlot plot = new XYPlot(dataset, xAxis, yAxis, renderer);
+
     plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD); // Main series behind the others
+
     plot.setBackgroundPaint(elements.backgroundColor());
-    plot.setDomainGridlinesVisible(elements.showGridLines());
-    plot.setRangeGridlinesVisible(elements.showGridLines());
-    plot.setDomainGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
-    plot.setRangeGridlinePaint(BuilderConstants.DEFAULT_GRIDLINE_PAINT);
+
+    plot.setDomainGridlinesVisible(elements.majorGrid());
+    plot.setDomainGridlinePaint(elements.majorGridColor());
+    plot.setDomainGridlineStroke(elements.majorGridStyle());
+
+    plot.setRangeGridlinesVisible(elements.majorGrid());
+    plot.setRangeGridlinePaint(elements.majorGridColor());
+    plot.setRangeGridlineStroke(elements.majorGridStyle());
+
+    plot.setDomainMinorGridlinesVisible(elements.minorGrid());
+    plot.setDomainMinorGridlinePaint(elements.minorGridColor());
+    plot.setDomainMinorGridlineStroke(elements.minorGridStyle());
+    
+    plot.setRangeMinorGridlinesVisible(elements.minorGrid());
+    plot.setRangeMinorGridlinePaint(elements.minorGridColor());
+    plot.setRangeMinorGridlineStroke(elements.minorGridStyle());
+
     return plot;
   }
 
