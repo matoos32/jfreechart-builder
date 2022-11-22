@@ -86,6 +86,13 @@ public abstract class BuilderConstants {
    */
   public static final Color DEFAULT_GRIDLINE_PAINT = Color.LIGHT_GRAY;
 
+  // Some convenience color constants
+  public static final Color DARK_BLUE = new Color(0, 0, 100);
+  public static final Color DARK_GREEN = new Color(0, 100, 0);
+  public static final Color DARK_RED = new Color(100, 0, 0);
+  public static final Color TRANSPARENT_GREEN = new Color(0f, 1f, 0f, 0.1f);
+  public static final Color TRANSPARENT_DARK_GREEN = new Color(0f, 0.5f, 0f, 0.3f);
+  
   /**
    * A default color that can be used throughout the application to represent a price close up
    * event.

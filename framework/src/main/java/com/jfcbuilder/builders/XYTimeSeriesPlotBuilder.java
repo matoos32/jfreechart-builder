@@ -21,6 +21,7 @@
 package com.jfcbuilder.builders;
 
 import java.awt.Paint;
+import java.awt.Stroke;
 import java.text.NumberFormat;
 
 import org.jfree.chart.axis.NumberAxis;
@@ -162,18 +163,62 @@ public class XYTimeSeriesPlotBuilder implements IXYTimeSeriesPlotBuilder<XYTimeS
     return this;
   }
 
+  /**
+   * Sets displaying grid lines ON.
+   * 
+   * @deprecated This facility is replaced by {@link XYTimeSeriesPlotBuilder#majorGrid(boolean)} and
+   *             {@link XYTimeSeriesPlotBuilder#minorGrid(boolean)}, and will be removed in a future release.
+   */
+  @Deprecated(since = "1.5.7", forRemoval = true)
   @Override
   public XYTimeSeriesPlotBuilder gridLines() {
-    elements.gridLines();
+    elements.majorGrid(true); // Legacy behavior
     return this;
   }
 
   @Override
   public XYTimeSeriesPlotBuilder noGridLines() {
-    elements.noGridLines();
+    majorGrid(false);
+    minorGrid(false);
     return this;
   }
 
+  @Override
+  public XYTimeSeriesPlotBuilder majorGrid(boolean enabled) {
+    elements.majorGrid(enabled);
+    return this;
+  }
+  
+  @Override
+  public XYTimeSeriesPlotBuilder majorGridColor(Paint color) {
+    elements.majorGridColor(color);
+    return this;
+  }
+
+  @Override
+  public XYTimeSeriesPlotBuilder majorGridStyle(Stroke style) {
+    elements.majorGridStyle(style);
+    return this;
+  }
+
+  @Override
+  public XYTimeSeriesPlotBuilder minorGrid(boolean enabled) {
+    elements.minorGrid(enabled);
+    return this;
+  }
+  
+  @Override
+  public XYTimeSeriesPlotBuilder minorGridColor(Paint color) {
+    elements.minorGridColor(color);
+    return this;
+  }
+
+  @Override
+  public XYTimeSeriesPlotBuilder minorGridStyle(Stroke style) {
+    elements.minorGridStyle(style);
+    return this;
+  }
+  
   @Override
   public XYPlot build() throws IllegalStateException {
 

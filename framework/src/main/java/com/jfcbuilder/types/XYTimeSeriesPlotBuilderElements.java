@@ -21,6 +21,7 @@
 package com.jfcbuilder.types;
 
 import java.awt.Paint;
+import java.awt.Stroke;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,9 +54,11 @@ public class XYTimeSeriesPlotBuilderElements {
 
   private static final int DEFAULT_PLOT_WEIGHT = 1;
 
-  private static final Paint DEFAULT_BACKGROUND_COLOR = XYPlot.DEFAULT_BACKGROUND_PAINT;
   private static final Paint DEFAULT_AXIS_FONT_COLOR = Axis.DEFAULT_TICK_LABEL_PAINT;
   private static final Paint DEFAULT_AXIS_COLOR = Axis.DEFAULT_AXIS_LINE_PAINT;
+  private static final Paint DEFAULT_BACKGROUND_COLOR = XYPlot.DEFAULT_BACKGROUND_PAINT;
+  private static final Stroke DEFAULT_GRIDLINE_STYLE = XYPlot.DEFAULT_GRIDLINE_STROKE;
+  private static final Paint DEFAULT_GRIDLINE_COLOR = XYPlot.DEFAULT_GRIDLINE_PAINT;
   
   private List<IXYTimeSeriesBuilder<?>> seriesBuilders;
   private List<IXYTimeSeriesDatasetBuilder<?>> datasetBuilders;
@@ -73,7 +76,12 @@ public class XYTimeSeriesPlotBuilderElements {
   private Paint backgroundColor;
   private Paint axisFontColor;
   private Paint axisColor;
-  private boolean showGridLines;
+  private boolean showMajorGridlines;
+  private Paint majorGridColor;
+  private Stroke majorGridStyle;
+  private boolean showMinorGridlines;
+  private Paint minorGridColor;
+  private Stroke minorGridStyle;
 
   /**
    * Constructor.
@@ -95,7 +103,12 @@ public class XYTimeSeriesPlotBuilderElements {
     backgroundColor = DEFAULT_BACKGROUND_COLOR;
     axisFontColor = DEFAULT_AXIS_FONT_COLOR;
     axisColor = DEFAULT_AXIS_COLOR;
-    showGridLines = false;
+    showMajorGridlines = true;
+    majorGridColor = DEFAULT_GRIDLINE_COLOR;
+    majorGridStyle = DEFAULT_GRIDLINE_STYLE;
+    showMinorGridlines = false;
+    minorGridColor = DEFAULT_GRIDLINE_COLOR;
+    minorGridStyle = DEFAULT_GRIDLINE_STYLE;
   }
   
   /**
@@ -418,30 +431,107 @@ public class XYTimeSeriesPlotBuilderElements {
   public Paint axisColor() {
     return axisColor;
   }
-
+  
   /**
-   * Sets displaying grid lines ON.
+   * Toggle displaying major grid lines ON or OFF.
    */
-  public void gridLines() {
-    showGridLines = true;
+  public void majorGrid(boolean enabled) {
+    showMajorGridlines = enabled;
   }
-
+  
   /**
-   * Sets displaying grid lines OFF.
+   * Returns true if showing major grid lines is ON, false otherwise.
    */
-  public void noGridLines() {
-    showGridLines = false;
+  public boolean majorGrid() {
+    return showMajorGridlines;
   }
-
+  
   /**
-   * Returns whether or not to show grid lines.
+   * Sets the major grid color to use when building the plot.
    * 
-   * @return True to show grid lines, false otherwise.
+   * @param color The color to set
    */
-  public boolean showGridLines() {
-    return showGridLines;
+  public void majorGridColor(Paint color) {
+    majorGridColor = color == null ? DEFAULT_GRIDLINE_COLOR : color;
+  }
+  
+  /**
+   * Gets the configured major grid color.
+   * 
+   * @return The color
+   */
+  public Paint majorGridColor() {
+    return majorGridColor;
   }
 
+  /**
+   * Sets the major grid line style to use when building the plot.
+   * 
+   * @param style The style to set
+   */
+  public void majorGridStyle(Stroke style) {
+    majorGridStyle = style == null ? DEFAULT_GRIDLINE_STYLE : style;
+  }
+  
+  /**
+   * Gets the configured major grid style.
+   * 
+   * @return The style
+   */
+  public Stroke majorGridStyle() {
+    return majorGridStyle;
+  }
+
+  /**
+   * Toggle displaying minor grid lines ON or OFF.
+   */
+  public void minorGrid(boolean enabled) {
+    showMinorGridlines = enabled;
+  }
+  
+  /**
+   * Returns true if showing minor grid lines is ON, false otherwise.
+   */
+  public boolean minorGrid() {
+    return showMinorGridlines;
+  }
+  
+  /**
+   * Sets the minor grid color to use when building the plot.
+   * 
+   * @param color The color to set
+   */
+  public void minorGridColor(Paint color) {
+    minorGridColor = color == null ? DEFAULT_GRIDLINE_COLOR : color;
+  }
+
+  /**
+   * Gets the configured minor grid color.
+   * 
+   * @return The color
+   */
+  public Paint minorGridColor() {
+    return minorGridColor;
+  }
+  
+  /**
+   * Sets the minor grid line style to use when building the plot.
+   * 
+   * @param style The style to set
+   */
+  public void minorGridStyle(Stroke style) {
+    minorGridStyle = style == null ? DEFAULT_GRIDLINE_STYLE : style;
+  }
+
+  /**
+   * Gets the configured minor grid style.
+   * 
+   * @return The style
+   */
+  public Stroke minorGridStyle() {
+    return minorGridStyle;
+  }
+  
   /**
    * Helper method to check if the preconditions for invoking {@code build()} have been satisfied.
    * That is, that the x-axis and time data shared by all plots have been configured.

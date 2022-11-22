@@ -22,6 +22,7 @@ package com.jfcbuilder.builders;
 
 import java.awt.Color;
 import java.awt.Paint;
+import java.awt.Stroke;
 import java.text.NumberFormat;
 import java.util.List;
 
@@ -196,18 +197,62 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
     return this;
   }
 
+  /**
+   * Sets displaying grid lines ON.
+   * 
+   * @deprecated This facility is replaced by {@link OhlcPlotBuilder#majorGrid(boolean)} and
+   *             {@link OhlcPlotBuilder#minorGrid(boolean)}, and will be removed in a future release.
+   */
+  @Deprecated(since = "1.5.7", forRemoval = true)
   @Override
   public OhlcPlotBuilder gridLines() {
-    elements.gridLines();
+    elements.majorGrid(true); // Legacy behavior
     return this;
   }
 
   @Override
   public OhlcPlotBuilder noGridLines() {
-    elements.noGridLines();
+    majorGrid(false);
+    minorGrid(false);
+    return this;
+  }
+  
+  @Override
+  public OhlcPlotBuilder majorGrid(boolean enabled) {
+    elements.majorGrid(enabled);
+    return this;
+  }
+  
+  @Override
+  public OhlcPlotBuilder majorGridColor(Paint color) {
+    elements.majorGridColor(color);
     return this;
   }
 
+  @Override
+  public OhlcPlotBuilder majorGridStyle(Stroke style) {
+    elements.majorGridStyle(style);
+    return this;
+  }
+
+  @Override
+  public OhlcPlotBuilder minorGrid(boolean enabled) {
+    elements.minorGrid(enabled);
+    return this;
+  }
+  
+  @Override
+  public OhlcPlotBuilder minorGridColor(Paint color) {
+    elements.minorGridColor(color);
+    return this;
+  }
+
+  @Override
+  public OhlcPlotBuilder minorGridStyle(Stroke style) {
+    elements.minorGridStyle(style);
+    return this;
+  }
+  
   private void checkBuildPreconditions() throws IllegalStateException {
     elements.checkBuildPreconditions();
   }

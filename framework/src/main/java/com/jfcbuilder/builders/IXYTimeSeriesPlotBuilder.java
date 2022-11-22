@@ -21,6 +21,7 @@
 package com.jfcbuilder.builders;
 
 import java.awt.Paint;
+import java.awt.Stroke;
 import java.text.NumberFormat;
 
 import org.jfree.chart.axis.ValueAxis;
@@ -188,17 +189,68 @@ public interface IXYTimeSeriesPlotBuilder<T extends IXYTimeSeriesPlotBuilder<T>>
   /**
    * Sets displaying grid lines ON.
    * 
-   * @return Reference to this builder instance for method chaining
+   * @deprecated This facility is replaced by {@link IXYTimeSeriesPlotBuilder#majorGrid(boolean)} and
+   *             {@link IXYTimeSeriesPlotBuilder#minorGrid(boolean)}, and will be removed in a future release.
    */
+  @Deprecated(since = "1.5.7", forRemoval = true)
   T gridLines();
 
   /**
-   * Sets displaying grid lines OFF.
+   * Sets displaying all grid lines OFF. Shorthand for calling both {@link IXYTimeSeriesPlotBuilder#majorGrid(boolean)}
+   * and {@link IXYTimeSeriesPlotBuilder#minorGrid(boolean)} with a value of {@code false}.
+   */
+  T noGridLines();
+  
+  /**
+   * Toggles displaying major grid lines ON or OFF.
+   * 
+   * @param enabled True to show major grid lines, false to turn them off.
    * 
    * @return Reference to this builder instance for method chaining
    */
-  T noGridLines();
+  T majorGrid(boolean enabled);
 
+  /**
+   * Sets the major grid color to use when building the plot.
+   * 
+   * @param color The color to set
+   * @return Reference to this builder instance for method chaining
+   */
+  T majorGridColor(Paint color);
+  
+  /**
+   * Sets the major grid line style to use when building the plot.
+   * 
+   * @param style The style to set
+   * @return Reference to this builder instance for method chaining
+   */
+  T majorGridStyle(Stroke style);
+  
+  /**
+   * Toggles displaying minor grid lines ON or OFF.
+   * 
+   * @param enabled True to show minor grid lines, false to turn them off.
+   * 
+   * @return Reference to this builder instance for method chaining
+   */
+  T minorGrid(boolean enabled);
+  
+  /**
+   * Sets the minor grid color to use when building the plot.
+   * 
+   * @param color The color to set
+   * @return Reference to this builder instance for method chaining
+   */
+  T minorGridColor(Paint color);
+  
+  /**
+   * Sets the minor grid line style to use when building the plot.
+   * 
+   * @param style The style to set
+   * @return Reference to this builder instance for method chaining
+   */
+  T minorGridStyle(Stroke style);
+  
   /**
    * Builds the XYPlot from all configured data and properties.
    * 

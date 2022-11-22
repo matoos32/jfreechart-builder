@@ -240,7 +240,7 @@ public class ChartBuilder {
     }
 
     parent.setGap(10.0); // sub-plot spacing
-
+    
     JFreeChart chart = createChart(parent, title);
     return chart;
 
