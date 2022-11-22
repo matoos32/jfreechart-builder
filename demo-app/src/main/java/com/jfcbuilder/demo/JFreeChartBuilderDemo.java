@@ -47,6 +47,8 @@ import javax.swing.JRadioButtonMenuItem;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.title.TextTitle;
+import org.jfree.chart.ui.RectangleAnchor;
 import org.jfree.chart.ui.TextAnchor;
 
 import com.jfcbuilder.builders.ChartBuilder;
@@ -61,6 +63,7 @@ import com.jfcbuilder.builders.XYLineBuilder;
 import com.jfcbuilder.builders.XYTextBuilder;
 import com.jfcbuilder.builders.XYTimeSeriesBuilder;
 import com.jfcbuilder.builders.XYTimeSeriesPlotBuilder;
+import com.jfcbuilder.builders.XYTitleBuilder;
 import com.jfcbuilder.demo.data.providers.AscendingDateTimeGenerator;
 import com.jfcbuilder.demo.data.providers.IDateTimeSeriesProvider;
 import com.jfcbuilder.demo.data.providers.IDohlcvProvider;
@@ -379,7 +382,7 @@ public class JFreeChartBuilderDemo {
       lookback = 28;
       int p4Index = ohlcEndIndex - lookback;
       long p4Date = timeArray[p4Index];
-      
+
       double resistanceLevel = dohlcv.closes()[0];
       double volumeLine = dohlcv.volumes()[0];
       
@@ -393,19 +396,19 @@ public class JFreeChartBuilderDemo {
           .color(DARK_GREEN))
 
         .annotation(XYLineBuilder.get()
-          .x1(p1Date).y1(p1Price)
-          .x2(p2Date).y2(p2Price)
+          .x1(p1Date).y1(p1Price).x2(p2Date).y2(p2Price)
           .color(Color.MAGENTA).style(THICK_DASHED_LINE))
         
         .annotation(XYBoxBuilder.get()
-          .x1(p3Date).y1(p3Open)
-          .x2(p4Date).y2(p3Close)
+          .x1(p3Date).y1(p3Open).x2(p4Date).y2(p3Close)
           .outlineStyle(SOLID_LINE).outlineColor(TRANSPARENT_DARK_GREEN)
           .fillColor(TRANSPARENT_GREEN))
+      
+        .annotation(
+          XYTitleBuilder.get().title(new TextTitle("OHLC Title")).x(0.5).y(0.9).anchor(RectangleAnchor.BOTTOM))
         
         .marker(MarkerBuilder.get().horizontal().at(resistanceLevel)
           .color(Color.LIGHT_GRAY).style(SOLID_LINE));
-
 
       volumePlot
       
@@ -427,6 +430,8 @@ public class JFreeChartBuilderDemo {
           .outlineStyle(THICK_DASHED_LINE).outlineColor(Color.CYAN)
           .fillColor(Color.YELLOW))
         
+        .annotation(XYTitleBuilder.get().title(new TextTitle("Volume Title")).x(0.5).y(1.0))
+        
         .marker(MarkerBuilder.get().horizontal().at(volumeLine)
           .color(DARK_GREEN).style(SOLID_LINE));
 
@@ -447,7 +452,10 @@ public class JFreeChartBuilderDemo {
         .annotation(XYBoxBuilder.get()
           .x1(p3Date).y1(70.0)
           .x2(p4Date).y2(30.0)
-          .outlineStyle(THICK_DASHED_LINE));
+          .outlineStyle(THICK_DASHED_LINE))
+        
+        .annotation(
+          XYTitleBuilder.get().title(new TextTitle("Indicator Title")).x(0.0).y(1.0).anchor(RectangleAnchor.TOP_LEFT));
     }
     
     chart.xyPlot(ohlcPlot);
