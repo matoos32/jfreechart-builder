@@ -34,7 +34,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -106,7 +108,9 @@ public class JFreeChartBuilderDemo {
   private static final LocalDateTime endDate = LocalDateTime.now();
   private static final LocalDateTime startDate = endDate.minus(18, ChronoUnit.MONTHS);
 
-  private static final Set<DayOfWeek> ohlcvSkipDays = Set.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
+  // Java 8 min requirement can't use Set.of()
+  public static DayOfWeek[] OHLCV_SKIP_DAYS = {DayOfWeek.SATURDAY, DayOfWeek.SUNDAY};
+  private static final Set<DayOfWeek> ohlcvSkipDays = new HashSet<>(Arrays.asList(OHLCV_SKIP_DAYS));
 
   private static IDateTimeSeriesProvider timeProvider = AscendingDateTimeGenerator.get();
 
