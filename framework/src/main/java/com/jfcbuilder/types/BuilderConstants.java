@@ -90,8 +90,11 @@ public abstract class BuilderConstants {
   public static final Color DARK_BLUE = new Color(0, 0, 100);
   public static final Color DARK_GREEN = new Color(0, 100, 0);
   public static final Color DARK_RED = new Color(100, 0, 0);
-  public static final Color TRANSPARENT_GREEN = new Color(0f, 1f, 0f, 0.1f);
-  public static final Color TRANSPARENT_DARK_GREEN = new Color(0f, 0.5f, 0f, 0.3f);
+  public static final Color TRANSPARENT_GREEN = new Color(0f, 1f, 0f, 0.2f);
+  public static final Color TRANSPARENT_DARK_GREEN = new Color(0f, 0.5f, 0f, 0.4f);
+  public static final Color TRANSPARENT_RED = new Color(1f, 0f, 0f, 0.2f);
+  public static final Color TRANSPARENT_DARK_RED = new Color(0.5f, 0f, 0f, 0.4f);
+  
   
   /**
    * A default color that can be used throughout the application to represent a price close up

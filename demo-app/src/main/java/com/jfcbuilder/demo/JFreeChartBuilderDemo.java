@@ -27,6 +27,7 @@ import java.awt.Paint;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.RoundRectangle2D;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -60,6 +61,7 @@ import com.jfcbuilder.builders.VolumeXYTimeSeriesBuilder;
 import com.jfcbuilder.builders.XYArrowBuilder;
 import com.jfcbuilder.builders.XYBoxBuilder;
 import com.jfcbuilder.builders.XYLineBuilder;
+import com.jfcbuilder.builders.XYShapeBuilder;
 import com.jfcbuilder.builders.XYTextBuilder;
 import com.jfcbuilder.builders.XYTimeSeriesBuilder;
 import com.jfcbuilder.builders.XYTimeSeriesPlotBuilder;
@@ -95,6 +97,9 @@ public class JFreeChartBuilderDemo {
 
   private static final Color TRANSPARENT_GREEN = BuilderConstants.TRANSPARENT_GREEN;
   private static final Color TRANSPARENT_DARK_GREEN = BuilderConstants.TRANSPARENT_DARK_GREEN;
+  
+  private static final Color TRANSPARENT_RED = BuilderConstants.TRANSPARENT_RED;
+  private static final Color TRANSPARENT_DARK_RED = BuilderConstants.TRANSPARENT_DARK_RED;
   
   // Prepare the application data to be plotted ...
 
@@ -383,6 +388,28 @@ public class JFreeChartBuilderDemo {
       int p4Index = ohlcEndIndex - lookback;
       long p4Date = timeArray[p4Index];
 
+      lookback = 58;
+      int p5Index = ohlcEndIndex - lookback;
+      long p5Date = timeArray[p5Index];
+      double p5High = dohlcv.highs()[p5Index];
+      double p5Low = dohlcv.lows()[p5Index];
+      double p5Rect2DWidth1 = 0.0005 * p5Date;
+      double p5Rect2DHeight1 = p5High - p5Low;
+      RoundRectangle2D roundedRect1 = new RoundRectangle2D.Double(p5Date, p5Low, p5Rect2DWidth1, p5Rect2DHeight1,
+        0.2 * p5Rect2DWidth1, 0.6 * p5Rect2DHeight1);
+      
+      double p5Volume = dohlcv.volumes()[p5Index];
+      double p5Rect2DWidth2 = p5Rect2DWidth1;
+      double p5Rect2DHeight2 = 0.3 * p5Volume;
+      RoundRectangle2D roundedRect2 = new RoundRectangle2D.Double(p5Date, p5Volume - p5Rect2DHeight2, p5Rect2DWidth2,
+        p5Rect2DHeight2, 0.2 * p5Rect2DWidth2, 0.6 * p5Rect2DHeight2);
+      
+      double p5Stoch = stoch.getPctK()[p5Index];
+      double p5Rect2DWidth3 = p5Rect2DWidth1;
+      double p5Rect2DHeight3 = 0.1 * p5Stoch;
+      RoundRectangle2D roundedRect3 = new RoundRectangle2D.Double(p5Date, p5Stoch - p5Rect2DHeight3, p5Rect2DWidth3,
+        p5Rect2DHeight3, 0.2 * p5Rect2DWidth3, 0.6 * p5Rect2DHeight3);
+      
       double resistanceLevel = dohlcv.closes()[0];
       double volumeLine = dohlcv.volumes()[0];
       
@@ -403,10 +430,15 @@ public class JFreeChartBuilderDemo {
           .x1(p3Date).y1(p3Open).x2(p4Date).y2(p3Close)
           .outlineStyle(SOLID_LINE).outlineColor(TRANSPARENT_DARK_GREEN)
           .fillColor(TRANSPARENT_GREEN))
-      
-        .annotation(
-          XYTitleBuilder.get().title(new TextTitle("OHLC Title")).x(0.5).y(0.9).anchor(RectangleAnchor.BOTTOM))
-        
+
+        .annotation(XYShapeBuilder.get()
+          .shape(roundedRect1)
+          .lineStyle(BuilderConstants.DASHED_LINE).lineColor(TRANSPARENT_DARK_RED)
+          .fillColor(TRANSPARENT_RED))
+
+        .annotation(XYTitleBuilder.get()
+          .title(new TextTitle("OHLC Title")).x(0.5).y(0.9).anchor(RectangleAnchor.BOTTOM))
+
         .marker(MarkerBuilder.get().horizontal().at(resistanceLevel)
           .color(Color.LIGHT_GRAY).style(SOLID_LINE));
 
@@ -429,6 +461,11 @@ public class JFreeChartBuilderDemo {
           .x2(p4Date).y2(p3Volume/2.0)
           .outlineStyle(THICK_DASHED_LINE).outlineColor(Color.CYAN)
           .fillColor(Color.YELLOW))
+        
+        .annotation(XYShapeBuilder.get()
+          .shape(roundedRect2)
+          .lineStyle(BuilderConstants.DASHED_LINE).lineColor(TRANSPARENT_DARK_RED)
+          .fillColor(TRANSPARENT_RED))
         
         .annotation(XYTitleBuilder.get().title(new TextTitle("Volume Title")).x(0.5).y(1.0))
         
@@ -453,6 +490,8 @@ public class JFreeChartBuilderDemo {
           .x1(p3Date).y1(70.0)
           .x2(p4Date).y2(30.0)
           .outlineStyle(THICK_DASHED_LINE))
+        
+        .annotation(XYShapeBuilder.get().shape(roundedRect3))
         
         .annotation(
           XYTitleBuilder.get().title(new TextTitle("Indicator Title")).x(0.0).y(1.0).anchor(RectangleAnchor.TOP_LEFT));
