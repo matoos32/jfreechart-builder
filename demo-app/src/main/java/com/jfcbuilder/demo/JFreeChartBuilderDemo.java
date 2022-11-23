@@ -63,6 +63,7 @@ import com.jfcbuilder.builders.VolumeXYTimeSeriesBuilder;
 import com.jfcbuilder.builders.XYArrowBuilder;
 import com.jfcbuilder.builders.XYBoxBuilder;
 import com.jfcbuilder.builders.XYLineBuilder;
+import com.jfcbuilder.builders.XYPolygonBuilder;
 import com.jfcbuilder.builders.XYShapeBuilder;
 import com.jfcbuilder.builders.XYTextBuilder;
 import com.jfcbuilder.builders.XYTimeSeriesBuilder;
@@ -414,6 +415,33 @@ public class JFreeChartBuilderDemo {
       RoundRectangle2D roundedRect3 = new RoundRectangle2D.Double(p5Date, p5Stoch - p5Rect2DHeight3, p5Rect2DWidth3,
         p5Rect2DHeight3, 0.2 * p5Rect2DWidth3, 0.6 * p5Rect2DHeight3);
       
+      lookback = 70;
+      int p6Index = ohlcEndIndex - lookback;
+      // Here we build a set of polygon vertices for all plots per XYPolygonAnnotation
+      final int numVertices = 10;
+      ArrayList<Double> highs = new ArrayList<>();
+      ArrayList<Double> volHighs = new ArrayList<>();
+      ArrayList<Double> stochK = new ArrayList<>();
+      double timeval = (double) timeArray[p6Index];
+      highs.add(timeval);
+      highs.add(dohlcv.lows()[p6Index]);
+      volHighs.add(timeval);
+      volHighs.add(0.0);
+      stochK.add(timeval);
+      stochK.add(stoch.getPctD()[p6Index]);
+      for(int i = p6Index; i < (p6Index + numVertices); i++) {
+        timeval = (double) timeArray[i];
+        highs.add(timeval);
+        highs.add(dohlcv.highs()[i]);
+        volHighs.add(timeval);
+        volHighs.add(dohlcv.volumes()[i]);
+        stochK.add(timeval);
+        stochK.add(stoch.getPctK()[i]);
+      }
+      double[] ohlcPolygon = highs.stream().mapToDouble(Double::doubleValue).toArray();
+      double[] volumePolygon = volHighs.stream().mapToDouble(Double::doubleValue).toArray();
+      double[] indicatorPolygon = stochK.stream().mapToDouble(Double::doubleValue).toArray();
+      
       double resistanceLevel = dohlcv.closes()[0];
       double volumeLine = dohlcv.volumes()[0];
       
@@ -442,6 +470,8 @@ public class JFreeChartBuilderDemo {
 
         .annotation(XYTitleBuilder.get()
           .title(new TextTitle("OHLC Title")).x(0.5).y(0.9).anchor(RectangleAnchor.BOTTOM))
+        
+        .annotation(XYPolygonBuilder.get().polygon(ohlcPolygon))
 
         .marker(MarkerBuilder.get().horizontal().at(resistanceLevel)
           .color(Color.LIGHT_GRAY).style(SOLID_LINE));
@@ -473,9 +503,11 @@ public class JFreeChartBuilderDemo {
         
         .annotation(XYTitleBuilder.get().title(new TextTitle("Volume Title")).x(0.5).y(1.0))
         
+        .annotation(XYPolygonBuilder.get().polygon(volumePolygon)
+          .fillColor(TRANSPARENT_GREEN).outlineColor(TRANSPARENT_DARK_GREEN))
+        
         .marker(MarkerBuilder.get().horizontal().at(volumeLine)
           .color(DARK_GREEN).style(SOLID_LINE));
-
 
       tsPlot
 
@@ -496,6 +528,9 @@ public class JFreeChartBuilderDemo {
           .outlineStyle(THICK_DASHED_LINE))
         
         .annotation(XYShapeBuilder.get().shape(roundedRect3))
+        
+        .annotation(XYPolygonBuilder.get().polygon(indicatorPolygon)
+          .fillColor(TRANSPARENT_GREEN).outlineColor(TRANSPARENT_DARK_GREEN))
         
         .annotation(
           XYTitleBuilder.get().title(new TextTitle("Indicator Title")).x(0.0).y(1.0).anchor(RectangleAnchor.TOP_LEFT));
