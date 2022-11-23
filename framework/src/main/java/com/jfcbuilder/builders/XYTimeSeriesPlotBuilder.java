@@ -168,8 +168,10 @@ public class XYTimeSeriesPlotBuilder implements IXYTimeSeriesPlotBuilder<XYTimeS
    * 
    * @deprecated This facility is replaced by {@link XYTimeSeriesPlotBuilder#majorGrid(boolean)} and
    *             {@link XYTimeSeriesPlotBuilder#minorGrid(boolean)}, and will be removed in a future release.
+   *             <p>
+   *             <b>For removal since v1.5.7</b>
    */
-  @Deprecated(since = "1.5.7", forRemoval = true)
+  @Deprecated
   @Override
   public XYTimeSeriesPlotBuilder gridLines() {
     elements.majorGrid(true); // Legacy behavior

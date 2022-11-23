@@ -191,8 +191,10 @@ public interface IXYTimeSeriesPlotBuilder<T extends IXYTimeSeriesPlotBuilder<T>>
    * 
    * @deprecated This facility is replaced by {@link IXYTimeSeriesPlotBuilder#majorGrid(boolean)} and
    *             {@link IXYTimeSeriesPlotBuilder#minorGrid(boolean)}, and will be removed in a future release.
+   *             <p>
+   *             <b>For removal since v1.5.7</b>
    */
-  @Deprecated(since = "1.5.7", forRemoval = true)
+  @Deprecated
   T gridLines();
 
   /**

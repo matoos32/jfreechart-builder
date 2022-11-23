@@ -202,8 +202,10 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
    * 
    * @deprecated This facility is replaced by {@link OhlcPlotBuilder#majorGrid(boolean)} and
    *             {@link OhlcPlotBuilder#minorGrid(boolean)}, and will be removed in a future release.
+   *             <p>
+   *             <b>For removal since v1.5.7</b>
    */
-  @Deprecated(since = "1.5.7", forRemoval = true)
+  @Deprecated
   @Override
   public OhlcPlotBuilder gridLines() {
     elements.majorGrid(true); // Legacy behavior
