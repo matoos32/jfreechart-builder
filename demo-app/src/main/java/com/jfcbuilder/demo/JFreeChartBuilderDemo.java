@@ -49,6 +49,7 @@ import javax.swing.JRadioButtonMenuItem;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.block.ColorBlock;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.chart.ui.RectangleAnchor;
@@ -62,6 +63,7 @@ import com.jfcbuilder.builders.VolumeXYPlotBuilder;
 import com.jfcbuilder.builders.VolumeXYTimeSeriesBuilder;
 import com.jfcbuilder.builders.XYArrowBuilder;
 import com.jfcbuilder.builders.XYBoxBuilder;
+import com.jfcbuilder.builders.XYDrawableBuilder;
 import com.jfcbuilder.builders.XYLineBuilder;
 import com.jfcbuilder.builders.XYPolygonBuilder;
 import com.jfcbuilder.builders.XYShapeBuilder;
@@ -103,6 +105,8 @@ public class JFreeChartBuilderDemo {
   
   private static final Color TRANSPARENT_RED = BuilderConstants.TRANSPARENT_RED;
   private static final Color TRANSPARENT_DARK_RED = BuilderConstants.TRANSPARENT_DARK_RED;
+  
+  private static final Color TRANSPARENT_YELLOW = BuilderConstants.TRANSPARENT_YELLOW;
   
   // Prepare the application data to be plotted ...
 
@@ -442,6 +446,13 @@ public class JFreeChartBuilderDemo {
       double[] volumePolygon = volHighs.stream().mapToDouble(Double::doubleValue).toArray();
       double[] indicatorPolygon = stochK.stream().mapToDouble(Double::doubleValue).toArray();
       
+      lookback = 84;
+      int p7Index = ohlcEndIndex - lookback;
+      long p7Date = timeArray[p7Index];
+      double p7High = dohlcv.highs()[p7Index];
+      double p7Volume = dohlcv.lows()[p7Index];
+      double p7Stoch = stoch.getPctK()[p7Index];
+      
       double resistanceLevel = dohlcv.closes()[0];
       double volumeLine = dohlcv.volumes()[0];
       
@@ -473,6 +484,10 @@ public class JFreeChartBuilderDemo {
         
         .annotation(XYPolygonBuilder.get().polygon(ohlcPolygon))
 
+        .annotation(XYDrawableBuilder.get()
+          .drawable(new ColorBlock(TRANSPARENT_YELLOW, 1, 1))
+          .x(p7Date).y(p7High).displayHeight(20).displayWidth(60))
+        
         .marker(MarkerBuilder.get().horizontal().at(resistanceLevel)
           .color(Color.LIGHT_GRAY).style(SOLID_LINE));
 
@@ -506,6 +521,10 @@ public class JFreeChartBuilderDemo {
         .annotation(XYPolygonBuilder.get().polygon(volumePolygon)
           .fillColor(TRANSPARENT_GREEN).outlineColor(TRANSPARENT_DARK_GREEN))
         
+        .annotation(XYDrawableBuilder.get()
+          .drawable(new ColorBlock(TRANSPARENT_YELLOW, 1, 1))
+          .x(p7Date).y(p7Volume).displayHeight(20).displayWidth(60))
+        
         .marker(MarkerBuilder.get().horizontal().at(volumeLine)
           .color(DARK_GREEN).style(SOLID_LINE));
 
@@ -529,11 +548,15 @@ public class JFreeChartBuilderDemo {
         
         .annotation(XYShapeBuilder.get().shape(roundedRect3))
         
+        .annotation(XYTitleBuilder.get()
+          .title(new TextTitle("Indicator Title")).x(0.0).y(1.0).anchor(RectangleAnchor.TOP_LEFT))
+        
         .annotation(XYPolygonBuilder.get().polygon(indicatorPolygon)
           .fillColor(TRANSPARENT_GREEN).outlineColor(TRANSPARENT_DARK_GREEN))
-        
-        .annotation(
-          XYTitleBuilder.get().title(new TextTitle("Indicator Title")).x(0.0).y(1.0).anchor(RectangleAnchor.TOP_LEFT));
+
+        .annotation(XYDrawableBuilder.get()
+          .drawable(new ColorBlock(TRANSPARENT_YELLOW, 1, 1))
+          .x(p7Date).y(p7Stoch).displayHeight(20).displayWidth(60));
     }
     
     chart.xyPlot(ohlcPlot);

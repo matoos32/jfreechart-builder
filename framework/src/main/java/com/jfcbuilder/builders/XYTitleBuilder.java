@@ -20,8 +20,6 @@
 
 package com.jfcbuilder.builders;
 
-import java.util.Arrays;
-
 import org.jfree.chart.annotations.XYAnnotation;
 import org.jfree.chart.annotations.XYTitleAnnotation;
 import org.jfree.chart.title.Title;
@@ -150,7 +148,7 @@ public class XYTitleBuilder implements IXYAnnotationBuilder<XYTitleBuilder> {
       throw new IllegalStateException("Max width not set");
     }
 
-    if (Double.isNaN(maxHeight) || Double.isNaN(y)) {
+    if (Double.isNaN(maxHeight)) {
       throw new IllegalStateException("Max height not set");
     }
 
