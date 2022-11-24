@@ -94,6 +94,7 @@ public abstract class BuilderConstants {
   public static final Color TRANSPARENT_DARK_GREEN = new Color(0f, 0.5f, 0f, 0.4f);
   public static final Color TRANSPARENT_RED = new Color(1f, 0f, 0f, 0.2f);
   public static final Color TRANSPARENT_DARK_RED = new Color(0.5f, 0f, 0f, 0.4f);
+  public static final Color TRANSPARENT_YELLOW = new Color(1f, 1f, 0f, 0.4f);
   
   
   /**
