@@ -67,6 +67,7 @@ import com.jfcbuilder.builders.VolumeXYPlotBuilder;
 import com.jfcbuilder.builders.VolumeXYTimeSeriesBuilder;
 import com.jfcbuilder.builders.XYArrowBuilder;
 import com.jfcbuilder.builders.XYBoxBuilder;
+import com.jfcbuilder.builders.XYDataImageBuilder;
 import com.jfcbuilder.builders.XYDrawableBuilder;
 import com.jfcbuilder.builders.XYImageBuilder;
 import com.jfcbuilder.builders.XYLineBuilder;
@@ -513,8 +514,13 @@ public class JFreeChartBuilderDemo {
           .x(p7Date).y(p7High).displayHeight(20).displayWidth(60))
         
         .annotation(XYImageBuilder.get().image(img1)
-            .x(p7Date).y(1.05 * p5High).anchor(RectangleAnchor.TOP))
-        
+          .x(p7Date).y(1.05 * p5High).anchor(RectangleAnchor.TOP))
+
+        .annotation(XYDataImageBuilder.get().image(img2)
+          .x(p1Date).y(1.05 * p5High)
+          .width(p2Date - p1Date).height(0.5)
+          .includeInDataBounds(true))
+
         .marker(MarkerBuilder.get().horizontal().at(resistanceLevel)
           .color(Color.LIGHT_GRAY).style(SOLID_LINE));
 
@@ -554,6 +560,10 @@ public class JFreeChartBuilderDemo {
         
         .annotation(XYImageBuilder.get().x(p7Date).y(p5Volume).image(img2))
         
+        .annotation(XYDataImageBuilder.get().image(img3)
+            .x(p1Date).y(1.05 * p5Volume)
+            .width(p2Date - p1Date).height(0.5 * p5Volume))
+        
         .marker(MarkerBuilder.get().horizontal().at(volumeLine)
           .color(DARK_GREEN).style(SOLID_LINE));
 
@@ -587,7 +597,11 @@ public class JFreeChartBuilderDemo {
           .drawable(new ColorBlock(TRANSPARENT_YELLOW, 1, 1))
           .x(p7Date).y(p7Stoch).displayHeight(20).displayWidth(60))
       
-        .annotation(XYImageBuilder.get().x(p7Date).y(p1Stoch).image(img3));
+        .annotation(XYImageBuilder.get().x(p7Date).y(p1Stoch).image(img3))
+      
+        .annotation(XYDataImageBuilder.get().image(img1)
+          .x(p1Date).y(1.05 * p5Stoch)
+          .width(p2Date - p1Date).height(30.0));
     }
     
     chart.xyPlot(ohlcPlot);
