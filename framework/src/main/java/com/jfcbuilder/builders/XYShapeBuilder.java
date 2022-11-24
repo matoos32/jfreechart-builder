@@ -31,6 +31,11 @@ import org.jfree.chart.annotations.XYShapeAnnotation;
 
 /**
  * Builder for producing {@link XYShapeAnnotation} objects.
+ * <p>
+ * <b>Note: Limited to working with {@link org.jfree.chart.axis.DateAxis} (i.e. with time gaps) mode
+ * only. See related comments in mapXToTimeIndex(long[], int, int)</b>
+ * 
+ * @see XYShapeBuilder#mapXToTimeIndex(long[], int, int)
  */
 public class XYShapeBuilder implements IXYAnnotationBuilder<XYShapeBuilder> {
 
