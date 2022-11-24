@@ -22,12 +22,14 @@ package com.jfcbuilder.demo;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.HeadlessException;
 import java.awt.Paint;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -42,10 +44,12 @@ import java.util.Locale;
 import java.util.Set;
 
 import javax.swing.ButtonGroup;
+import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.UIManager;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -64,6 +68,7 @@ import com.jfcbuilder.builders.VolumeXYTimeSeriesBuilder;
 import com.jfcbuilder.builders.XYArrowBuilder;
 import com.jfcbuilder.builders.XYBoxBuilder;
 import com.jfcbuilder.builders.XYDrawableBuilder;
+import com.jfcbuilder.builders.XYImageBuilder;
 import com.jfcbuilder.builders.XYLineBuilder;
 import com.jfcbuilder.builders.XYPolygonBuilder;
 import com.jfcbuilder.builders.XYShapeBuilder;
@@ -453,6 +458,25 @@ public class JFreeChartBuilderDemo {
       double p7Volume = dohlcv.lows()[p7Index];
       double p7Stoch = stoch.getPctK()[p7Index];
       
+      final int imageType = BufferedImage.TYPE_INT_ARGB;
+      Icon icon = UIManager.getIcon("OptionPane.warningIcon");
+      BufferedImage img1 = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), imageType);
+      Graphics g = img1.getGraphics();
+      icon.paintIcon(null, g, 0, 0);
+      g.dispose();
+      
+      icon = UIManager.getIcon("OptionPane.errorIcon");
+      BufferedImage img2 = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), imageType);
+      g = img2.getGraphics();
+      icon.paintIcon(null, g, 0, 0);
+      g.dispose();
+      
+      icon = UIManager.getIcon("OptionPane.informationIcon");
+      BufferedImage img3 = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), imageType);
+      g = img3.getGraphics();
+      icon.paintIcon(null, g, 0, 0);
+      g.dispose();
+      
       double resistanceLevel = dohlcv.closes()[0];
       double volumeLine = dohlcv.volumes()[0];
       
@@ -487,6 +511,9 @@ public class JFreeChartBuilderDemo {
         .annotation(XYDrawableBuilder.get()
           .drawable(new ColorBlock(TRANSPARENT_YELLOW, 1, 1))
           .x(p7Date).y(p7High).displayHeight(20).displayWidth(60))
+        
+        .annotation(XYImageBuilder.get().image(img1)
+            .x(p7Date).y(1.05 * p5High).anchor(RectangleAnchor.TOP))
         
         .marker(MarkerBuilder.get().horizontal().at(resistanceLevel)
           .color(Color.LIGHT_GRAY).style(SOLID_LINE));
@@ -525,6 +552,8 @@ public class JFreeChartBuilderDemo {
           .drawable(new ColorBlock(TRANSPARENT_YELLOW, 1, 1))
           .x(p7Date).y(p7Volume).displayHeight(20).displayWidth(60))
         
+        .annotation(XYImageBuilder.get().x(p7Date).y(p5Volume).image(img2))
+        
         .marker(MarkerBuilder.get().horizontal().at(volumeLine)
           .color(DARK_GREEN).style(SOLID_LINE));
 
@@ -556,7 +585,9 @@ public class JFreeChartBuilderDemo {
 
         .annotation(XYDrawableBuilder.get()
           .drawable(new ColorBlock(TRANSPARENT_YELLOW, 1, 1))
-          .x(p7Date).y(p7Stoch).displayHeight(20).displayWidth(60));
+          .x(p7Date).y(p7Stoch).displayHeight(20).displayWidth(60))
+      
+        .annotation(XYImageBuilder.get().x(p7Date).y(p1Stoch).image(img3));
     }
     
     chart.xyPlot(ohlcPlot);
