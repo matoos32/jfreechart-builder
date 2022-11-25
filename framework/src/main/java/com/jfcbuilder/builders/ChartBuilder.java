@@ -231,10 +231,10 @@ public class ChartBuilder {
       XYPlot xyPlot = b.build();
 
       xyPlot.setRangeAxisLocation(AxisLocation.TOP_OR_RIGHT, false);
-      xyPlot.setDomainCrosshairVisible(true); // Enabled now to allow clicking to move crosshair
+      xyPlot.setDomainCrosshairVisible(true); // Enabled now to allow clicking to move cross-hair
       xyPlot.setRangeCrosshairVisible(true);
       xyPlot.setDomainCrosshairLockedOnData(false);
-      xyPlot.setDomainCrosshairValue(-1.0, false); // Start off the screen so not visible until click
+      xyPlot.setRangeCrosshairLockedOnData(false);
 
       parent.add(xyPlot, b.plotWeight());
     }

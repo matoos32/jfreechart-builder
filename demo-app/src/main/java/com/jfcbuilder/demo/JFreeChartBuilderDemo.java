@@ -45,6 +45,7 @@ import java.util.Set;
 
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -85,6 +86,7 @@ import com.jfcbuilder.demo.data.providers.numeric.Sinusoid;
 import com.jfcbuilder.demo.data.providers.numeric.Sma;
 import com.jfcbuilder.demo.data.providers.numeric.StochasticOscillator;
 import com.jfcbuilder.demo.data.providers.numeric.StochasticOscillator.StochData;
+import com.jfcbuilder.listeners.ChartCombinedAxisClickDispatcher;
 import com.jfcbuilder.types.BuilderConstants;
 import com.jfcbuilder.types.DohlcvSeries;
 import com.jfcbuilder.types.MinimalDateFormat;
@@ -809,41 +811,61 @@ public class JFreeChartBuilderDemo {
 
     ChartPanel panel = new ChartPanel(null);
 
+    JMenuBar menuBar = new JMenuBar();
+    
+    JMenu demoMenu = new JMenu("Demonstrations");
+    menuBar.add(demoMenu);
+    
+    ButtonGroup group = new ButtonGroup();
+    JRadioButtonMenuItem rbItem;
+
+    for (JFreeChart chart : charts) {
+      rbItem = new JRadioButtonMenuItem(chart.getTitle().getText());
+      rbItem.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          JRadioButtonMenuItem context = (JRadioButtonMenuItem) e.getSource();
+          context.setSelected(true);
+          panel.setChart(chart);
+        }
+      });
+      group.add(rbItem);
+      demoMenu.add(rbItem);
+
+      if (panel.getChart() == null) {
+        rbItem.doClick();
+      }
+    }
+
+    JMenu modesMenu = new JMenu("Modes");
+    menuBar.add(modesMenu);
+
+    JCheckBoxMenuItem cbItem = new JCheckBoxMenuItem("Synchronize Cross-Hairs", true);
+    // Click listener to dispatch clicks to sub-plots for synchronizing cross-hairs.
+    // When each sub-plot is virtually clicked, it self-updates its cross-hair with the coordinates.
+    ChartCombinedAxisClickDispatcher clickDispatcher = new ChartCombinedAxisClickDispatcher(panel);
+    panel.addChartMouseListener(clickDispatcher);
+
+    cbItem.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        JCheckBoxMenuItem item = (JCheckBoxMenuItem) e.getSource();
+        if (item.isSelected()) {
+          panel.addChartMouseListener(clickDispatcher);
+        } else {
+          panel.removeChartMouseListener(clickDispatcher);
+        }
+      }
+    });
+
+    modesMenu.add(cbItem);
+
     JFrame frame = new JFrame(ChartBuilder.class.getSimpleName() + " Demo App");
     frame.add(panel);
     frame.setSize(new Dimension(800, 600));
     frame.setLocationRelativeTo(null);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-    JMenuBar menuBar = new JMenuBar();
     frame.setJMenuBar(menuBar);
-
-    JMenu demoMenu = new JMenu("Demonstrations");
-    menuBar.add(demoMenu);
-    
-    ButtonGroup group = new ButtonGroup();
-    JRadioButtonMenuItem item;
-
-    for (JFreeChart chart : charts) {
-      item = new JRadioButtonMenuItem(chart.getTitle().getText());
-      item.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          if (e.getSource() instanceof JRadioButtonMenuItem) {
-            JRadioButtonMenuItem context = (JRadioButtonMenuItem) e.getSource();
-            context.setSelected(true);
-            panel.setChart(chart);
-          }
-        }
-      });
-      group.add(item);
-      demoMenu.add(item);
-
-      if (panel.getChart() == null) {
-        item.doClick();
-      }
-    }
-
     frame.setVisible(true);
   }
 }
