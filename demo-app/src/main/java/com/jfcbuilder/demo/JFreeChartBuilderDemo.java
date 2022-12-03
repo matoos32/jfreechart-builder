@@ -840,25 +840,37 @@ public class JFreeChartBuilderDemo {
     JMenu modesMenu = new JMenu("Modes");
     menuBar.add(modesMenu);
 
-    JCheckBoxMenuItem cbItem = new JCheckBoxMenuItem("Synchronize Cross-Hairs", true);
-    // Click listener to dispatch clicks to sub-plots for synchronizing cross-hairs.
-    // When each sub-plot is virtually clicked, it self-updates its cross-hair with the coordinates.
-    ChartCombinedAxisClickDispatcher clickDispatcher = new ChartCombinedAxisClickDispatcher(panel);
-    panel.addChartMouseListener(clickDispatcher);
-
-    cbItem.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        JCheckBoxMenuItem item = (JCheckBoxMenuItem) e.getSource();
-        if (item.isSelected()) {
-          panel.addChartMouseListener(clickDispatcher);
-        } else {
-          panel.removeChartMouseListener(clickDispatcher);
-        }
+    JCheckBoxMenuItem cbTraceItem = new JCheckBoxMenuItem("Show Trace", false);
+    modesMenu.add(cbTraceItem);
+    cbTraceItem.addActionListener(e -> {
+      boolean isSelected = cbTraceItem.isSelected();
+      panel.setHorizontalAxisTrace(isSelected);
+      panel.setVerticalAxisTrace(isSelected);
+      if(!isSelected) {
+        // WORKAROUND: the area under the menu item does not re-draw/update if trace was ON and the
+        // menu is closed, so force a repaint.
+        panel.repaint();
       }
     });
-
-    modesMenu.add(cbItem);
+    
+    JCheckBoxMenuItem cbCrosshairItem = new JCheckBoxMenuItem("Synchronize Crosshairs", true);
+    modesMenu.add(cbCrosshairItem);
+    // Click listener to dispatch clicks to sub-plots for synchronizing crosshairs.
+    // When each sub-plot is virtually clicked, it self-updates its crosshair with the coordinates.
+    ChartCombinedAxisClickDispatcher clickDispatcher = new ChartCombinedAxisClickDispatcher(panel);
+    panel.addChartMouseListener(clickDispatcher);
+    cbCrosshairItem.addActionListener(e -> {
+      if (cbCrosshairItem.isSelected()) {
+        panel.addChartMouseListener(clickDispatcher);
+      } else {
+        panel.removeChartMouseListener(clickDispatcher);
+      }
+      if(cbTraceItem.isSelected()) {
+        // WORKAROUND: the area under the menu item does not re-draw/update if trace is ON and the
+        // menu is closed, so force a repaint.
+        panel.repaint();
+      }
+    });
 
     JFrame frame = new JFrame(ChartBuilder.class.getSimpleName() + " Demo App");
     frame.add(panel);

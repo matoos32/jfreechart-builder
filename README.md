@@ -7,17 +7,16 @@ It's a companion to [ChartFactory.java](https://github.com/jfree/jfreechart/blob
 
 ## Features
 
-* XY time series charts using [CombinedDomainXYPlot](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/plot/CombinedDomainXYPlot.java) for data alignment on sub-plots
-* Time gap removal solution
-* Time axis tick format control
-* General XY time series charts
-* Stock market OHLC candlestick charts
-* Stock market volume bar charts
-* Markers
-* Annotations (arrows, text, lines, boxes)
-* Set various colors
-* Toggle grid lines
-* [Demo app](./demo-app/src/main/java/com/jfcbuilder/demo/JFreeChartBuilderDemo.java) for testing and prototyping
+* XY time series charts using [CombinedDomainXYPlot](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/plot/CombinedDomainXYPlot.java) for data alignment on sub-plots.
+* Stockmarket OHLC candlestick and volume bar charts.
+* A time gap removal solution (see [JfreeChart Issue #197](https://github.com/jfree/jfreechart/issues/197)).
+* A combined axis sub-plot crosshair synchronization solution.
+* Easy time axis tick format control including a minimalist date format solution.
+* Easy markers and annotations (arrows, boxes, images, lines, polygons, text, titles).
+* Easy color, line style, and gridline control.
+* A [Demo app](./demo-app/src/main/java/com/jfcbuilder/demo/JFreeChartBuilderDemo.java) for testing and prototyping.
+
+Note: all charts use a `CombinedDomainXYPlot` even if there's one plot in order to ease the maintenance of this framework.
 
 In the future, more facilities may be added to leverage more of what
 [jfreechart](https://github.com/jfree/jfreechart) provides.
@@ -138,6 +137,32 @@ ChartBuilder.get()
 **Note: the x-axis month label in the gapless time chart currently doesn't always correspond to the first day (or trading day) of the month.**
 
 
+### Sub-plot Crosshair Synchronization
+
+[ChartCombinedAxisClickDispatcher](./framework/src/main/java/com/jfcbuilder/listeners/ChartCombinedAxisClickDispatcher.java)
+was created to dispatch JfreeChart `ChartMouseEvent`s to combined axis sub-plots. This leverages JFreeChart's built-in updating of crosshairs
+and emulates the perpendicular `ChartPanel` trace lines like a snapshot of them. The demo app has example code but essentially you add a chart mouse listener to the panel:
+
+```
+ChartPanel panel = new ChartPanel();
+
+...
+
+ChartMouseListener clickDispatcher = new ChartCombinedAxisClickDispatcher(panel);
+
+panel.addChartMouseListener(clickDispatcher);
+```
+
+Now a click on any combined axis sub-plot will make all sub-plots get a `handleClick()` call.
+
+To remove this, pass the same listener object to the remove method:
+
+```
+panel.removeChartMouseListener(clickDispatcher);
+```
+
+[ChartCombinedAxisClickDispatcher](./framework/src/main/java/com/jfcbuilder/listeners/ChartCombinedAxisClickDispatcher.java) is extendable for other customizations.
+
 ### Time Axis Tick Label Formats
 
 You can supply `DateFormat` instances to render time axis tick labels by calling  `dateFormat(DateFormat format)`. You can even implement your own sub-class.
@@ -159,12 +184,6 @@ ChartBuilder.get()
 ### Convenience Minimal Tick Format
 
 An optional [MinimalDateFormat](./framework/src/main/java/com/jfcbuilder/types/MinimalDateFormat.java) class is implemented to format dates with month letter(s) on first instance of a new month then only month days until a new month is reached.
-
-
-## Javadoc
-
-See the [Builders Summary](https://matoos32.github.io/jfreechart-builder-docs/javadoc/com/jfcbuilder/builders/package-summary.html)
-to browse the public API.
 
 
 ## Demo App
@@ -194,15 +213,17 @@ git clone <this repo's URL>
 ### Versioning
 
 The major and minor numbers are the same as the **jfreechart** major and minor to denote compatibility.
+
 The incremental ("patch") number is the monolithic version number of **jfreechart-builder**.
 
 
 ### Branching model
 
-If you want the latest and greatest contributions use the `develop` branch. These commits give you a
+The latest and greatest but unreleased contributions are on the `develop` branch. These commits give you a
 preview of what's to come.
 
 Each time `develop` is merged into `main`, a version tag is added onto that merge commit.
+
 Each commit to `main` represents the next released version.
 
 
@@ -213,7 +234,9 @@ Each commit to `main` represents the next released version.
 [demo-app/](./demo-app) contains the demo app code and produces the launchable `jfreechart-builder-demo` JAR file.
 
 
-### Building
+### Build and install the jars into your local Maven repo
+
+Set the desired branch
 
 ```
 cd path/to/cloned/repo
@@ -221,37 +244,13 @@ cd path/to/cloned/repo
 git checkout <desired branch or tag>
 ```
 
-
-#### Simple build
-
-Build everything:
-
-```
-mvn package
-```
-
-The jars will be in the `framework/target/` and `demo-app/target/` folders.
-
-
-Build each module independently:
-
-```
-cd framework
-mvn package
-
-cd ../demo-app
-mvn package
-```
-
-#### Build and install the jars into your Maven repo
-
 Build and install everything:
 
 ```
 mvn install
 ```
 
-Build and install each module independently:
+Or build and install modules independently:
 
 ```
 cd framework
@@ -261,30 +260,7 @@ cd ../demo-app
 mvn install
 ```
 
-### Testing
-
-Run the demo-app from your IDE or launch it from the command line:
-
-```
-java -jar jfreechart-builder-demo.jar
-```
-
-
-### Generate and view Javadoc
-
-```
-mvn javadoc:javadoc -Dsource=8
-```
-
-Use a browser to open `framework/target/site/apidocs/index.html`
-
-Alternatively, run the generation script by specifying what version tag to associate with the Javadoc:
-
-```
-./scripts/generate-javadoc.sh v1.5.6
-```
-
-That output will be in `target/site/apidocs/javadoc`
+**Note:** to build the jars without installing use `mvn package` instead of `mvn install` . They'll be in the `framework/target/` and `demo-app/target/` folders.
 
 
 ### Add the jfreechart-builder JAR to a client project
@@ -297,6 +273,15 @@ Add this dependency to your project's `.pom` file:
   <artifactId>jfreechart-builder</artifactId>
   <version>1.5.6</version>
 <dependency>
+```
+
+
+### Testing
+
+Run the demo-app from your IDE or launch it from the command line:
+
+```
+java -jar jfreechart-builder-demo.jar
 ```
 
 ## Test Coverage Warning
@@ -313,9 +298,32 @@ You should thoroughly test the use of `jfreechart-builder` in your project and e
 
 If you feel a capability is missing or there's a bug feel free to create an issue or start a discussion thread. Contributions are also welcome (see *Contributing* below)!
 
+
+## Javadoc
+
+The latest release Javadoc is hosted [here](https://matoos32.github.io/jfreechart-builder-docs/javadoc/overview-tree.html).
+
+
+### Generating Javadoc locally
+
+```
+mvn javadoc:javadoc -Dsource=8
+```
+
+Use a browser to open `framework/target/site/apidocs/index.html`
+
+Alternatively, run the generation script by specifying what version tag to associate with the Javadoc:
+
+```
+./scripts/generate-javadoc.sh v1.5.6
+```
+
+That output will be in `target/site/apidocs/javadoc`
+
+
 ## Thread-safety and garbage collection
 
-No thread-safety measures are deliberately taken. If you require thread-safety then provide deep copies of objects, don't share builders, don't share charts, or add synchronization to your business logic.
+No thread-safety measures are deliberately taken. If you require thread-safety then provide deep copies of objects, don't share builders, don't share charts, or you could add synchronization to your business logic.
 
 Generally, primitive data arrays are copied into **jfreechart** objects. **jfreechart-builder** will maintain references to other objects passed-in like strings, colors, and drawing strokes. When the builders and charts they produce go out of scope,
 the objects you provided (and other objects that may be referencing them) should be garbage collected as applicable.
@@ -337,5 +345,5 @@ If you need clarification on the LGPL vs. Java, please see the [FSF's tech note 
 Contributions are welcome and will be accepted as the maintainers' time permits.
 
 * Please use indentations of two spaces (no tabs)
-* Wrap lines at a width of 120 characters.
-* To help others, write good Javadoc at least for interfaces, class descriptions, and public methods.
+* Wrap lines at a width of 100 characters.
+* Write good Javadoc at least for interfaces, class descriptions, and public methods.
