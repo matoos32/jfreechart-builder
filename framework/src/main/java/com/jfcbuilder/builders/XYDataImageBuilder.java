@@ -66,56 +66,124 @@ public class XYDataImageBuilder implements IXYAnnotationBuilder<XYDataImageBuild
     return new XYDataImageBuilder();
   }
 
+  /**
+   * Sets the data image's x-axis data coordinate.
+   * 
+   * @param x The data coordinate to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYDataImageBuilder x(double x) {
     this.x = x;
     return this;
   }
 
+  /**
+   * Gets the x-axis data coordinate that is set.
+   * 
+   * @return The data coordinate value
+   */
   public double x() {
     return x;
   }
 
+  /**
+   * Sets the data image's y-axis data coordinate.
+   * 
+   * @param y The data coordinate to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYDataImageBuilder y(double y) {
     this.y = y;
     return this;
   }
 
+  /**
+   * Gets the y-axis data coordinate that is set.
+   * 
+   * @return The data coordinate value
+   */
   public double y() {
     return y;
   }
 
+  /**
+   * Sets the {@link java.awt.Image} to be annotated.
+   * 
+   * @param image The image object to annotate
+   * @return Reference to this builder instance for method chaining
+   */
   public XYDataImageBuilder image(Image image) {
     this.image = image;
     return this;
   }
 
+  /**
+   * Gets the {@link java.awt.Image} to be annotated.
+   * 
+   * @return The image object to annotate
+   */
   public Image image() {
     return image;
   }
 
+  /**
+   * Sets the data-space width of the image's drawing rectangle.
+   * 
+   * @param w The width to be set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYDataImageBuilder width(double w) {
     width = w;
     return this;
   }
 
+  /**
+   * Gets the data-space width of the image's drawing rectangle.
+   * 
+   * @return The width
+   */
   public double width() {
     return width;
   }
 
+  /**
+   * Sets the data-space height of the image's drawing rectangle.
+   * 
+   * @param h The width to be set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYDataImageBuilder height(double h) {
     height = h;
     return this;
   }
 
+  /**
+   * Gets the data-space height of the image's drawing rectangle.
+   * 
+   * @return The height
+   */
   public double height() {
     return height;
   }
-  
+
+  /**
+   * Sets the "include in data bounds" flag.
+   * 
+   * @param include True to enable the inclusion, false to disable it.
+   * @return Reference to this builder instance for method chaining
+   * @see org.jfree.chart.annotations.XYDataImageAnnotation#getIncludeInDataBounds()
+   */
   public XYDataImageBuilder includeInDataBounds(boolean include) {
     includeInDataBounds = include;
     return this;
   }
 
+  /**
+   * Gets the "include in data bounds" flag.
+   * 
+   * @return True if including is enabled, false otherwise.
+   * @see org.jfree.chart.annotations.XYDataImageAnnotation#getIncludeInDataBounds()
+   */
   public boolean includeInDataBounds() {
     return includeInDataBounds;
   }
@@ -129,7 +197,7 @@ public class XYDataImageBuilder implements IXYAnnotationBuilder<XYDataImageBuild
     if (image == null) {
       throw new IllegalStateException("Image not set");
     }
-    
+
     if (Double.isNaN(width) || Double.isNaN(height)) {
       throw new IllegalStateException("Width or height not set");
     }
@@ -142,7 +210,6 @@ public class XYDataImageBuilder implements IXYAnnotationBuilder<XYDataImageBuild
 
     return new XYDataImageAnnotation(image, x, y, width, height, includeInDataBounds);
   }
-
 
   @Override
   public void mapXToTimeIndex(long[] timeData, int indexRangeStartIndex, int indexRangeEndIndex) {
@@ -159,19 +226,15 @@ public class XYDataImageBuilder implements IXYAnnotationBuilder<XYDataImageBuild
     // mapXToTimeIndex() method to write their own logic.
     //
     // There's a potential code snippet below inspired from the other builders.
-    
-    /*
-    // +1 as the binary search method end index is exclusive.
-    int xIndex = Arrays.binarySearch(timeData, indexRangeStartIndex, indexRangeEndIndex + 1,
-        (long) x());
 
-    if (xIndex >= 0) {
-      x((double) (xIndex - indexRangeStartIndex));
-      
-      // And now how many indices does the width span? All time spacing is squashed into sequential
-      // evenly spaced indices ...
-      width( width() / ??? );
-    }
-    */
+    /*
+     * // +1 as the binary search method end index is exclusive. int xIndex =
+     * Arrays.binarySearch(timeData, indexRangeStartIndex, indexRangeEndIndex + 1, (long) x());
+     * 
+     * if (xIndex >= 0) { x((double) (xIndex - indexRangeStartIndex));
+     * 
+     * // And now how many indices does the width span? All time spacing is squashed into sequential
+     * // evenly spaced indices ... width( width() / ??? ); }
+     */
   }
 }

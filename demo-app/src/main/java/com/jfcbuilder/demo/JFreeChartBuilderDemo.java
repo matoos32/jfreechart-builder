@@ -122,7 +122,7 @@ public class JFreeChartBuilderDemo {
   private static final LocalDateTime startDate = endDate.minus(18, ChronoUnit.MONTHS);
 
   // Java 8 min requirement can't use Set.of()
-  public static DayOfWeek[] OHLCV_SKIP_DAYS = {DayOfWeek.SATURDAY, DayOfWeek.SUNDAY};
+  private static DayOfWeek[] OHLCV_SKIP_DAYS = {DayOfWeek.SATURDAY, DayOfWeek.SUNDAY};
   private static final Set<DayOfWeek> ohlcvSkipDays = new HashSet<>(Arrays.asList(OHLCV_SKIP_DAYS));
 
   private static IDateTimeSeriesProvider timeProvider = AscendingDateTimeGenerator.get();

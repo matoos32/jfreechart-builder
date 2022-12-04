@@ -59,38 +59,84 @@ public class XYImageBuilder implements IXYAnnotationBuilder<XYImageBuilder> {
     return new XYImageBuilder();
   }
 
+  /**
+   * Sets the image's x-axis data coordinate.
+   * 
+   * @param x The data coordinate to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYImageBuilder x(double x) {
     this.x = x;
     return this;
   }
 
+  /**
+   * Gets the x-axis data coordinate that is set.
+   * 
+   * @return The data coordinate value
+   */
   public double x() {
     return x;
   }
 
+  /**
+   * Sets the image's y-axis data coordinate.
+   * 
+   * @param y The data coordinate to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYImageBuilder y(double y) {
     this.y = y;
     return this;
   }
 
+  /**
+   * Gets the y-axis data coordinate that is set.
+   * 
+   * @return The data coordinate value
+   */
   public double y() {
     return y;
   }
 
+  /**
+   * Sets the {@link java.awt.Image} to be annotated.
+   * 
+   * @param image The image object to annotate
+   * @return Reference to this builder instance for method chaining
+   */
   public XYImageBuilder image(Image image) {
     this.image = image;
     return this;
   }
 
+  /**
+   * Gets the {@link java.awt.Image} to be annotated.
+   * 
+   * @return The image object to annotate
+   */
   public Image image() {
     return image;
   }
 
+  /**
+   * Sets the image rectangle's position anchor
+   * 
+   * @param anchor The anchor to be set
+   * @return Reference to this builder instance for method chaining
+   * @see org.jfree.chart.annotations.XYImageAnnotation#getImageAnchor()
+   */
   public XYImageBuilder anchor(RectangleAnchor anchor) {
     this.anchor = anchor;
     return this;
   }
 
+  /**
+   * Gets the image rectangle's position anchor
+   * 
+   * @return The anchor
+   * @see org.jfree.chart.annotations.XYImageAnnotation#getImageAnchor()
+   */
   public RectangleAnchor anchor() {
     return anchor;
   }

@@ -27,6 +27,9 @@ import java.util.Objects;
  */
 public class StochasticOscillator {
 
+  /**
+   * Data-structure for representing a stochastic oscillator indicator series.
+   */
   public static class StochData {
 
     private static final double[] EMPTY_DATA = {};
@@ -48,14 +51,20 @@ public class StochasticOscillator {
       this.pctD = pctD;
     }
 
-    public static double[] getEmptyData() {
-      return EMPTY_DATA;
-    }
-
+    /**
+     * Gets the %K data.
+     * 
+     * @return Reference to the data series array
+     */
     public double[] getPctK() {
       return pctK;
     }
 
+    /**
+     * Gets the %D data.
+     * 
+     * @return Reference to the data series array
+     */
     public double[] getPctD() {
       return pctD;
     }
@@ -124,10 +133,10 @@ public class StochasticOscillator {
         }
       }
     }
-    
+
     // Now calculate %D from the %K series we just created.
     final double[] pctD = Sma.calculate(D, pctK);
-    
+
     return new StochData(pctK, pctD);
   }
 }

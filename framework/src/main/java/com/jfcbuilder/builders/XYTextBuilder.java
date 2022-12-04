@@ -52,49 +52,108 @@ public class XYTextBuilder implements IXYAnnotationBuilder<XYTextBuilder> {
     return new XYTextBuilder();
   }
 
+  /**
+   * Sets the text's x-axis data coordinate.
+   * 
+   * @param x The data coordinate to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYTextBuilder x(double x) {
     elems.x(x);
     return this;
   }
 
+  /**
+   * Gets the x-axis data coordinate that is set.
+   * 
+   * @return The data coordinate value
+   */
   public double x() {
     return elems.x();
   }
-  
+
+  /**
+   * Sets the text's y-axis data coordinate.
+   * 
+   * @param y The data coordinate to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYTextBuilder y(double y) {
     elems.y(y);
     return this;
   }
 
+  /**
+   * Gets the y-axis data coordinate that is set.
+   * 
+   * @return The data coordinate value
+   */
   public double y() {
     return elems.y();
   }
-  
+
+  /**
+   * Sets the text's orientation angle in degrees.
+   * 
+   * @param degrees The angle to be set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYTextBuilder angle(double degrees) {
     elems.angle(degrees);
     return this;
   }
 
+  /**
+   * Sets the text
+   * 
+   * @param text The text to be set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYTextBuilder text(String text) {
     elems.text(text);
     return this;
   }
 
+  /**
+   * Sets the anchor alignment method of the text.
+   * 
+   * @param alignment The alignment anchor to use for the text
+   * @return Reference to this builder instance for method chaining
+   * @see org.jfree.chart.annotations.XYTextAnnotation#setTextAnchor(TextAnchor)
+   */
   public XYTextBuilder textAlign(TextAnchor alignment) {
     elems.textAlign(alignment);
     return this;
   }
 
+  /**
+   * Sets the text color.
+   * 
+   * @param color The color to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYTextBuilder color(Color color) {
     elems.color(color);
     return this;
   }
 
+  /**
+   * Sets a number of padding space characters to insert to the left of the configured text.
+   * 
+   * @param n The number of padding characters
+   * @return Reference to this builder instance for method chaining
+   */
   public XYTextBuilder textPaddingLeft(int n) {
     elems.textPaddingLeft(n);
     return this;
   }
 
+  /**
+   * Sets a number of padding space characters to insert to the right of the configured text.
+   * 
+   * @param n The number of padding characters
+   * @return Reference to this builder instance for method chaining
+   */
   public XYTextBuilder textPaddingRight(int n) {
     elems.textPaddingRight(n);
     return this;
@@ -126,7 +185,8 @@ public class XYTextBuilder implements IXYAnnotationBuilder<XYTextBuilder> {
   @Override
   public void mapXToTimeIndex(long[] timeData, int indexRangeStartIndex, int indexRangeEndIndex) {
     // +1 as the binary search method end index is exclusive.
-    int xIndex = Arrays.binarySearch(timeData, indexRangeStartIndex, indexRangeEndIndex + 1, (long) x());
+    int xIndex = Arrays.binarySearch(timeData, indexRangeStartIndex, indexRangeEndIndex + 1,
+        (long) x());
 
     if (xIndex >= 0) {
       x((double) (xIndex - indexRangeStartIndex));

@@ -40,8 +40,20 @@ import org.jfree.chart.annotations.XYShapeAnnotation;
 public class XYShapeBuilder implements IXYAnnotationBuilder<XYShapeBuilder> {
 
   // See XYShapeAnnotation for these defaults
+
+  /**
+   * The default line color to use if none is specified.
+   */
   public static final Color DEFAULT_LINE_COLOR = Color.BLACK;
+
+  /**
+   * The default line style to use if none is specified.
+   */
   public static final Stroke DEFAULT_LINE_STYLE = new BasicStroke(1.0f);
+
+  /**
+   * The default fill color to use if none is specified.
+   */
   public static final Color DEFAULT_FILL_COLOR = null; // None specified
 
   private Shape shape;
@@ -68,37 +80,81 @@ public class XYShapeBuilder implements IXYAnnotationBuilder<XYShapeBuilder> {
     return new XYShapeBuilder();
   }
 
+  /**
+   * Gets the {@link java.awt.Shape} to be annotated.
+   * 
+   * @return The shape
+   */
   public Shape shape() {
     return shape;
   }
 
+  /**
+   * Sets the {@link java.awt.Shape} to be annotated.
+   * 
+   * @param shape The {@link java.awt.Shape} to be set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYShapeBuilder shape(Shape shape) {
     this.shape = shape;
     return this;
   }
 
+  /**
+   * Gets the line style of the shape.
+   * 
+   * @return The line style
+   */
   public Stroke lineStyle() {
     return lineStyle;
   }
 
+  /**
+   * Sets the line style of the shape.
+   * 
+   * @param style The style to be set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYShapeBuilder lineStyle(Stroke style) {
     lineStyle = style;
     return this;
   }
 
+  /**
+   * Gets the line color of the shape.
+   * 
+   * @return The color
+   */
   public Paint lineColor() {
     return lineColor;
   }
 
+  /**
+   * Sets the line color of the shape.
+   * 
+   * @param color The color to be set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYShapeBuilder lineColor(Paint color) {
     lineColor = color;
     return this;
   }
 
+  /**
+   * Gets the fill color of the shape.
+   * 
+   * @return The color
+   */
   public Paint fillColor() {
     return fillColor;
   }
 
+  /**
+   * Sets the fill color of the shape.
+   * 
+   * @param color The color to be set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYShapeBuilder fillColor(Paint color) {
     fillColor = color;
     return this;
@@ -123,28 +179,26 @@ public class XYShapeBuilder implements IXYAnnotationBuilder<XYShapeBuilder> {
 
     // Gapless shape annotations are not currently supported due to multiple complexities.
     //
-    // We need to somehow map the java.awt.Shape's x-coordinate(s) to time indices, but Shape is an interface and
-    // concrete classes can have any number of x-coordinates passed-in and in any number of ways. The interface provides
-    // no means to get x-coordinates polymorphically. So it requires specific logic for 30+
-    // different known implementing classes:
+    // We need to somehow map the java.awt.Shape's x-coordinate(s) to time indices, but Shape is an
+    // interface and concrete classes can have any number of x-coordinates passed-in and in any
+    // number of ways.
     //
-    //   https://docs.oracle.com/javase/8/docs/api/java/awt/Shape.html
+    // The interface provides no means to get x-coordinates polymorphically. So it requires specific
+    // logic for 30+ different known implementing classes:
+    //
+    // https://docs.oracle.com/javase/8/docs/api/java/awt/Shape.html
     //
     // That is a big effort possibly with high maintenance burden.
-    
-    /*
-      if(shape == null) {
-        return;
-      }
 
-      // +1 as the binary search method end index is exclusive.
-      int xIndex = Arrays.binarySearch(timeData, indexRangeStartIndex, indexRangeEndIndex + 1, (long) x());
-      
-      if (xIndex >= 0) {
-        x((double) (xIndex - indexRangeStartIndex));
-      }
-    */
-    
+    /*
+     * if(shape == null) { return; }
+     * 
+     * // +1 as the binary search method end index is exclusive. int xIndex =
+     * Arrays.binarySearch(timeData, indexRangeStartIndex, indexRangeEndIndex + 1, (long) x());
+     * 
+     * if (xIndex >= 0) { x((double) (xIndex - indexRangeStartIndex)); }
+     */
+
   }
 
 }

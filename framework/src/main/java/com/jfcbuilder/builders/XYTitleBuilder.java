@@ -31,10 +31,29 @@ import org.jfree.chart.util.XYCoordinateType;
  */
 public class XYTitleBuilder implements IXYAnnotationBuilder<XYTitleBuilder> {
 
+  /**
+   * The default x-axis data coordinate to use if none is specified.
+   */
   public static final double DEFAULT_X_COORD = 0.5;
+
+  /**
+   * The default y-axis data coordinate to use if none is specified.
+   */
   public static final double DEFAULT_Y_COORD = 1.0;
+
+  /**
+   * The default maximum width to use if none is specified.
+   */
   public static final double DEFAULT_MAX_WIDTH = 0.0;
+
+  /**
+   * The default maximum height to use if none is specified.
+   */
   public static final double DEFAULT_MAX_HEIGHT = 0.0;
+
+  /**
+   * The default text anchor position to use if none is specified.
+   */
   public static final RectangleAnchor DEFAULT_ANCHOR = RectangleAnchor.TOP;
 
   private double x;
@@ -79,7 +98,11 @@ public class XYTitleBuilder implements IXYAnnotationBuilder<XYTitleBuilder> {
     return this;
   }
 
-  
+  /**
+   * Gets the x-coordinate of the annotation.
+   * 
+   * @return The x-coordinate
+   */
   public double x() {
     return x;
   }
@@ -98,42 +121,93 @@ public class XYTitleBuilder implements IXYAnnotationBuilder<XYTitleBuilder> {
     return this;
   }
 
+  /**
+   * Gets the y-coordinate of the annotation.
+   * 
+   * @return The y-coordinate
+   */
   public double y() {
     return y;
   }
 
+  /**
+   * Sets the maximum width of the annotation.
+   * 
+   * @param w The width to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYTitleBuilder maxWidth(double w) {
     maxWidth = w;
     return this;
   }
 
+  /**
+   * Gets the maximum width of the annotation.
+   * 
+   * @return The max width
+   */
   public double maxWidth() {
     return maxWidth;
   }
 
+  /**
+   * Sets the maximum height of the annotation.
+   * 
+   * @param h The height to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYTitleBuilder maxHeight(double h) {
     maxHeight = h;
     return this;
   }
 
+  /**
+   * Gets the maximum height of the annotation.
+   * 
+   * @return The max height
+   */
   public double maxHeight() {
     return maxHeight;
   }
 
+  /**
+   * Sets the {@link org.jfree.chart.title.Title} to be annotated.
+   * 
+   * @param t The title to be set.
+   * @return Reference to this builder instance for method chaining
+   */
   public XYTitleBuilder title(Title t) {
     title = t;
     return this;
   }
 
+  /**
+   * Gets the {@link org.jfree.chart.title.Title} to be annotated.
+   * 
+   * @return The title
+   */
   public Title title() {
     return title;
   }
 
+  /**
+   * Sets the title's position anchor
+   * 
+   * @param a The anchor to be set
+   * @return Reference to this builder instance for method chaining
+   * @see org.jfree.chart.annotations.XYTitleAnnotation#getTitleAnchor()
+   */
   public XYTitleBuilder anchor(RectangleAnchor a) {
     anchor = a;
     return this;
   }
 
+  /**
+   * Gets the title's position anchor
+   * 
+   * @return The anchor
+   * @see org.jfree.chart.annotations.XYTitleAnnotation#getTitleAnchor()
+   */
   public RectangleAnchor anchor() {
     return anchor;
   }
@@ -165,7 +239,7 @@ public class XYTitleBuilder implements IXYAnnotationBuilder<XYTitleBuilder> {
   public XYAnnotation build() throws IllegalStateException {
 
     checkBuildPreconditions();
-
+    // FIXME: Add missing calls to set the max width and height.
     return new XYTitleAnnotation(x, y, title, anchor);
   }
 

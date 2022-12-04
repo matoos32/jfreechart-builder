@@ -34,7 +34,7 @@ import com.jfcbuilder.types.BuilderConstants;
 import com.jfcbuilder.types.XYTimeSeriesPlotBuilderElements;
 
 /**
- * Utility methods that can be used throughout the application.
+ * Utility methods for common logic within the framework.
  */
 public abstract class BuilderUtils {
 
@@ -71,17 +71,17 @@ public abstract class BuilderUtils {
   }
 
   /**
-   * Helper method to create and initialize an XYPlot
+   * Helper method to create and initialize an XYPlot.
    * 
-   * @param xAxis    The x-axis to be used with the plot
-   * @param yAxis    The y-axis to be used with the plot
-   * @param dataset  An XYDataset to be plotted
+   * @param xAxis The x-axis to be used with the plot
+   * @param yAxis The y-axis to be used with the plot
+   * @param dataset An XYDataset to be plotted
    * @param renderer The renderer used to plot the dataset
    * @param elements Various settings used to initialize the plot object
    * @return The new XYPlot instance
    */
-  public static XYPlot createPlot(final ValueAxis xAxis, NumberAxis yAxis, XYDataset dataset, XYItemRenderer renderer,
-    XYTimeSeriesPlotBuilderElements elements) {
+  public static XYPlot createPlot(final ValueAxis xAxis, NumberAxis yAxis, XYDataset dataset,
+      XYItemRenderer renderer, XYTimeSeriesPlotBuilderElements elements) {
 
     final XYPlot plot = new XYPlot(dataset, xAxis, yAxis, renderer);
 
@@ -100,7 +100,7 @@ public abstract class BuilderUtils {
     plot.setDomainMinorGridlinesVisible(elements.minorGrid());
     plot.setDomainMinorGridlinePaint(elements.minorGridColor());
     plot.setDomainMinorGridlineStroke(elements.minorGridStyle());
-    
+
     plot.setRangeMinorGridlinesVisible(elements.minorGrid());
     plot.setRangeMinorGridlinePaint(elements.minorGridColor());
     plot.setRangeMinorGridlineStroke(elements.minorGridStyle());

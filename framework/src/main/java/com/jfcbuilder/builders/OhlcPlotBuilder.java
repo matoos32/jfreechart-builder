@@ -201,7 +201,8 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
    * Sets displaying grid lines ON.
    * 
    * @deprecated This facility is replaced by {@link OhlcPlotBuilder#majorGrid(boolean)} and
-   *             {@link OhlcPlotBuilder#minorGrid(boolean)}, and will be removed in a future release.
+   *             {@link OhlcPlotBuilder#minorGrid(boolean)}, and will be removed in a future
+   *             release.
    *             <p>
    *             <b>For removal since v1.5.7</b>
    */
@@ -218,13 +219,13 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
     minorGrid(false);
     return this;
   }
-  
+
   @Override
   public OhlcPlotBuilder majorGrid(boolean enabled) {
     elements.majorGrid(enabled);
     return this;
   }
-  
+
   @Override
   public OhlcPlotBuilder majorGridColor(Paint color) {
     elements.majorGridColor(color);
@@ -242,7 +243,7 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
     elements.minorGrid(enabled);
     return this;
   }
-  
+
   @Override
   public OhlcPlotBuilder minorGridColor(Paint color) {
     elements.minorGridColor(color);
@@ -254,7 +255,7 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
     elements.minorGridStyle(style);
     return this;
   }
-  
+
   private void checkBuildPreconditions() throws IllegalStateException {
     elements.checkBuildPreconditions();
   }
@@ -263,8 +264,8 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
    * Builds the DOHLC plot. The DOHLC series is shown behind all other series that were added.
    * 
    * @return New instance of an plot corresponding to all configured data sets and settings
-   * @throws IllegalStateException If an OhlcSeriesBuilder, if time axis was not set, or if time
-   *         data was not set.
+   * @throws IllegalStateException If an OhlcSeriesBuilder was not set, if time axis was not set, or
+   *         if time data was not set.
    */
   @Override
   public XYPlot build() throws IllegalStateException {
