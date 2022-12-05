@@ -185,10 +185,14 @@ ChartBuilder.get()
 
 An optional [MinimalDateFormat](./framework/src/main/java/com/jfcbuilder/types/MinimalDateFormat.java) class is implemented to format dates with month letter(s) on first instance of a new month then only month days until a new month is reached.
 
+![Minimal axis date format](./screenshots/minimal-axis-date-format.png "Screenshot")
+
 
 ## Demo App
 
 See the [demo-app](./demo-app) solution for an interactive demo. Used for development and testing.
+
+To launch it see *Testing* section further down.
 
 
 ## Incorporating into your project
