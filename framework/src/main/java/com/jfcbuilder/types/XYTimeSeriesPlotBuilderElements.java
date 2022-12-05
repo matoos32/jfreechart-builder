@@ -59,7 +59,7 @@ public class XYTimeSeriesPlotBuilderElements {
   private static final Paint DEFAULT_BACKGROUND_COLOR = XYPlot.DEFAULT_BACKGROUND_PAINT;
   private static final Stroke DEFAULT_GRIDLINE_STYLE = XYPlot.DEFAULT_GRIDLINE_STROKE;
   private static final Paint DEFAULT_GRIDLINE_COLOR = XYPlot.DEFAULT_GRIDLINE_PAINT;
-  
+
   private List<IXYTimeSeriesBuilder<?>> seriesBuilders;
   private List<IXYTimeSeriesDatasetBuilder<?>> datasetBuilders;
   private List<MarkerBuilder> markerBuilders;
@@ -110,7 +110,7 @@ public class XYTimeSeriesPlotBuilderElements {
     minorGridColor = DEFAULT_GRIDLINE_COLOR;
     minorGridStyle = DEFAULT_GRIDLINE_STYLE;
   }
-  
+
   /**
    * Sets the zero-based index range to be used with all data series.
    * 
@@ -168,7 +168,6 @@ public class XYTimeSeriesPlotBuilderElements {
     return timeData;
   }
 
-
   /**
    * Sets whether or not time gaps should be rendered.
    * 
@@ -177,7 +176,7 @@ public class XYTimeSeriesPlotBuilderElements {
   public void showTimeGaps(boolean showTimeGaps) {
     this.showTimeGaps = showTimeGaps;
   }
-  
+
   /**
    * Gets whether to render time gaps.
    * 
@@ -186,7 +185,7 @@ public class XYTimeSeriesPlotBuilderElements {
   public boolean showTimeGaps() {
     return showTimeGaps;
   }
-  
+
   /**
    * Registers an XY time series builder to be used for building the plot.
    * 
@@ -377,7 +376,7 @@ public class XYTimeSeriesPlotBuilderElements {
   public NumberFormat yAxisTickFormat() {
     return yAxisTickFormat;
   }
-  
+
   /**
    * Sets the plot background color to use when building the plot.
    * 
@@ -431,21 +430,25 @@ public class XYTimeSeriesPlotBuilderElements {
   public Paint axisColor() {
     return axisColor;
   }
-  
+
   /**
    * Toggle displaying major grid lines ON or OFF.
+   * 
+   * @param enabled True to set displaying ON, false for OFF
    */
   public void majorGrid(boolean enabled) {
     showMajorGridlines = enabled;
   }
-  
+
   /**
-   * Returns true if showing major grid lines is ON, false otherwise.
+   * Returns true if displaying major grid lines is set ON or OFF.
+   * 
+   * @return True if ON, false if OFF.
    */
   public boolean majorGrid() {
     return showMajorGridlines;
   }
-  
+
   /**
    * Sets the major grid color to use when building the plot.
    * 
@@ -454,7 +457,7 @@ public class XYTimeSeriesPlotBuilderElements {
   public void majorGridColor(Paint color) {
     majorGridColor = color == null ? DEFAULT_GRIDLINE_COLOR : color;
   }
-  
+
   /**
    * Gets the configured major grid color.
    * 
@@ -472,7 +475,7 @@ public class XYTimeSeriesPlotBuilderElements {
   public void majorGridStyle(Stroke style) {
     majorGridStyle = style == null ? DEFAULT_GRIDLINE_STYLE : style;
   }
-  
+
   /**
    * Gets the configured major grid style.
    * 
@@ -484,18 +487,22 @@ public class XYTimeSeriesPlotBuilderElements {
 
   /**
    * Toggle displaying minor grid lines ON or OFF.
+   * 
+   * @param enabled True to set displaying ON, false for OFF
    */
   public void minorGrid(boolean enabled) {
     showMinorGridlines = enabled;
   }
-  
+
   /**
-   * Returns true if showing minor grid lines is ON, false otherwise.
+   * Returns true if displaying minor grid lines is set ON or OFF.
+   * 
+   * @return True if ON, false if OFF.
    */
   public boolean minorGrid() {
     return showMinorGridlines;
   }
-  
+
   /**
    * Sets the minor grid color to use when building the plot.
    * 
@@ -513,7 +520,7 @@ public class XYTimeSeriesPlotBuilderElements {
   public Paint minorGridColor() {
     return minorGridColor;
   }
-  
+
   /**
    * Sets the minor grid line style to use when building the plot.
    * 
@@ -531,7 +538,7 @@ public class XYTimeSeriesPlotBuilderElements {
   public Stroke minorGridStyle() {
     return minorGridStyle;
   }
-  
+
   /**
    * Helper method to check if the preconditions for invoking {@code build()} have been satisfied.
    * That is, that the x-axis and time data shared by all plots have been configured.

@@ -38,7 +38,7 @@ import com.jfcbuilder.types.ZeroBasedIndexRange;
  * would be hidden by only having access to the interface.
  * 
  * @param <T> The method chaining return type, which must be the type of the builder implementing
- *        this interface.
+ *            this interface.
  */
 public interface IXYTimeSeriesPlotBuilder<T extends IXYTimeSeriesPlotBuilder<T>> {
 
@@ -95,8 +95,8 @@ public interface IXYTimeSeriesPlotBuilder<T extends IXYTimeSeriesPlotBuilder<T>>
   T series(IXYTimeSeriesDatasetBuilder<?> series);
 
   /**
-   * Registers a {@link MarkerBuilder} whose {@code build()} method will be called to generate its plot line
-   * when this plot builder's{@code build()} method is called.
+   * Registers a {@link MarkerBuilder} whose {@code build()} method will be called to generate its
+   * plot line when this plot builder's{@code build()} method is called.
    * 
    * @param marker The marker builder representing the marker that it will build
    * @return Reference to this builder instance for method chaining
@@ -189,20 +189,26 @@ public interface IXYTimeSeriesPlotBuilder<T extends IXYTimeSeriesPlotBuilder<T>>
   /**
    * Sets displaying grid lines ON.
    * 
-   * @deprecated This facility is replaced by {@link IXYTimeSeriesPlotBuilder#majorGrid(boolean)} and
-   *             {@link IXYTimeSeriesPlotBuilder#minorGrid(boolean)}, and will be removed in a future release.
+   * @deprecated This facility is replaced by {@link IXYTimeSeriesPlotBuilder#majorGrid(boolean)}
+   *             and {@link IXYTimeSeriesPlotBuilder#minorGrid(boolean)}, and will be removed in a
+   *             future release.
    *             <p>
    *             <b>For removal since v1.5.7</b>
+   * 
+   * @return Reference to this builder instance for method chaining
    */
   @Deprecated
   T gridLines();
 
   /**
-   * Sets displaying all grid lines OFF. Shorthand for calling both {@link IXYTimeSeriesPlotBuilder#majorGrid(boolean)}
-   * and {@link IXYTimeSeriesPlotBuilder#minorGrid(boolean)} with a value of {@code false}.
+   * Sets displaying all grid lines OFF. Shorthand for calling both
+   * {@link IXYTimeSeriesPlotBuilder#majorGrid(boolean)} and
+   * {@link IXYTimeSeriesPlotBuilder#minorGrid(boolean)} with a value of {@code false}.
+   * 
+   * @return Reference to this builder instance for method chaining
    */
   T noGridLines();
-  
+
   /**
    * Toggles displaying major grid lines ON or OFF.
    * 
@@ -219,7 +225,7 @@ public interface IXYTimeSeriesPlotBuilder<T extends IXYTimeSeriesPlotBuilder<T>>
    * @return Reference to this builder instance for method chaining
    */
   T majorGridColor(Paint color);
-  
+
   /**
    * Sets the major grid line style to use when building the plot.
    * 
@@ -227,7 +233,7 @@ public interface IXYTimeSeriesPlotBuilder<T extends IXYTimeSeriesPlotBuilder<T>>
    * @return Reference to this builder instance for method chaining
    */
   T majorGridStyle(Stroke style);
-  
+
   /**
    * Toggles displaying minor grid lines ON or OFF.
    * 
@@ -236,7 +242,7 @@ public interface IXYTimeSeriesPlotBuilder<T extends IXYTimeSeriesPlotBuilder<T>>
    * @return Reference to this builder instance for method chaining
    */
   T minorGrid(boolean enabled);
-  
+
   /**
    * Sets the minor grid color to use when building the plot.
    * 
@@ -244,7 +250,7 @@ public interface IXYTimeSeriesPlotBuilder<T extends IXYTimeSeriesPlotBuilder<T>>
    * @return Reference to this builder instance for method chaining
    */
   T minorGridColor(Paint color);
-  
+
   /**
    * Sets the minor grid line style to use when building the plot.
    * 
@@ -252,13 +258,13 @@ public interface IXYTimeSeriesPlotBuilder<T extends IXYTimeSeriesPlotBuilder<T>>
    * @return Reference to this builder instance for method chaining
    */
   T minorGridStyle(Stroke style);
-  
+
   /**
    * Builds the XYPlot from all configured data and properties.
    * 
    * @return New instance of an XYPlot corresponding to all configured data and properties
    * @throws IllegalStateException If the minimum needed configuration for building an XYPlot is not
-   *         setup in the builder.
+   *                               setup in the builder.
    */
   XYPlot build() throws IllegalStateException;
 

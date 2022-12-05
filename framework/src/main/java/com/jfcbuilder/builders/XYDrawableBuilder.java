@@ -31,13 +31,16 @@ import org.jfree.chart.ui.Drawable;
  */
 public class XYDrawableBuilder implements IXYAnnotationBuilder<XYDrawableBuilder> {
 
+  /**
+   * The drawing scale factor to use if none is specified.
+   */
   public static final double DEFAULT_DRAW_SCALE_FACTOR = 1.0;
 
-  private double   x;
-  private double   y;
-  private double   displayWidth;
-  private double   displayHeight;
-  private double   drawScaleFactor;
+  private double x;
+  private double y;
+  private double displayWidth;
+  private double displayHeight;
+  private double drawScaleFactor;
   private Drawable drawable;
 
   /**
@@ -61,61 +64,125 @@ public class XYDrawableBuilder implements IXYAnnotationBuilder<XYDrawableBuilder
     return new XYDrawableBuilder();
   }
 
+  /**
+   * Sets the drawable's x-coordinate.
+   * 
+   * @param x The coordinate to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYDrawableBuilder x(double x) {
     this.x = x;
     return this;
   }
 
+  /**
+   * Gets the x-coordinate that is set.
+   * 
+   * @return The coordinate value
+   */
   public double x() {
     return x;
   }
 
+  /**
+   * Sets the drawable's y-coordinate.
+   * 
+   * @param y The coordinate to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYDrawableBuilder y(double y) {
     this.y = y;
     return this;
   }
 
+  /**
+   * Gets the y-coordinate that is set.
+   * 
+   * @return The coordinate value
+   */
   public double y() {
     return y;
   }
 
+  /**
+   * Sets the width of the area into which to draw the {@link org.jfree.chart.ui.Drawable}.
+   * 
+   * @param w The width to be set (Java2D units)
+   * @return Reference to this builder instance for method chaining
+   */
   public XYDrawableBuilder displayWidth(double w) {
     displayWidth = w;
     return this;
   }
 
+  /**
+   * Gets the width of the area into which to draw the {@link org.jfree.chart.ui.Drawable}.
+   * 
+   * @return The width (Java2D units)
+   */
   public double displayWidth() {
     return displayWidth;
   }
 
+  /**
+   * Sets the height of the area into which to draw the {@link org.jfree.chart.ui.Drawable}.
+   * 
+   * @param h The height to be set (Java2D units)
+   * @return Reference to this builder instance for method chaining
+   */
   public XYDrawableBuilder displayHeight(double h) {
     displayHeight = h;
     return this;
   }
 
+  /**
+   * Gets the height of the area into which to draw the {@link org.jfree.chart.ui.Drawable}.
+   * 
+   * @return The height (Java2D units)
+   */
   public double displayHeight() {
     return displayHeight;
   }
 
+  /**
+   * Sets the {@link org.jfree.chart.ui.Drawable} object to be annotated.
+   * 
+   * @param d The {@link org.jfree.chart.ui.Drawable}
+   * @return Reference to this builder instance for method chaining
+   */
   public XYDrawableBuilder drawable(Drawable d) {
     drawable = d;
     return this;
   }
 
+  /**
+   * Gets the {@link org.jfree.chart.ui.Drawable} object to be annotated.
+   * 
+   * @return The {@link org.jfree.chart.ui.Drawable}
+   */
   public Drawable drawable() {
     return drawable;
   }
 
+  /**
+   * Sets the draw scale factor to use.
+   * 
+   * @param f The scale factor
+   * @return Reference to this builder instance for method chaining
+   */
   public XYDrawableBuilder drawScaleFactor(double f) {
     drawScaleFactor = f;
     return this;
   }
 
-
+  /**
+   * Gets the draw scale factor to be used
+   * 
+   * @return The scale factor
+   */
   public double drawScaleFactor() {
     return drawScaleFactor;
   }
-
 
   private void checkBuildPreconditions() throws IllegalStateException {
 

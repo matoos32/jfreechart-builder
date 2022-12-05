@@ -33,7 +33,7 @@ import com.jfcbuilder.types.ZeroBasedIndexRange;
  * would be hidden by only having access to the interface.
  * 
  * @param <T> The method chaining return type, which must be the type of the builder implementing
- *        this interface.
+ *            this interface.
  */
 public interface IXYTimeSeriesDatasetBuilder<T extends IXYTimeSeriesDatasetBuilder<T>> {
 
@@ -60,7 +60,7 @@ public interface IXYTimeSeriesDatasetBuilder<T extends IXYTimeSeriesDatasetBuild
    * 
    * @return New instance of the corresponding XYDataset
    * @throws IllegalStateException If source array sizes don't match or if an index range is
-   *         configured and its indexes are out of bounds.
+   *                               configured and its indexes are out of bounds.
    */
   XYDataset build() throws IllegalStateException;
 }

@@ -31,7 +31,7 @@ import org.jfree.chart.annotations.XYAnnotation;
  * by only having access to the interface.
  * 
  * @param <T> The method chaining return type, which must be the type of the builder implementing
- *        this interface.
+ *            this interface.
  */
 public interface IXYAnnotationBuilder<T extends IXYAnnotationBuilder<T>> {
 
@@ -40,7 +40,7 @@ public interface IXYAnnotationBuilder<T extends IXYAnnotationBuilder<T>> {
    * 
    * @return New instance of an XYAnnotation corresponding to all configured data and properties
    * @throws IllegalStateException If the builder is missing properties when {@code build()} is
-   *         called
+   *                               called
    */
   XYAnnotation build() throws IllegalStateException;
 
@@ -52,8 +52,8 @@ public interface IXYAnnotationBuilder<T extends IXYAnnotationBuilder<T>> {
    * <p>
    * For facilitating the removal of visible time gaps on charts.
    * <p>
-   * Different implementations may use different methods to map configured x value(s) to
-   * numeric indices, including search algorithms that may have higher order Big-O complexity. 
+   * Different implementations may use different methods to map configured x value(s) to numeric
+   * indices, including search algorithms that may have higher order Big-O complexity.
    * 
    * @param timeData             The array of source time values
    * @param indexRangeStartIndex The start index of the series index range

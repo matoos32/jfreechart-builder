@@ -32,7 +32,15 @@ public class XYTimeSeriesElements {
 
   private static final String DEFAULT_NAME = "";
   private static final ZeroBasedIndexRange DEFAULT_INDEX_RANGE = new ZeroBasedIndexRange(0, 0);
+  
+  /**
+   * A default line style to use when rendering if none is specified. 
+   */
   public static final Stroke DEFAULT_STYLE = BuilderConstants.SOLID_LINE;
+  
+  /**
+   * A default color to use when rendering if none is specified. 
+   */
   public static final Color DEFAULT_COLOR = Color.BLACK;
 
   private String name;

@@ -91,7 +91,7 @@ public class ChartCombinedAxisClickDispatcher implements ChartMouseListener {
         // anchor point calculated by the parent ChartPanel (the adjusted click coordinate). We also
         // need to identify and provide the data area of subplots to the click handler call. That's
         // needed in XYPlot handleClick() to convert the click/anchor y-coordinate to the specific
-        // subplot y-axis data value, which may be outside the visible subplot data area.
+        // subplot y-axis data coordinate, which may be outside the visible subplot data area.
 
         // Note: calling getEntity() on the event may not provide the clicked-on plot because other
         // types of entities like XY items in a series are clickable. To find the clicked chart we

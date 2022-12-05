@@ -35,7 +35,15 @@ import org.jfree.chart.annotations.XYPolygonAnnotation;
 public class XYPolygonBuilder implements IXYAnnotationBuilder<XYPolygonBuilder> {
 
   // See XYPolygonAnnotation for source of these defaults (they're hard-coded, no constants).
+
+  /**
+   * The default outline color to use if none is specified.
+   */
   public static final Color DEFAULT_OUTLINE_COLOR = Color.BLACK;
+
+  /**
+   * The default outline style to use if none is specified.
+   */
   public static final Stroke DEFAULT_OUTLINE_STYLE = new BasicStroke(1.0f);
 
   private double[] polygon;
@@ -62,6 +70,11 @@ public class XYPolygonBuilder implements IXYAnnotationBuilder<XYPolygonBuilder> 
     return new XYPolygonBuilder();
   }
 
+  /**
+   * Gets the copy of the polygon array, which was possibly mutated by {@code mapXToTimeIndex()}.
+   * 
+   * @return The serialized polygon (x,y) pairs.
+   */
   public double[] polygon() {
     return polygon;
   }
@@ -69,9 +82,9 @@ public class XYPolygonBuilder implements IXYAnnotationBuilder<XYPolygonBuilder> 
   /**
    * Sets the polygon array by storying a copy of the supplied array.
    * <p>
-   * Because {@code mapXToTimeIndex()} will mutate the array.
+   * The copy is because {@code mapXToTimeIndex()} will mutate the array.
    * 
-   * @param polygon The serialized polygon (x,y) pairs to be copied. 
+   * @param polygon The serialized polygon (x,y) pairs to be copied.
    * @return Reference to this builder instance for method chaining
    */
   public XYPolygonBuilder polygon(double[] polygon) {
@@ -79,40 +92,67 @@ public class XYPolygonBuilder implements IXYAnnotationBuilder<XYPolygonBuilder> 
     return this;
   }
 
+  /**
+   * Gets the polygon outline style.
+   * 
+   * @return The outline style
+   */
   public Stroke outlineStyle() {
     return outlineStyle;
   }
 
+  /**
+   * Sets the polygon outline style.
+   * 
+   * @param outlineStyle The style to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYPolygonBuilder outlineStyle(Stroke outlineStyle) {
     this.outlineStyle = outlineStyle;
     return this;
   }
 
+  /**
+   * Gets the color of the polygon outline.
+   * 
+   * @return The color
+   */
   public Paint outlineColor() {
     return outlineColor;
   }
 
+  /**
+   * Sets the color of the polygon outline.
+   * 
+   * @param outlineColor The color to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYPolygonBuilder outlineColor(Paint outlineColor) {
     this.outlineColor = outlineColor;
     return this;
   }
 
+  /**
+   * Gets the polygon fill color.
+   * 
+   * @return The fill color
+   */
   public Paint fillColor() {
     return fillColor;
   }
 
+  /**
+   * Sets the polygon fill color.
+   * 
+   * @param fillColor The color to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYPolygonBuilder fillColor(Paint fillColor) {
     this.fillColor = fillColor;
     return this;
   }
 
-  /**
-   * Checks to see if all preconditions for building the annotation are satisfied and throws an
-   * exception if not.
-   * 
-   * @throws IllegalStateException If x1, y1, x2, or y2 have not been configured.
-   */
-  public void checkBuildPreconditions() throws IllegalStateException {
+  private void checkBuildPreconditions() throws IllegalStateException {
 
     if (polygon == null) {
       throw new IllegalStateException("Polygon not set");
@@ -148,13 +188,13 @@ public class XYPolygonBuilder implements IXYAnnotationBuilder<XYPolygonBuilder> 
 
     // x is at even indices
     // y is at odd indices
-    
+
     if (polygon != null) {
       for (int i = 0; (i < polygon.length); i++) {
         if (i % 2 == 0) {
           // +1 as the binary search method end index is exclusive.
           int xIndex = Arrays.binarySearch(timeData, indexRangeStartIndex, indexRangeEndIndex + 1,
-            (long) polygon[i]);
+              (long) polygon[i]);
 
           if (xIndex >= 0) {
             // Hopefully always here.

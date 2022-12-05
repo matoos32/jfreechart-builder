@@ -36,7 +36,7 @@ import com.jfcbuilder.types.ZeroBasedIndexRange;
  * by only having access to the interface.
  * 
  * @param <T> The method chaining return type, which must be the type of the builder implementing
- *        this interface.
+ *            this interface.
  */
 public interface IXYTimeSeriesBuilder<T extends IXYTimeSeriesBuilder<T>> {
 
@@ -64,9 +64,9 @@ public interface IXYTimeSeriesBuilder<T extends IXYTimeSeriesBuilder<T>> {
    * Sets the data value array to be plotted.
    * 
    * @param data The value data to be set. <b>Warning: this array's length must be equal to the
-   *        length of the associated time series array set via
-   *        <i>ITimeSeriesBuilder.timeData(long[])</i>. Failure to do so will result in undefined
-   *        and possibly fatal behavior.</b>
+   *             length of the associated time series array set via
+   *             <i>ITimeSeriesBuilder.timeData(long[])</i>. Failure to do so will result in
+   *             undefined and possibly fatal behavior.</b>
    * @return Reference to this builder for chaining method calls
    */
   T data(double[] data);
@@ -110,8 +110,9 @@ public interface IXYTimeSeriesBuilder<T extends IXYTimeSeriesBuilder<T>> {
    * define all time instances in milliseconds since the epoch start.
    * 
    * @param timeData The time data to be set. <b>Warning: this array's length must be equal to the
-   *        length of all other data to be plotted that will be associated with this time series.
-   *        Failure to do so will result in undefined and possibly fatal behavior.</b>
+   *                 length of all other data to be plotted that will be associated with this time
+   *                 series. Failure to do so will result in undefined and possibly fatal
+   *                 behavior.</b>
    * @return Reference to this builder for chaining method calls
    */
   T timeData(long[] timeData);
@@ -129,7 +130,7 @@ public interface IXYTimeSeriesBuilder<T extends IXYTimeSeriesBuilder<T>> {
    * 
    * @return The new TimeSeries instance if successful
    * @throws IllegalStateException If the builder was not setup adequately to properly create new
-   *         TimeSeries instances
+   *                               TimeSeries instances
    */
   TimeSeries build() throws IllegalStateException;
 }

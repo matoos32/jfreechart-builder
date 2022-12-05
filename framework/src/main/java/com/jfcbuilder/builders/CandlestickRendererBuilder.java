@@ -40,30 +40,62 @@ public class CandlestickRendererBuilder {
     downColor = BuilderConstants.DEFAULT_DOWN_COLOR;
   }
 
+  /**
+   * Factory method for obtaining new instances of this class.
+   * 
+   * @return New instance of this class
+   */
   public static CandlestickRendererBuilder get() {
     return new CandlestickRendererBuilder();
   }
 
+  /**
+   * Sets the close-up candle color to be used when rendering candles.
+   * 
+   * @param c The {@link Color} to use
+   * @return Reference to this builder for chaining method calls
+   */
   public CandlestickRendererBuilder upColor(Color c) {
     Objects.requireNonNull(c, "Color cannot be set to null");
     upColor = c;
     return this;
   }
 
+  /**
+   * Gets the configured close-up candle color.
+   * 
+   * @return The color
+   */
   public Color upColor() {
     return upColor;
   }
 
+  /**
+   * Sets the close-down candle color to be used when rendering candles.
+   * 
+   * @param c The {@link Color} to use
+   * @return Reference to this builder for chaining method calls
+   */
   public CandlestickRendererBuilder downColor(Color c) {
     Objects.requireNonNull(c, "Color cannot be set to null");
     downColor = c;
     return this;
   }
 
+  /**
+   * Gets the configured close-down candle color.
+   * 
+   * @return The color
+   */
   public Color downColor() {
     return downColor;
   }
 
+  /**
+   * Builds the renderer using all configured settings.
+   * 
+   * @return New instance of a CandlestickRenderer corresponding to all configured settings
+   */
   public CandlestickRenderer build() {
 
     CandlestickRenderer renderer = new CandlestickRenderer();

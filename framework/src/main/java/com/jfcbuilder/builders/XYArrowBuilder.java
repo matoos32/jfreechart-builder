@@ -67,59 +67,132 @@ public class XYArrowBuilder implements IXYAnnotationBuilder<XYArrowBuilder> {
     return new XYArrowBuilder();
   }
 
+  /**
+   * Sets the arrow's x-axis data coordinate.
+   * 
+   * @param x The data coordinate to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYArrowBuilder x(double x) {
     elems.x(x);
     return this;
   }
 
+  /**
+   * Gets the x-axis data coordinate that is set.
+   * 
+   * @return The data coordinate value
+   */
   public double x() {
     return elems.x();
   }
 
+  /**
+   * Sets the arrow's y-axis data coordinate.
+   * 
+   * @param y The data coordinate to set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYArrowBuilder y(double y) {
     elems.y(y);
     return this;
   }
 
+  /**
+   * Gets the y-axis data coordinate that is set.
+   * 
+   * @return The data coordinate value
+   */
   public double y() {
     return elems.y();
   }
 
+  /**
+   * Sets the arrow's orientation angle in degrees.
+   * 
+   * @param degrees The angle to be set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYArrowBuilder angle(double degrees) {
     elems.angle(degrees);
     return this;
   }
 
+  /**
+   * Sets the arrow's text
+   * 
+   * @param text The text to be set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYArrowBuilder text(String text) {
     elems.text(text);
     return this;
   }
 
+  /**
+   * Sets a number of padding space characters to insert to the left of the configured text.
+   * 
+   * @param n The number of padding characters
+   * @return Reference to this builder instance for method chaining
+   */
   public XYArrowBuilder textPaddingLeft(int n) {
     elems.textPaddingLeft(n);
     return this;
   }
 
+  /**
+   * Sets a number of padding space characters to insert to the right of the configured text.
+   * 
+   * @param n The number of padding characters
+   * @return Reference to this builder instance for method chaining
+   */
   public XYArrowBuilder textPaddingRight(int n) {
     elems.textPaddingRight(n);
     return this;
   }
 
+  /**
+   * Sets the anchor alignment method of the text.
+   * 
+   * @param alignment The alignment anchor to use for the text
+   * @return Reference to this builder instance for method chaining
+   * @see org.jfree.chart.annotations.XYPointerAnnotation#setTextAnchor(TextAnchor)
+   */
   public XYArrowBuilder textAlign(TextAnchor alignment) {
     elems.textAlign(alignment);
     return this;
   }
 
+  /**
+   * Sets the arrow color.
+   * 
+   * @param color The color to be set
+   * @return Reference to this builder instance for method chaining
+   */
   public XYArrowBuilder color(Color color) {
     elems.color(color);
     return this;
   }
 
+  /**
+   * Sets the arrow length.
+   * 
+   * @param length The length to be set in Java2D units
+   * @return Reference to this builder instance for method chaining
+   * @see org.jfree.chart.annotations.XYPointerAnnotation#setBaseRadius(double)
+   */
   public XYArrowBuilder arrowLength(double length) {
     arrowLength = length;
     return this;
   }
 
+  /**
+   * Sets the arrow tip's radius in Java2D units (effectively the tip size)
+   * 
+   * @param radius The radius to be set in Java2D units
+   * @return Reference to this builder instance for method chaining
+   * @see org.jfree.chart.annotations.XYPointerAnnotation#setTipRadius(double)
+   */
   public XYArrowBuilder tipRadius(double radius) {
     tipRadius = radius;
     return this;
@@ -134,8 +207,8 @@ public class XYArrowBuilder implements IXYAnnotationBuilder<XYArrowBuilder> {
 
     checkBuildPreconditions();
 
-    XYPointerAnnotation annotation = new XYPointerAnnotation(elems.paddedText(), elems.x(), elems.y(),
-      Math.toRadians(elems.angle()));
+    XYPointerAnnotation annotation = new XYPointerAnnotation(elems.paddedText(), elems.x(),
+        elems.y(), Math.toRadians(elems.angle()));
     annotation.setTextAnchor(elems.textAlignment());
     annotation.setBaseRadius(arrowLength);
     annotation.setTipRadius(tipRadius);
@@ -144,15 +217,17 @@ public class XYArrowBuilder implements IXYAnnotationBuilder<XYArrowBuilder> {
   }
 
   /**
-   * Uses {@code Arrays.binarySearch()} to search the source array for the date value. If found, replaces that value in
-   * the builder with the found array index relative to the configured index range. The source time values are assumed
-   * to be timestamps in milliseconds since the epoch start. It's also assumed these are in ascending chronologic order.
-   * Failure to provide them in sorted order will result in undefined behavior as per {@code Arrays.binarySearch()}.
+   * Uses {@code Arrays.binarySearch()} to search the source array for the date value. If found,
+   * replaces that value in the builder with the found array index relative to the configured index
+   * range. The source time values are assumed to be timestamps in milliseconds since the epoch
+   * start. It's also assumed these are in ascending chronologic order. Failure to provide them in
+   * sorted order will result in undefined behavior as per {@code Arrays.binarySearch()}.
    */
   @Override
   public void mapXToTimeIndex(long[] timeData, int indexRangeStartIndex, int indexRangeEndIndex) {
     // +1 as the binary search method end index is exclusive.
-    int xIndex = Arrays.binarySearch(timeData, indexRangeStartIndex, indexRangeEndIndex + 1, (long) x());
+    int xIndex = Arrays.binarySearch(timeData, indexRangeStartIndex, indexRangeEndIndex + 1,
+        (long) x());
 
     if (xIndex >= 0) {
       x((double) (xIndex - indexRangeStartIndex));
