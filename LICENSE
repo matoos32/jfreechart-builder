@@ -1,6 +1,6 @@
-jfreechart-builder: a builder pattern module for working with the jfreechart library
+jfreechart-builder: a builder pattern module and demonstration app for working with the jfreechart library
 
-(C) Copyright 2020, by Matt E. and project contributors
+(C) Copyright 2022, by Matt E. and project contributors
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public

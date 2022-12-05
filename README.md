@@ -1,8 +1,25 @@
 # jfreechart-builder
 
-A [builder pattern](https://en.wikipedia.org/wiki/Builder_pattern) module for working with the [jfreechart](https://github.com/jfree/jfreechart) library. Meant as a companion to [ChartFactory.java](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/ChartFactory.java) to build more complex charts with fewer lines of code.
+A [builder pattern](https://en.wikipedia.org/wiki/Builder_pattern) module for working with the [jfreechart](https://github.com/jfree/jfreechart) library.
 
-Takes an opinionated approach to creating "good enough" charts while providing a more declarative way of parameterizing them.
+It's a companion to [ChartFactory.java](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/ChartFactory.java) for using a declarative approach to creating complex charts with fewer lines of code.
+
+
+## Features
+
+* XY time series charts using [CombinedDomainXYPlot](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/plot/CombinedDomainXYPlot.java) for data alignment on sub-plots.
+* Stockmarket OHLC candlestick and volume bar charts.
+* A time gap removal solution (see [JfreeChart Issue #197](https://github.com/jfree/jfreechart/issues/197)).
+* A combined axis sub-plot crosshair synchronization solution.
+* Easy time axis tick format control including a minimalist date format solution.
+* Easy markers and annotations (arrows, boxes, images, lines, polygons, text, titles).
+* Easy color, line style, and gridline control.
+* A [Demo app](./demo-app/src/main/java/com/jfcbuilder/demo/JFreeChartBuilderDemo.java) for testing and prototyping.
+
+Note: all charts use a `CombinedDomainXYPlot` even if there's one plot in order to ease the maintenance of this framework.
+
+In the future, more facilities may be added to leverage more of what
+[jfreechart](https://github.com/jfree/jfreechart) provides.
 
 
 ## Samples
@@ -14,7 +31,7 @@ Takes an opinionated approach to creating "good enough" charts while providing a
 ChartBuilder.get()
   .title("Simple Time Series With Annotations")
   .timeData(timeArray)
-  .xyPlot(XYTimeSeriesPlotBuilder.get().gridLines()
+  .xyPlot(XYTimeSeriesPlotBuilder.get()
     .series(XYTimeSeriesBuilder.get().name("Amplitude").data(array1).color(Color.BLUE).style(SOLID_LINE))
     .annotation(XYArrowBuilder.get().x(arrowX).y(arrowY).angle(180.0).color(Color.RED).text(arrowTxt))
     .annotation(XYArrowBuilder.get().x(arrowX).y(arrowY).angle(0.0).color(Color.RED))
@@ -35,7 +52,7 @@ ChartBuilder.get()
   .timeData(timeArray)
 
   .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Values")
-    .backgroundColor(Color.DARK_GRAY).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
+    .backgroundColor(Color.DARK_GRAY).axisColor(Color.RED).axisFontColor(Color.BLUE)
     .series(XYTimeSeriesBuilder.get().data(array1).color(Color.YELLOW).style(SOLID_LINE))
     .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID_LINE))
     .series(XYTimeSeriesBuilder.get().data(array3).color(Color.GREEN).style(SOLID_LINE))
@@ -46,15 +63,15 @@ ChartBuilder.get()
     .series(XYTimeSeriesBuilder.get().data(array3).color(Color.LIGHT_GRAY).style(SOLID_LINE)))
 
   .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Series 1")
-    .backgroundColor(DARK_GREEN).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
+    .backgroundColor(DARK_GREEN).axisColor(Color.RED).axisFontColor(Color.BLUE)
     .series(XYTimeSeriesBuilder.get().data(array1).color(Color.GREEN).style(SOLID_LINE)))
 
   .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Series 2")
-    .backgroundColor(DARK_RED).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
+    .backgroundColor(DARK_RED).axisColor(Color.RED).axisFontColor(Color.BLUE)
     .series(XYTimeSeriesBuilder.get().data(array2).color(Color.RED).style(SOLID_LINE)))
 
   .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Series 3")
-    .backgroundColor(DARK_BLUE).axisColor(Color.RED).axisFontColor(Color.BLUE).gridLines()
+    .backgroundColor(DARK_BLUE).axisColor(Color.RED).axisFontColor(Color.BLUE)
     .series(XYTimeSeriesBuilder.get().data(array3).color(Color.CYAN).style(SOLID_LINE)))
 
   .build();
@@ -71,35 +88,40 @@ ChartBuilder.get()
   .title("Stock Chart Time Series With Weekend Gaps, Lines, and Annotations")
   .timeData(timeArray)
 
-  .xyPlot(OhlcPlotBuilder.get().yAxisName("Price").plotWeight(3).gridLines()
+  .xyPlot(OhlcPlotBuilder.get().yAxisName("Price").plotWeight(3)
     .series(OhlcSeriesBuilder.get().ohlcv(dohlcv).upColor(Color.WHITE).downColor(Color.RED))
     .series(XYTimeSeriesBuilder.get().name("MA(20)").data(sma20).color(Color.MAGENTA).style(SOLID_LINE))
     .series(XYTimeSeriesBuilder.get().name("MA(50)").data(sma50).color(Color.BLUE).style(SOLID_LINE))
     .series(XYTimeSeriesBuilder.get().name("MA(200)").data(sma200).color(Color.RED).style(SOLID_LINE))
     .annotation(XYArrowBuilder.get().x(stockEventDate).y(stockEventPrice).angle(270.0).color(DARK_GREEN)
       .textAlign(TextAnchor.BOTTOM_CENTER).text(String.format("%.2f", stockEventPrice)))
-    .line(LineBuilder.get().horizontal().at(resistanceLevel).color(Color.LIGHT_GRAY).style(SOLID_LINE)))
+    .marker(MarkerBuilder.get().horizontal().at(resistanceLevel).color(Color.LIGHT_GRAY).style(SOLID_LINE)))
 
-  .xyPlot(VolumeXYPlotBuilder.get().yAxisName("Volume").yTickFormat(volNumFormat).gridLines()
+  .xyPlot(VolumeXYPlotBuilder.get().yAxisName("Volume").yTickFormat(volNumFormat)
     .series(VolumeXYTimeSeriesBuilder.get().ohlcv(dohlcv).upColor(Color.DARK_GRAY).downColor(Color.RED))
     .series(XYTimeSeriesBuilder.get().name("MA(90)").data(volSma90).color(Color.BLUE).style(SOLID_LINE))
     .annotation(XYArrowBuilder.get().x(stockEventDate).y(stockEventVolume).angle(270.0).color(DARK_GREEN)
       .textAlign(TextAnchor.BOTTOM_CENTER).text(String.format("%.0f", stockEventVolume)))
-    .line(LineBuilder.get().horizontal().at(volumeLine).color(DARK_GREEN).style(SOLID_LINE)))
+    .marker(MarkerBuilder.get().horizontal().at(volumeLine).color(DARK_GREEN).style(SOLID_LINE)))
 
-  .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Stoch").yAxisRange(0.0, 100.0).yAxisTickSize(50.0).gridLines()
+  .xyPlot(XYTimeSeriesPlotBuilder.get().yAxisName("Stoch").yAxisRange(0.0, 100.0).yAxisTickSize(50.0)
     .series(XYTimeSeriesBuilder.get().name("K(" + K + ")").data(stoch.getPctK()).color(Color.RED).style(SOLID_LINE))
     .series(XYTimeSeriesBuilder.get().name("D(" + D + ")").data(stoch.getPctD()).color(Color.BLUE).style(SOLID_LINE))
-    .line(LineBuilder.get().horizontal().at(80.0).color(Color.BLACK).style(SOLID_LINE))
-    .line(LineBuilder.get().horizontal().at(50.0).color(Color.BLUE).style(SOLID_LINE))
-    .line(LineBuilder.get().horizontal().at(20.0).color(Color.BLACK).style(SOLID_LINE)))
+    .marker(MarkerBuilder.get().horizontal().at(80.0).color(Color.BLACK).style(SOLID_LINE))
+    .marker(MarkerBuilder.get().horizontal().at(50.0).color(Color.BLUE).style(SOLID_LINE))
+    .marker(MarkerBuilder.get().horizontal().at(20.0).color(Color.BLACK).style(SOLID_LINE)))
 
   .build();
 ```
 
 ![A stock chart time series chart with weekend gaps](./screenshots/stock-chart-time-series-weekend-gaps.png "Screenshot")
 
-Using `showTimeGaps(boolean)` you can remove time gaps that JFreeChart renders by default when no data is defined at expected time instances (like on weekends):
+
+### Time Gap Removal
+
+Implements a solution for removing visible time gaps where no data exists (like on weekends). Accomplishes this with a family of adapter classes mapping `NumberAxis` values as indices in time value arrays.
+
+Configured using `showTimeGaps(boolean)`:
 
 ```
 ChartBuilder.get()
@@ -114,54 +136,75 @@ ChartBuilder.get()
 
 **Note: the x-axis month label in the gapless time chart currently doesn't always correspond to the first day (or trading day) of the month.**
 
-## Javadoc
 
-See the [Builders Summary](https://matoos32.github.io/jfreechart-builder-docs/javadoc/com/jfcbuilder/builders/package-summary.html)
-to browse the public API.
+### Sub-plot Crosshair Synchronization
+
+[ChartCombinedAxisClickDispatcher](./framework/src/main/java/com/jfcbuilder/listeners/ChartCombinedAxisClickDispatcher.java)
+was created to dispatch JfreeChart `ChartMouseEvent`s to combined axis sub-plots. This leverages JFreeChart's built-in updating of crosshairs
+and emulates the perpendicular `ChartPanel` trace lines like a snapshot of them. The demo app has example code but essentially you add a chart mouse listener to the panel:
+
+```
+ChartPanel panel = new ChartPanel();
+
+...
+
+ChartMouseListener clickDispatcher = new ChartCombinedAxisClickDispatcher(panel);
+
+panel.addChartMouseListener(clickDispatcher);
+```
+
+Now a click on any combined axis sub-plot will make all sub-plots get a `handleClick()` call.
+
+To remove this, pass the same listener object to the remove method:
+
+```
+panel.removeChartMouseListener(clickDispatcher);
+```
+
+[ChartCombinedAxisClickDispatcher](./framework/src/main/java/com/jfcbuilder/listeners/ChartCombinedAxisClickDispatcher.java) is extendable for other customizations.
+
+### Time Axis Tick Label Formats
+
+You can supply `DateFormat` instances to render time axis tick labels by calling  `dateFormat(DateFormat format)`. You can even implement your own sub-class.
+
+You can also set the vertical label flag to draw them vertically.
 
 
-## Capabilities
+```
+ChartBuilder.get()
 
-* XY time series plots using a [CombinedDomainXYPlot](https://github.com/jfree/jfreechart/blob/master/src/main/java/org/jfree/chart/plot/CombinedDomainXYPlot.java) in all cases.
+  .dateFormat( /* supply your DateFormat instance here */ )
 
-  * This produces left-to-right horizontal time axes and vertical value axes.
-  * The time axis is meant to be shared by all sub-plots.
-  * If you need different time axes then you'll need to `build()` multiple charts and lay those out as desired in your app.
+  .verticalTickLabels(true)
 
-* Stock market OHLC candlestick charts
+  ...
+```
 
-* Stock market volume bar charts
 
-* Stright line charts
+### Convenience Minimal Tick Format
 
-* Overlay series
+An optional [MinimalDateFormat](./framework/src/main/java/com/jfcbuilder/types/MinimalDateFormat.java) class is implemented to format dates with month letter(s) on first instance of a new month then only month days until a new month is reached.
 
-* Annotations (arrows and text)
-
-* Time gap removal
-
-* Set various colors
-
-* Toggle grid lines
-
-In the future, more parameterization may be added to leverage more of what
-[jfreechart](https://github.com/jfree/jfreechart) provides.
+![Minimal axis date format](./screenshots/minimal-axis-date-format.png "Screenshot")
 
 
 ## Demo App
 
-See the [jfreechart-builder-demo](https://github.com/matoos32/jfreechart-builder-demo) for an
-interactive demo used for development.
+See the [demo-app](./demo-app) solution for an interactive demo. Used for development and testing.
+
+To launch it see *Testing* section further down.
 
 
 ## Incorporating into your project
+
+The module is not published to Maven Central so you must build the solution locally and install it in local Maven repositories.
 
 
 ### Prerequisites
 
 * JDK 8 or greater [[1](https://openjdk.java.net/)] [[2](https://www.oracle.com/java/)] installed.
 * [Apache Maven](https://maven.apache.org/) installed.
-* Internet connection for Maven downloads or you add them to your local Maven repo yourself.
+* Internet connection for Maven dependency downloads or you add those to your local Maven repo yourself.
 
 
 ### Installing source code
@@ -174,19 +217,30 @@ git clone <this repo's URL>
 ### Versioning
 
 The major and minor numbers are the same as the **jfreechart** major and minor to denote compatibility.
+
 The incremental ("patch") number is the monolithic version number of **jfreechart-builder**.
 
 
 ### Branching model
 
-If you want the latest and greatest contributions use the `develop` branch. These commits give you a
+The latest and greatest but unreleased contributions are on the `develop` branch. These commits give you a
 preview of what's to come.
 
 Each time `develop` is merged into `main`, a version tag is added onto that merge commit.
+
 Each commit to `main` represents the next released version.
 
 
-### Building
+### Folder Structure
+
+[framework/](./framework) contains the builder library code and produces the consumable `jfreechart-builder` JAR file.
+
+[demo-app/](./demo-app) contains the demo app code and produces the launchable `jfreechart-builder-demo` JAR file.
+
+
+### Build and install the jars into your local Maven repo
+
+Set the desired branch
 
 ```
 cd path/to/cloned/repo
@@ -194,43 +248,26 @@ cd path/to/cloned/repo
 git checkout <desired branch or tag>
 ```
 
-
-#### Simple build
-
-```
-mvn package
-```
-
-The jar will be in the `target/` folder.
-
-
-#### Build and install the jar in your Maven repo
+Build and install everything:
 
 ```
 mvn install
 ```
 
-
-### Generate and view Javadoc
-
-You can generate the Javadoc locally
+Or build and install modules independently:
 
 ```
-mvn javadoc:javadoc
+cd framework
+mvn install
+
+cd ../demo-app
+mvn install
 ```
 
-Use a browser to open `target/site/apidocs/index.html`
-
-Alternatively, run the generation script by specifying what version tag to associate with the Javadoc:
-
-```
-./scripts/generate-javadoc.sh v1.5.6
-```
-
-That output will be in `target/site/apidocs/javadoc`
+**Note:** to build the jars without installing use `mvn package` instead of `mvn install` . They'll be in the `framework/target/` and `demo-app/target/` folders.
 
 
-### Add the JAR to a client project
+### Add the jfreechart-builder JAR to a client project
 
 Add this dependency to your project's `.pom` file:
 
@@ -238,14 +275,59 @@ Add this dependency to your project's `.pom` file:
 <dependency>
   <groupId>com.jfcbuilder</groupId>
   <artifactId>jfreechart-builder</artifactId>
-  <version>1.5.6</version>
+  <version>1.5.7</version>
 <dependency>
 ```
 
 
+### Testing
+
+Run the demo-app from your IDE or launch it from the command line:
+
+```
+java -jar jfreechart-builder-demo.jar
+```
+
+## Test Coverage Warning
+
+Testing of `jfreechart-builder` is limited to manually running the `jfreechart-builder-demo` application locally on Windows or Linux. It's rarely (if ever) run on both operating systems for the same code changes being merged. As of this writing the author(s)/maintainer(s) have not tested it on MacOS.
+
+There is a reliance on the cross-platform natured promise of Java.
+
+There are currently no runnable or automated unit tests, integration tests, regression tests, and the like.
+
+Testing is done by visual inspection of the `jfreechart-builder-demo` app user interface.
+
+You should thoroughly test the use of `jfreechart-builder` in your project and environment to satisfy yourself it does what you need and expect.
+
+If you feel a capability is missing or there's a bug feel free to create an issue or start a discussion thread. Contributions are also welcome (see *Contributing* below)!
+
+
+## Javadoc
+
+The latest release Javadoc is hosted [here](https://matoos32.github.io/jfreechart-builder-docs/javadoc/overview-tree.html).
+
+
+### Generating Javadoc locally
+
+```
+mvn javadoc:javadoc -Dsource=8
+```
+
+Use a browser to open `framework/target/site/apidocs/index.html`
+
+Alternatively, run the generation script by specifying what version tag to associate with the Javadoc:
+
+```
+./scripts/generate-javadoc.sh v1.5.7
+```
+
+That output will be in `target/site/apidocs/javadoc`
+
+
 ## Thread-safety and garbage collection
 
-No thread-safety measures are deliberately taken. If you require thread-safety then provide deep copies of objects, don't share builders, don't share charts, or add synchronization to your business logic.
+No thread-safety measures are deliberately taken. If you require thread-safety then provide deep copies of objects, don't share builders, don't share charts, or you could add synchronization to your business logic.
 
 Generally, primitive data arrays are copied into **jfreechart** objects. **jfreechart-builder** will maintain references to other objects passed-in like strings, colors, and drawing strokes. When the builders and charts they produce go out of scope,
 the objects you provided (and other objects that may be referencing them) should be garbage collected as applicable.
@@ -253,7 +335,7 @@ the objects you provided (and other objects that may be referencing them) should
 
 ## License
 
-**jfreechart-builder** is not affiliated with the **jfreechart** project but for compatibility is provided under the terms of the same [LGPL 2.1 license](./license-LGPL.txt).
+**jfreechart-builder** is not affiliated with the **jfreechart** project but for compatibility it and the jfreechart-builder-demo app are provided under the terms of the same [LGPL 2.1 license](./license-LGPL.txt).
 
 You should be aware of the contents of the **jfreechart-builder** JAR file built from this project.
 
@@ -268,4 +350,4 @@ Contributions are welcome and will be accepted as the maintainers' time permits.
 
 * Please use indentations of two spaces (no tabs)
 * Wrap lines at a width of 100 characters.
-* To help others, write good Javadoc at least for class descriptions and public methods.
+* Write good Javadoc at least for interfaces, class descriptions, and public methods.

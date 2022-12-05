@@ -1,7 +1,8 @@
-.mvn/
-.settings/
-/bin/
-/target/
-/workspace/
-.classpath
-.project
+**/.mvn/
+**/.settings/
+**/bin/
+**/target/
+**/workspace/
+**/.classpath
+**/.project
+**/dependency-reduced-pom.xml
