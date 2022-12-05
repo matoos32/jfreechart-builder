@@ -239,8 +239,20 @@ public class XYTitleBuilder implements IXYAnnotationBuilder<XYTitleBuilder> {
   public XYAnnotation build() throws IllegalStateException {
 
     checkBuildPreconditions();
-    // FIXME: Add missing calls to set the max width and height.
-    return new XYTitleAnnotation(x, y, title, anchor);
+
+    XYTitleAnnotation annotation = new XYTitleAnnotation(x, y, title, anchor);
+
+    // Check if max width/height are using defaults to avoid XYTitleAnnotation firing change events.
+
+    if (Double.compare(maxWidth, DEFAULT_MAX_WIDTH) != 0) {
+      annotation.setMaxWidth(maxWidth);
+    }
+
+    if (Double.compare(maxHeight, DEFAULT_MAX_HEIGHT) != 0) {
+      annotation.setMaxHeight(maxHeight);
+    }
+
+    return annotation;
   }
 
   @Override

@@ -509,6 +509,10 @@ public class JFreeChartBuilderDemo {
         .annotation(XYTitleBuilder.get()
           .title(new TextTitle("OHLC Title")).x(0.5).y(0.9).anchor(RectangleAnchor.BOTTOM))
         
+        .annotation(XYTitleBuilder.get()
+              .title(new TextTitle("Subtitle")).x(0.5).y(0.8).maxHeight(0.05).maxWidth(0.05)
+              .anchor(RectangleAnchor.BOTTOM))
+        
         .annotation(XYPolygonBuilder.get().polygon(ohlcPolygon))
 
         .annotation(XYDrawableBuilder.get()
