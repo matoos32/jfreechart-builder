@@ -305,7 +305,7 @@ If you feel a capability is missing or there's a bug feel free to create an issu
 
 ## Javadoc
 
-The latest release Javadoc is hosted [here](https://matoos32.github.io/jfreechart-builder-docs/javadoc/overview-tree.html).
+The latest release Javadoc is hosted [here](https://matoos32.github.io/jfreechart-builder-docs/javadoc/index.html).
 
 
 ### Generating Javadoc locally
