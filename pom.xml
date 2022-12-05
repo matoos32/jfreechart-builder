@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.jfcbuilder</groupId>
   <artifactId>jfreechart-builder-solution</artifactId>
-  <version>1.5.6</version>
+  <version>1.5.7</version>
   <packaging>pom</packaging>
   <name>jfreechart-builder parent POM</name>
   <description>Provides the parent POM with which to build the entire jfreechart-builder solution</description>
