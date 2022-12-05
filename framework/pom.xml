@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.jfcbuilder</groupId>
   <artifactId>jfreechart-builder</artifactId>
-  <version>1.5.6</version>
+  <version>1.5.7</version>
   <name>JFreeChartBuilder</name>
   <description>A builder framework for creating JFreeChart charts.</description>
 
