@@ -24,7 +24,6 @@ import java.awt.Color;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,8 +36,6 @@ import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.chart.ui.RectangleInsets;
-import org.jfree.data.time.Millisecond;
-import org.jfree.data.time.RegularTimePeriod;
 
 import com.jfcbuilder.adapters.NumberFormatDateAdapter;
 import com.jfcbuilder.types.BuilderConstants;
@@ -54,6 +51,8 @@ public class ChartBuilder {
 
   private static final ZeroBasedIndexRange NO_INDEX_RANGE = null;
   private static final long[] NO_TIME_DATA = null;
+
+  private static final double DEFAULT_SHARED_AXIS_MARGIN = 0.005;
 
   private String title;
   private ZeroBasedIndexRange indexRange;
@@ -92,7 +91,7 @@ public class ChartBuilder {
    * @return Same instance of this builder for chaining calls
    */
   public ChartBuilder title(String title) {
-    this.title = (title == null) ? "" : title;
+    this.title = (title == null) ? DEFAULT_TITLE : title;
     return this;
   }
 
@@ -134,7 +133,7 @@ public class ChartBuilder {
 
     return this;
   }
-
+  
   /**
    * Overrides the time axis tick label format.
    * 
@@ -221,6 +220,12 @@ public class ChartBuilder {
       sharedAxis = createGaplessTimeAxis(range, timeData);
     }
 
+    sharedAxis.setLowerMargin(DEFAULT_SHARED_AXIS_MARGIN);
+    sharedAxis.setUpperMargin(DEFAULT_SHARED_AXIS_MARGIN);
+    sharedAxis.setAutoRange(true);
+    sharedAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
+    sharedAxis.setVerticalTickLabels(verticalTickLabels);
+
     CombinedDomainXYPlot parent = new CombinedDomainXYPlot(sharedAxis);
 
     for (IXYTimeSeriesPlotBuilder<?> b : xyPlotBuilders) {
@@ -263,13 +268,11 @@ public class ChartBuilder {
    * @return The new axis instance
    */
   private ValueAxis createGaplessTimeAxis(ZeroBasedIndexRange range, long[] timeData) {
-    final String timeAxisLabel = null;
-    NumberAxis timeAxis = new NumberAxis(timeAxisLabel);
-    timeAxis.setAutoRange(true);
-    timeAxis.setAutoRangeStickyZero(false);
-    timeAxis.setLowerMargin(0.005);
-    timeAxis.setUpperMargin(0.005);
-    timeAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
+
+    final String axisLabel = null;
+    NumberAxis axis = new NumberAxis(axisLabel);
+
+    axis.setAutoRangeStickyZero(false);
 
     DateFormat df = dateFormat != null ? dateFormat : new MinimalDateFormat();
 
@@ -283,9 +286,9 @@ public class ChartBuilder {
     // data updated without recreating a whole new chart unless the timeAxis created here is
     // accessed in the existing chart, with setNumberFormatOverride() called on it again using
     // updated range, timeData, and date format.
-    timeAxis.setNumberFormatOverride(new NumberFormatDateAdapter(range, timeData, df));
-    timeAxis.setVerticalTickLabels(verticalTickLabels);
-    return timeAxis;
+    axis.setNumberFormatOverride(new NumberFormatDateAdapter(range, timeData, df));
+
+    return axis;
   }
 
   /**
@@ -299,25 +302,14 @@ public class ChartBuilder {
    */
   private ValueAxis createTimeAxis(long startDateMs, long endDateMs) {
 
-    final String timeAxisLabel = null;
-    DateAxis timeAxis = new DateAxis(timeAxisLabel);
-
-    timeAxis.setLowerMargin(0.005); // Margin values tuned using trial and error.
-    timeAxis.setUpperMargin(0.005);
-    timeAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
-
-    RegularTimePeriod startDate = new Millisecond(new Date(startDateMs));
-    RegularTimePeriod endDate = new Millisecond(new Date(endDateMs));
-
-    timeAxis.setRange(startDate.getStart(), endDate.getEnd());
+    final String axisLabel = null;
+    DateAxis axis = new DateAxis(axisLabel);
 
     if (dateFormat != null) {
-      timeAxis.setDateFormatOverride(dateFormat);
+      axis.setDateFormatOverride(dateFormat);
     }
-
-    timeAxis.setVerticalTickLabels(verticalTickLabels);
-
-    return timeAxis;
+    
+    return axis;
   }
 
   /**
