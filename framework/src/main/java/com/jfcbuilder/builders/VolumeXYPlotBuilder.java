@@ -22,9 +22,11 @@ package com.jfcbuilder.builders;
 
 import java.awt.Color;
 
+import org.jfree.chart.labels.XYToolTipGenerator;
 import org.jfree.chart.renderer.xy.CandlestickRenderer;
 import org.jfree.data.xy.XYDataset;
 
+import com.jfcbuilder.labels.VolumeXYToolTipGenerator;
 import com.jfcbuilder.types.BuilderConstants;
 
 /**
@@ -97,7 +99,7 @@ public class VolumeXYPlotBuilder extends OhlcPlotBuilder {
   }
 
   /**
-   * Creates and configures a new candlestick renderer instance for use with plots
+   * Creates and configures a new candlestick renderer instance for use with volume plots.
    * 
    * @return New renderer instance
    */
@@ -110,7 +112,13 @@ public class VolumeXYPlotBuilder extends OhlcPlotBuilder {
     Color downColor = (volumeSeriesBuilder != null) ? volumeSeriesBuilder.downColor()
         : BuilderConstants.DEFAULT_DOWN_COLOR;
 
-    return CandlestickRendererBuilder.get().upColor(upColor).downColor(downColor).build();
+   XYToolTipGenerator tooltipGenerator = new VolumeXYToolTipGenerator();
+
+    return CandlestickRendererBuilder.get()
+      .upColor(upColor)
+      .downColor(downColor)
+      .toolTipGenerator(tooltipGenerator)
+      .build();
   }
 
 }
