@@ -328,10 +328,7 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
       plot.mapDatasetToDomainAxis(seriesIndex, 0);
 
       // Now also set the renderer that will be used because it will be used to determine the axis
-      // min/max value range when this is auto-calculated. FIXME: Candlestick renderer offsets
-      // center of candle from x-axis start pixel. When rendering general xy lines, those line
-      // points are drawn at the x-axis start pixel. This causes indicator lines to be misaligned by
-      // a few pixels from the OHLC bars and may provide false signals to those looking at charts.
+      // min/max value range when this is auto-calculated.
       plot.setRenderer(seriesIndex, renderer, false);
 
       // We're now ready to add the dataset
