@@ -23,6 +23,7 @@ package com.jfcbuilder.builders;
 import java.awt.Color;
 import java.util.Objects;
 
+import org.jfree.chart.labels.XYToolTipGenerator;
 import org.jfree.chart.renderer.xy.CandlestickRenderer;
 
 import com.jfcbuilder.types.BuilderConstants;
@@ -34,10 +35,12 @@ public class CandlestickRendererBuilder {
 
   private Color upColor;
   private Color downColor;
+  private XYToolTipGenerator toolTipGenerator;
 
   private CandlestickRendererBuilder() {
     upColor = BuilderConstants.DEFAULT_UP_COLOR;
     downColor = BuilderConstants.DEFAULT_DOWN_COLOR;
+    toolTipGenerator = null;
   }
 
   /**
@@ -92,6 +95,26 @@ public class CandlestickRendererBuilder {
   }
 
   /**
+   * Gets the configured tooltip generator.
+   * 
+   * @return The tooltip generator instance if one was set. Null otherwise.
+   */
+  public XYToolTipGenerator toolTipGenerator() {
+    return toolTipGenerator;
+  }
+
+  /**
+   * Sets the tooltip generator to use. If this method is not invoked the
+   * {@link CandlestickRenderer} default is used.
+   * 
+   * @param toolTipGenerator The tooltip generator that should be used.
+   */
+  public CandlestickRendererBuilder toolTipGenerator(XYToolTipGenerator toolTipGenerator) {
+    this.toolTipGenerator = toolTipGenerator;
+    return this;
+  }
+
+  /**
    * Builds the renderer using all configured settings.
    * 
    * @return New instance of a CandlestickRenderer corresponding to all configured settings
@@ -106,6 +129,10 @@ public class CandlestickRendererBuilder {
     renderer.setDownPaint(downColor);
     renderer.setDrawVolume(false);
     renderer.setAutoWidthFactor(BuilderConstants.DEFAULT_BAR_WIDTH_PERCENT);
+
+    if (toolTipGenerator != null) {
+      renderer.setDefaultToolTipGenerator(toolTipGenerator);
+    }
 
     return renderer;
   }
