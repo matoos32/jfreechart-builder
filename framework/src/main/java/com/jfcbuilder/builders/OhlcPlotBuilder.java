@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2022, by Matt E. and project contributors
+ * (C) Copyright 2023, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -272,12 +272,6 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
 
     checkBuildPreconditions();
 
-    final ValueAxis xAxis = elements.xAxis();
-    xAxis.setAxisLinePaint(elements.axisColor());
-    xAxis.setTickLabelPaint(elements.axisFontColor());
-
-    final long[] timeData = elements.timeData();
-
     XYDataset ohlc = buildOhlcDataset();
 
     if (!elements.showTimeGaps()) {
@@ -286,16 +280,19 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
       }
     }
 
+    final long[] timeData = elements.timeData();
+
+    final ValueAxis xAxis = elements.xAxis();
     final NumberAxis yAxis = BuilderUtils.createYAxis(elements);
 
     final XYPlot plot = BuilderUtils.createPlot(xAxis, yAxis, ohlc, getCandleRenderer(), elements);
 
     StringBuilder axisSubName = new StringBuilder();
-
+    
     final List<IXYTimeSeriesBuilder<?>> seriesBuilders = elements.unmodifiableSeries();
 
     if (!seriesBuilders.isEmpty()) {
-
+      
       StandardXYItemRenderer renderer = new StandardXYItemRenderer();
 
       TimeSeriesCollection collection = elements.showTimeGaps() ? new TimeSeriesCollection()
@@ -328,10 +325,7 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
       plot.mapDatasetToDomainAxis(seriesIndex, 0);
 
       // Now also set the renderer that will be used because it will be used to determine the axis
-      // min/max value range when this is auto-calculated. FIXME: Candlestick renderer offsets
-      // center of candle from x-axis start pixel. When rendering general xy lines, those line
-      // points are drawn at the x-axis start pixel. This causes indicator lines to be misaligned by
-      // a few pixels from the OHLC bars and may provide false signals to those looking at charts.
+      // min/max value range when this is auto-calculated.
       plot.setRenderer(seriesIndex, renderer, false);
 
       // We're now ready to add the dataset

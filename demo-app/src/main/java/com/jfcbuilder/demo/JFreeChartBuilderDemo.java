@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder-demo: a demonstration app for jfreechart-builder
  * 
- * (C) Copyright 2022, by Matt E.
+ * (C) Copyright 2023, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -275,6 +275,8 @@ public class JFreeChartBuilderDemo {
       .title("Multi Plot Minute Time Series")
       .timeData(timeArray)
       .indexRange(startIndex, endIndex)
+      .sharedAxisColor(Color.CYAN)
+      .sharedAxisFontColor(Color.RED)
 
       // Deprecation note: preserve a call to gridLines() for testing until it's removed.
       

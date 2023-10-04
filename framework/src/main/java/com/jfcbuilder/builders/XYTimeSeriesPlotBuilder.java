@@ -1,7 +1,7 @@
 /*
  * jfreechart-builder: a builder pattern module for working with the jfreechart library
  * 
- * (C) Copyright 2022, by Matt E. and project contributors
+ * (C) Copyright 2023, by Matt E. and project contributors
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -226,16 +226,14 @@ public class XYTimeSeriesPlotBuilder implements IXYTimeSeriesPlotBuilder<XYTimeS
 
     elements.checkBuildPreconditions();
 
-    final ValueAxis xAxis = elements.xAxis();
-    xAxis.setAxisLinePaint(elements.axisColor());
-    xAxis.setTickLabelPaint(elements.axisFontColor());
-
     final long[] timeData = elements.timeData();
+
+    final ValueAxis xAxis = elements.xAxis();
 
     StringBuilder axisSubName = new StringBuilder();
 
     TimeSeriesCollection collection = elements.showTimeGaps() ? new TimeSeriesCollection()
-        : new NumberMappedTimeSeriesCollection();
+      : new NumberMappedTimeSeriesCollection();
 
     StandardXYItemRenderer renderer = new StandardXYItemRenderer();
 
@@ -259,6 +257,7 @@ public class XYTimeSeriesPlotBuilder implements IXYTimeSeriesPlotBuilder<XYTimeS
         renderer.setSeriesPaint(collection.getSeriesCount(), builder.color());
         renderer.setSeriesStroke(collection.getSeriesCount(), builder.style());
         collection.addSeries(series);
+
         // JFreeChart series key is the name given to the series.
         if (series.getKey() != null && !series.getKey().toString().isEmpty()) {
           axisSubName.append(' ').append(series.getKey().toString());
@@ -269,7 +268,7 @@ public class XYTimeSeriesPlotBuilder implements IXYTimeSeriesPlotBuilder<XYTimeS
     final NumberAxis yAxis = BuilderUtils.createYAxis(elements);
 
     yAxis.setLabel(elements.yAxisName() + axisSubName.toString());
-    
+
     final XYPlot plot = BuilderUtils.createPlot(xAxis, yAxis, collection, renderer, elements);
 
     for (MarkerBuilder builder : elements.unmodifiableLines()) {
