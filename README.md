@@ -275,7 +275,7 @@ Add this dependency to your project's `.pom` file:
 <dependency>
   <groupId>com.jfcbuilder</groupId>
   <artifactId>jfreechart-builder</artifactId>
-  <version>1.5.7</version>
+  <version>1.5.8</version>
 <dependency>
 ```
 
@@ -319,7 +319,7 @@ Use a browser to open `framework/target/site/apidocs/index.html`
 Alternatively, run the generation script by specifying what version tag to associate with the Javadoc:
 
 ```
-./scripts/generate-javadoc.sh v1.5.7
+./scripts/generate-javadoc.sh v1.5.8
 ```
 
 That output will be in `target/site/apidocs/javadoc`
