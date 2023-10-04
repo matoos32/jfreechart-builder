@@ -21,6 +21,7 @@
 package com.jfcbuilder.builders;
 
 import java.awt.Color;
+import java.awt.Paint;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -59,6 +60,8 @@ public class ChartBuilder {
   private long[] timeData;
   private DateFormat dateFormat;
   private boolean verticalTickLabels;
+  private Paint sharedAxisColor;
+  private Paint sharedAxisFontColor;
   private boolean showTimeGaps;
   private List<IXYTimeSeriesPlotBuilder<?>> xyPlotBuilders;
 
@@ -71,6 +74,8 @@ public class ChartBuilder {
     timeData = NO_TIME_DATA;
     dateFormat = null;
     verticalTickLabels = false;
+    sharedAxisColor = null;
+    sharedAxisFontColor = null;
     showTimeGaps = true;
     xyPlotBuilders = new ArrayList<>();
   }
@@ -158,6 +163,28 @@ public class ChartBuilder {
   }
 
   /**
+   * Sets the shared axis color to use when building the chart.
+   * 
+   * @param color The color to set
+   * @return Reference to this builder instance for method chaining
+   */
+  public ChartBuilder sharedAxisColor(Paint color) {
+    sharedAxisColor = color;
+    return this;
+  }
+
+  /**
+   * Sets the shared axis font color to use when building the chart.
+   * 
+   * @param color The color to set
+   * @return Reference to this builder instance for method chaining
+   */
+  public ChartBuilder sharedAxisFontColor(Paint color) {
+    sharedAxisFontColor = color;
+    return this;
+  }
+  
+  /**
    * Sets whether or not time gaps should be rendered.
    * 
    * @param showTimeGaps True to render time gaps, false otherwise
@@ -207,7 +234,7 @@ public class ChartBuilder {
     checkBuildPreconditions();
 
     ZeroBasedIndexRange range = (indexRange != null) ? indexRange
-        : new ZeroBasedIndexRange(0, timeData.length - 1);
+      : new ZeroBasedIndexRange(0, timeData.length - 1);
 
     ValueAxis sharedAxis;
 
@@ -225,6 +252,14 @@ public class ChartBuilder {
     sharedAxis.setAutoRange(true);
     sharedAxis.setTickLabelFont(BuilderConstants.DEFAULT_FONT);
     sharedAxis.setVerticalTickLabels(verticalTickLabels);
+
+    if (sharedAxisColor != null) {
+      sharedAxis.setAxisLinePaint(sharedAxisColor);
+    }
+
+    if (sharedAxisFontColor != null) {
+      sharedAxis.setTickLabelPaint(sharedAxisFontColor);
+    }
 
     CombinedDomainXYPlot parent = new CombinedDomainXYPlot(sharedAxis);
 

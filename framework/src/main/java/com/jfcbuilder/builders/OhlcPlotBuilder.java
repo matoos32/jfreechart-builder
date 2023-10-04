@@ -272,12 +272,6 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
 
     checkBuildPreconditions();
 
-    final ValueAxis xAxis = elements.xAxis();
-    xAxis.setAxisLinePaint(elements.axisColor());
-    xAxis.setTickLabelPaint(elements.axisFontColor());
-
-    final long[] timeData = elements.timeData();
-
     XYDataset ohlc = buildOhlcDataset();
 
     if (!elements.showTimeGaps()) {
@@ -286,16 +280,19 @@ public class OhlcPlotBuilder implements IXYTimeSeriesPlotBuilder<OhlcPlotBuilder
       }
     }
 
+    final long[] timeData = elements.timeData();
+
+    final ValueAxis xAxis = elements.xAxis();
     final NumberAxis yAxis = BuilderUtils.createYAxis(elements);
 
     final XYPlot plot = BuilderUtils.createPlot(xAxis, yAxis, ohlc, getCandleRenderer(), elements);
 
     StringBuilder axisSubName = new StringBuilder();
-
+    
     final List<IXYTimeSeriesBuilder<?>> seriesBuilders = elements.unmodifiableSeries();
 
     if (!seriesBuilders.isEmpty()) {
-
+      
       StandardXYItemRenderer renderer = new StandardXYItemRenderer();
 
       TimeSeriesCollection collection = elements.showTimeGaps() ? new TimeSeriesCollection()
