@@ -275,6 +275,8 @@ public class JFreeChartBuilderDemo {
       .title("Multi Plot Minute Time Series")
       .timeData(timeArray)
       .indexRange(startIndex, endIndex)
+      .sharedAxisColor(Color.CYAN)
+      .sharedAxisFontColor(Color.RED)
 
       // Deprecation note: preserve a call to gridLines() for testing until it's removed.
       
